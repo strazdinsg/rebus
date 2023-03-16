@@ -1,0 +1,10 @@
+html {
+  font-size: 62.5%; /* Reset 1 rem to 10px */
+}
+
+/* Take full control of sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
