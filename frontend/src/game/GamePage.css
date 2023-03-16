@@ -1,0 +1,19 @@
+#challenges {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 2rem;
+}
+
+#challenges > button {
+  display: block;
+  height: 10rem;
+  width: 10rem;
+  background-color: lightgray;
+  border: 1px solid black;
+}
+
+#challenges > button.solved {
+  background-color: lightgreen;
+}

@@ -1,0 +1,18 @@
+nav {
+  display: flex;
+  justify-content: center;
+}
+
+nav a {
+  font-size: 2rem;
+  padding: 1rem;
+}
+
+nav a,
+nav a:visited {
+  color: blue;
+}
+
+nav a.active {
+  color: blueviolet;
+}
