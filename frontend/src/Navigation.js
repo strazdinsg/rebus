@@ -3,7 +3,6 @@ import "./Navigation.css";
 export function Navigation() {
   return (
     <nav>
-      <NavLink to="/login">Login</NavLink>
       <NavLink to="/admin/grading">Grading</NavLink>
       <NavLink to="/admin/teams">Teams</NavLink>
       <NavLink to="/admin/results">Results</NavLink>
