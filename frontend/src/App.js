@@ -6,13 +6,12 @@ import { TeamPage } from "./admin/team/TeamPage";
 import { ResultPage } from "./admin/results/ResultPage";
 import { GamePage } from "./game/GamePage";
 import { AnswerPage } from "./answer/AnswerPage";
+import { ThemeProvider } from "@mui/material";
+import { muiTheme } from "./MuiTheme";
 
-/**
- * The main application wrapper.
- * @returns {JSX.Element}
- * @constructor
- */
-function App() {
+const user = null;
+
+function MainPages() {
   return (
     <Router>
       <Navigation />
@@ -25,6 +24,19 @@ function App() {
         <Route path="/answer" element={<AnswerPage />} />
       </Routes>
     </Router>
+  );
+}
+
+/**
+ * The main application wrapper.
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function App() {
+  return (
+    <ThemeProvider theme={muiTheme}>
+      {user ? <MainPages /> : <LoginPage />}
+    </ThemeProvider>
   );
 }
 
