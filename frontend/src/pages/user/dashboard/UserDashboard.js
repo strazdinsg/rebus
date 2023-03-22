@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 

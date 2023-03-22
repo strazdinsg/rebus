@@ -3,8 +3,8 @@ import { ThemeProvider } from "@mui/material";
 import { muiTheme } from "./MuiTheme";
 import { UserContext } from "./context/UserContext";
 import { useState } from "react";
-import { UserPage } from "./pages/UserPage";
-import { AdminPage } from "./pages/AdminPage";
+import { UserPage } from "./pages/user/UserPage";
+import { AdminPage } from "./pages/admin/AdminPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AnswerPage } from "./pages/user/answer/AnswerPage";
 
