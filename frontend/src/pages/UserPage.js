@@ -19,7 +19,8 @@ const challenges = [
  * @constructor
  */
 export function UserPage() {
-  const { user, setUser } = useContext(UserContext);
+  const userContext = useContext(UserContext);
+  const user = userContext.user;
 
   return (
     <div>
