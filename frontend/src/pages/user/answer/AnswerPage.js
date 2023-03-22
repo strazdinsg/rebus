@@ -9,11 +9,7 @@ export function AnswerPage({ challenge }) {
   return (
     <main>
       <h1>Challenge {challenge.id}</h1>
-      <p>
-        I am something that everyone has, yet no one can see it. I am precious,
-        but cannot be bought. I am light as a feather, yet can weigh a person
-        down. What am I?
-      </p>
+      <p>{challenge.question}</p>
       <label>
         Your answer:
         <input type="text" placeholder="Chuck McDuck" />

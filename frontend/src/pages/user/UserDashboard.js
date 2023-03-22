@@ -1,15 +1,20 @@
 import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
-import { ChallengeChoiceButton } from "./user/ChallengeChoiceButton";
+import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 
 // TODO - load challenges from backend
 const challenges = [
-  { id: 1, submitted: false },
-  { id: 2, submitted: false },
-  { id: 3, submitted: true },
-  { id: 4, submitted: false },
-  { id: 5, submitted: true },
+  {
+    id: 1,
+    submitted: false,
+    question:
+      "I am something that everyone has, yet no one can see it. I am precious, but cannot be bought. I am light as a feather, yet can weigh a person down. What am I?",
+  },
+  { id: 2, submitted: false, question: "" },
+  { id: 3, submitted: true, question: "" },
+  { id: 4, submitted: false, question: "" },
+  { id: 5, submitted: true, question: "" },
 ];
 
 /**

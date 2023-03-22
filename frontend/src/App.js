@@ -6,7 +6,7 @@ import { useState } from "react";
 import { UserPage } from "./pages/UserPage";
 import { AdminPage } from "./pages/AdminPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AnswerPage } from "./pages/answer/AnswerPage";
+import { AnswerPage } from "./pages/user/answer/AnswerPage";
 
 /**
  * The main application wrapper.
