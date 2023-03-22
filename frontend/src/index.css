@@ -25,9 +25,20 @@ input[type="number"] {
 
 h1 {
   font-size: 4rem;
-  margin-bottom: 1rem;
 }
 
 h2 {
   font-size: 3.2rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+main {
+  margin: 2rem;
 }

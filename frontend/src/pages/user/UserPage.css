@@ -1,0 +1,15 @@
+#challenge-container {
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+  width: 90%;
+  margin: 2rem auto 0 auto;
+  flex-wrap: wrap;
+  min-width: 35rem;
+}
+
+#challenge-container > button {
+  width: 15rem;
+  height: 15rem;
+  flex-shrink: 0;
+}

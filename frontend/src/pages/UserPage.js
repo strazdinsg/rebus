@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import "./UserPage.css";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import "./user/UserPage.css";
+import { ChallengeChoiceButton } from "./user/ChallengeChoiceButton";
 
 // TODO - load challenges from backend
 const challenges = [
@@ -12,10 +13,6 @@ const challenges = [
   { submitted: true },
 ];
 
-function MenuIcon() {
-  return null;
-}
-
 /**
  * The main page for a regular non-admin user (team)
  * @return {JSX.Element}
@@ -25,20 +22,20 @@ export function UserPage() {
   const { user, setUser } = useContext(UserContext);
 
   return (
-    <main>
+    <div>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h4">{user.username}</Typography>
+          <Typography variant="h5">{user.username}</Typography>
         </Toolbar>
       </AppBar>
-      <h2>Choose a challenge</h2>
-      <div id="challenge-container">
-        {challenges.map((challenge, index) => (
-          <Button variant={challenge.submitted ? "contained" : "outlined"}>
-            {index + 1}
-          </Button>
-        ))}
-      </div>
-    </main>
+      <main>
+        <h2>Choose a challenge</h2>
+        <div id="challenge-container">
+          {challenges.map((challenge, index) => (
+            <ChallengeChoiceButton challenge={challenge} index={index} />
+          ))}
+        </div>
+      </main>
+    </div>
   );
 }
