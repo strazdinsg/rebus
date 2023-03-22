@@ -1,5 +1,6 @@
 html {
   font-size: 62.5%; /* Reset 1 rem to 10px */
+  font-family: Roboto, sans-serif;
 }
 
 /* Take full control of sizing */
@@ -20,4 +21,24 @@ input::-webkit-inner-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+h2 {
+  font-size: 3.2rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+main {
+  margin: 2rem;
 }
