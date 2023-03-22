@@ -5,6 +5,8 @@ import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import { UserPage } from "./pages/UserPage";
 import { AdminPage } from "./pages/AdminPage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AnswerPage } from "./pages/answer/AnswerPage";
 
 /**
  * The main application wrapper.
@@ -16,13 +18,18 @@ function App() {
   return (
     <ThemeProvider theme={muiTheme}>
       <UserContext.Provider value={{ user: user, setUser: setUser }}>
-        {user && user.isAdmin ? (
-          <AdminPage />
-        ) : user && !user.isAdmin ? (
-          <UserPage />
-        ) : (
-          <LoginPage />
-        )}
+        <Router>
+          {user && user.isAdmin ? (
+            <AdminPage />
+          ) : user && !user.isAdmin ? (
+            <Routes>
+              <Route path={"/"} element={<UserPage />} />
+              <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
+            </Routes>
+          ) : (
+            <LoginPage />
+          )}
+        </Router>
       </UserContext.Provider>
     </ThemeProvider>
   );
