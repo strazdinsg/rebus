@@ -5,10 +5,11 @@ import "./AnswerPage.css";
  * @returns {JSX.Element}
  * @constructor
  */
-export function AnswerPage({ challenge }) {
+export function AnswerPage({ challenge, goBack }) {
   return (
     <main>
       <h1>Challenge {challenge.id}</h1>
+      <button onClick={goBack}>Go back</button>
       <p>{challenge.question}</p>
       <label>
         Your answer:

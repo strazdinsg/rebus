@@ -11,10 +11,10 @@ const challenges = [
     question:
       "I am something that everyone has, yet no one can see it. I am precious, but cannot be bought. I am light as a feather, yet can weigh a person down. What am I?",
   },
-  { id: 2, submitted: false, question: "" },
-  { id: 3, submitted: true, question: "" },
-  { id: 4, submitted: false, question: "" },
-  { id: 5, submitted: true, question: "" },
+  { id: 2, submitted: false, question: "Second quest" },
+  { id: 3, submitted: true, question: "Another quest" },
+  { id: 4, submitted: false, question: "Foursquare" },
+  { id: 5, submitted: true, question: "Pentagon" },
 ];
 
 /**

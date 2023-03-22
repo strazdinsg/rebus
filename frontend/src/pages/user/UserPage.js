@@ -12,7 +12,10 @@ export function UserPage() {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
 
   return selectedChallenge != null ? (
-    <AnswerPage challenge={selectedChallenge} />
+    <AnswerPage
+      challenge={selectedChallenge}
+      goBack={() => setSelectedChallenge(null)}
+    />
   ) : (
     <UserDashboard setSelectedChallenge={setSelectedChallenge} />
   );
