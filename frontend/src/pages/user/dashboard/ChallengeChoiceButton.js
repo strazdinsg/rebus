@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
  */
 export function ChallengeChoiceButton({ challenge }) {
   const navigate = useNavigate();
-
-  const checkmark = challenge.submitted ? "✔" : "";
-  const buttonVariant = challenge.submitted ? "contained" : "outlined";
+  const submitted = challenge.submittedAnswer != null;
+  const checkmark = submitted ? "✔" : "";
+  const buttonVariant = submitted ? "contained" : "outlined";
   return (
     <Button
       variant={buttonVariant}

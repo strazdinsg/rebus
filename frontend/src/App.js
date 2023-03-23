@@ -45,13 +45,17 @@ function loadStaticChallenges() {
   return [
     {
       id: 1,
-      submitted: false,
       question:
         "I am something that everyone has, yet no one can see it. I am precious, but cannot be bought. I am light as a feather, yet can weigh a person down. What am I?",
+      submittedAnswer: "The breath",
     },
-    { id: 2, submitted: false, question: "Second quest" },
-    { id: 3, submitted: true, question: "Another quest" },
-    { id: 4, submitted: false, question: "Foursquare" },
-    { id: 5, submitted: true, question: "Pentagon" },
+    {
+      id: 2,
+      question: "Second quest",
+      submittedAnswer: null,
+    },
+    { id: 3, question: "Another quest", submittedAnswer: null },
+    { id: 4, question: "Foursquare", submittedAnswer: "Random answer" },
+    { id: 5, question: "Pentagon", submittedAnswer: null },
   ];
 }

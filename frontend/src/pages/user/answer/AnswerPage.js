@@ -15,7 +15,9 @@ export function AnswerPage() {
   const { challengeId } = useParams();
   const allChallenges = useContext(ChallengeContext);
   const challenge = getSelectedChallenge(allChallenges, challengeId);
+  const [answer, setAnswer] = useState(challenge.submittedAnswer);
   const [errorText, setErrorText] = useState("");
+  const submissionEnabled = !!answer;
   const hasError = !!errorText;
   const navigate = useNavigate();
 
@@ -44,15 +46,22 @@ export function AnswerPage() {
             error={hasError}
             helperText={errorText}
             multiline={true}
+            onChange={(event) => setAnswer(event.target.value)}
+            value={answer}
           />
-          {/*TODO - style the image uploader*/}
           <label htmlFor="image-upload-input">
             <input type="file" accept="image/*" id="image-upload-input" />
             <Button variant="outlined" id="add-image-button" component="span">
               Add image
             </Button>
           </label>
-          <Button variant="contained">Send</Button>
+          <Button
+            variant="contained"
+            onClick={submitAnswer}
+            disabled={!submissionEnabled}
+          >
+            Send
+          </Button>
         </div>
       </main>
     </>
@@ -65,5 +74,10 @@ export function AnswerPage() {
 
   function goBack() {
     navigate(-1);
+  }
+
+  function submitAnswer() {
+    setErrorText("Not implemented");
+    console.log("Setting error");
   }
 }
