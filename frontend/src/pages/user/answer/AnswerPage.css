@@ -1,5 +1,5 @@
 #answer-container {
-  margin: 1rem auto;
+  margin: 3rem auto;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -10,4 +10,13 @@
 
 .MuiSvgIcon-root {
   color: white;
+}
+
+#image-upload-input {
+  display: none;
+}
+
+#add-image-button {
+  display: block;
+  text-align: center;
 }

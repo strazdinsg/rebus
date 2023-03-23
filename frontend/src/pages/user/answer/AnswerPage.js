@@ -3,14 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ChallengeContext } from "../../../context/ChallengeContext";
 import TextField from "@mui/material/TextField";
-import {
-  AppBar,
-  Button,
-  IconButton,
-  Input,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 
 /**
@@ -50,9 +43,15 @@ export function AnswerPage() {
             type="text"
             error={hasError}
             helperText={errorText}
+            multiline={true}
           />
           {/*TODO - style the image uploader*/}
-          <Input type="file" inputProps={{ accept: "image/*" }}></Input>
+          <label htmlFor="image-upload-input">
+            <input type="file" accept="image/*" id="image-upload-input" />
+            <Button variant="outlined" id="add-image-button" component="span">
+              Add image
+            </Button>
+          </label>
           <Button variant="contained">Send</Button>
         </div>
       </main>
