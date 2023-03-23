@@ -1,15 +1,13 @@
-input[type="file"] {
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
+#answer-container {
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 30rem;
+  max-width: 60rem;
+  gap: 2rem;
 }
 
-label.image-upload::before {
-  content: "Select an image";
-  display: inline-block;
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+.MuiSvgIcon-root {
+  color: white;
 }

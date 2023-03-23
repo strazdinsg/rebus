@@ -1,33 +1,70 @@
 import "./AnswerPage.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useState } from "react";
+import { ChallengeContext } from "../../../context/ChallengeContext";
+import TextField from "@mui/material/TextField";
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Input,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
  * @returns {JSX.Element}
  * @constructor
  */
-export function AnswerPage(props) {
+export function AnswerPage() {
   const { challengeId } = useParams();
+  const allChallenges = useContext(ChallengeContext);
+  const challenge = getSelectedChallenge(allChallenges, challengeId);
+  const [errorText, setErrorText] = useState("");
+  const hasError = !!errorText;
+  const navigate = useNavigate();
+
+  if (challenge == null) {
+    return <main>Loading challenge data...</main>;
+  }
 
   return (
-    <main>
-      <h1>Challenge {challengeId}</h1>
-      <p>TODO - challenge.question</p>
-      <label>
-        Your answer:
-        <input type="text" placeholder="Chuck McDuck" />
-      </label>
-      <br />
-      <label className="image-upload" for="image-upload"></label>
-      <input
-        type="file"
-        id="image-upload"
-        name="answer-image"
-        accept="image/*"
-        title="Upload image"
-      />
-      <br />
-      <input type="submit" value="Send" />
-    </main>
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton onClick={goBack}>
+            <ArrowBack />
+          </IconButton>
+          <Typography variant="h5">Challenge {challenge.id}</Typography>
+        </Toolbar>
+      </AppBar>
+      <main>
+        <p>{challenge.question}</p>
+        <div id="answer-container">
+          <TextField
+            id="answer-input-field"
+            label="Your answer"
+            placeholder="Your answer here"
+            type="text"
+            error={hasError}
+            helperText={errorText}
+          />
+          {/*TODO - style the image uploader*/}
+          <Input type="file" inputProps={{ accept: "image/*" }}></Input>
+          <Button variant="contained">Send</Button>
+        </div>
+      </main>
+    </>
   );
+
+  function getSelectedChallenge(challenges, id) {
+    const integerId = parseInt(id);
+    return challenges.find((challenge) => challenge.id === integerId);
+  }
+
+  function goBack() {
+    navigate(-1);
+  }
 }

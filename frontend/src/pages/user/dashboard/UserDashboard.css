@@ -5,11 +5,11 @@
   width: 90%;
   margin: 2rem auto 0 auto;
   flex-wrap: wrap;
-  min-width: 35rem;
+  min-width: 30rem;
 }
 
 #challenge-container > button {
-  width: 15rem;
-  height: 15rem;
+  width: 10rem;
+  height: 10rem;
   flex-shrink: 0;
 }

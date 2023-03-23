@@ -40,6 +40,11 @@ h4 {
   color: #1976d2;
 }
 
+p {
+  font-size: 2rem;
+  line-height: 1.5;
+}
+
 main {
   margin: 2rem;
 }
