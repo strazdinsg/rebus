@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 /**
  * A button for choosing one specific challenge.
@@ -7,13 +8,15 @@ import { Button } from "@mui/material";
  * @return {JSX.Element}
  * @constructor
  */
-export function ChallengeChoiceButton({ challenge, setSelectedChallenge }) {
+export function ChallengeChoiceButton({ challenge }) {
+  const navigate = useNavigate();
+
   const checkmark = challenge.submitted ? "✔" : "";
   const buttonVariant = challenge.submitted ? "contained" : "outlined";
   return (
     <Button
       variant={buttonVariant}
-      onClick={() => setSelectedChallenge(challenge)}
+      onClick={() => navigate("/answer/" + challenge.id)}
     >
       {challenge.id + " " + checkmark}
     </Button>

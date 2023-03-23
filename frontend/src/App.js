@@ -7,6 +7,7 @@ import { UserPage } from "./pages/user/UserPage";
 import { AdminPage } from "./pages/admin/AdminPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AnswerPage } from "./pages/user/answer/AnswerPage";
+import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
 
 /**
  * The main application wrapper.
@@ -23,7 +24,7 @@ function App() {
             <AdminPage />
           ) : user && !user.isAdmin ? (
             <Routes>
-              <Route path={"/"} element={<UserPage />} />
+              <Route path={"/"} element={<UserDashboard />} />
               <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
             </Routes>
           ) : (
