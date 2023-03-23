@@ -1,0 +1,22 @@
+#answer-container {
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 30rem;
+  max-width: 60rem;
+  gap: 2rem;
+}
+
+.MuiSvgIcon-root {
+  color: white;
+}
+
+#image-upload-input {
+  display: none;
+}
+
+#add-image-button {
+  display: block;
+  text-align: center;
+}

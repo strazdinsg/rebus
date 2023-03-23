@@ -1,29 +1,22 @@
 import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
-import "./user/UserPage.css";
-import { ChallengeChoiceButton } from "./user/ChallengeChoiceButton";
-
-// TODO - load challenges from backend
-const challenges = [
-  { submitted: false },
-  { submitted: false },
-  { submitted: true },
-  { submitted: false },
-  { submitted: true },
-];
+import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
+import { ChallengeContext } from "../../../context/ChallengeContext";
+import "./UserDashboard.css";
 
 /**
- * The main page for a regular non-admin user (team)
+ * Dashboard for regular users, showing a listing of available challenges.
  * @return {JSX.Element}
  * @constructor
  */
-export function UserPage() {
+export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
+  const challenges = useContext(ChallengeContext);
 
   return (
-    <div>
+    <>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h5">{user.username}</Typography>
@@ -33,10 +26,10 @@ export function UserPage() {
         <h2>Choose a challenge</h2>
         <div id="challenge-container">
           {challenges.map((challenge, index) => (
-            <ChallengeChoiceButton challenge={challenge} index={index} />
+            <ChallengeChoiceButton challenge={challenge} key={index} />
           ))}
         </div>
       </main>
-    </div>
+    </>
   );
 }
