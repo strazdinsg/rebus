@@ -1,5 +1,4 @@
-import { asyncApiDelete, asyncApiGet, asyncApiPost } from "./requests";
-import { getAuthenticatedUser } from "./authentication";
+import { asyncApiGet } from "./requests";
 
 //////////////////////////////////////
 // API requests to the backend
