@@ -5,6 +5,7 @@ import { ChallengeContext } from "../../../context/ChallengeContext";
 import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
+import { ImageUploader } from "./ImageUploader";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -36,8 +37,8 @@ export function AnswerPage() {
         </Toolbar>
       </AppBar>
       <main>
-        <p>{challenge.question}</p>
         <div id="answer-container">
+          <p>{challenge.question}</p>
           <TextField
             id="answer-input-field"
             label="Your answer"
@@ -49,12 +50,7 @@ export function AnswerPage() {
             onChange={(event) => setAnswer(event.target.value)}
             value={answer}
           />
-          <label htmlFor="image-upload-input">
-            <input type="file" accept="image/*" id="image-upload-input" />
-            <Button variant="outlined" id="add-image-button" component="span">
-              Add image
-            </Button>
-          </label>
+          <ImageUploader />
           <Button
             variant="contained"
             onClick={submitAnswer}
