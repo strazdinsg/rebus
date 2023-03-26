@@ -13,6 +13,7 @@ First you need to ensure the following requirements are met:
   - DB_HOST - database hostname
   - DB_DATABASE - database name
   - DB_PORT - TCP port number for the database
+  - JWT_SECRET_KEY - secret key used to sign JWT tokens
 
 You can start the backend by executing `mvn spring-boot:run` in the terminal. 
 

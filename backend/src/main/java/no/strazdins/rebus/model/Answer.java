@@ -17,10 +17,11 @@ public class Answer {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+  private String answer;
   @ManyToOne
   private User user;
   @ManyToOne
   private Challenge challenge;
-  private int imageId;
-  private int score;
+  private Integer imageId;
+  private Integer score;
 }

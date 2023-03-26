@@ -19,6 +19,7 @@ public class User {
   private String name;
   // Plain-text pin. This is done for a reason - to give the admins an opportunity to see the PINs
   // and tell them to the participants. The PIN is auto-generated.
+  @Column(unique = true)
   private String pin;
   @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
   private boolean isAdmin;
