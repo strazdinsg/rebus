@@ -8,9 +8,8 @@ import { useNavigate } from "react-router-dom";
  * @return {JSX.Element}
  * @constructor
  */
-export function ChallengeChoiceButton({ challenge }) {
+export function ChallengeChoiceButton({ challenge, submitted }) {
   const navigate = useNavigate();
-  const submitted = challenge.submittedAnswer != null;
   const checkmark = submitted ? "✔" : "";
   const buttonVariant = submitted ? "contained" : "outlined";
   return (

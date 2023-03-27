@@ -6,9 +6,18 @@ import { asyncApiGet } from "./requests";
 
 /**
  * Send request to API - Get all challenges
- * @return {Promise<string>} Promise to return the response body as JSON array
+ * @return {Promise<[]>} Promise to return the response body as JSON array
  * Throws and exception on error
  */
 export function apiGetChallenges() {
   return asyncApiGet("/challenges");
+}
+
+/**
+ * Send request to API - get my answers
+ * @return {Promise<[]>} Promise to return the response body as JSON array
+ * Throws and exception on error
+ */
+export function apiGetMyAnswers() {
+  return asyncApiGet("/answers/my");
 }

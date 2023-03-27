@@ -10,7 +10,7 @@ export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 /**
  * Send an asynchronous HTTP GET request to the remote API (backend)
  * @param {string} url Relative backend API url
- * @return {Promise<string>} The response text (body) received from the API.
+ * @return {Promise<JSON>} The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiGet(url) {
@@ -21,7 +21,7 @@ export async function asyncApiGet(url) {
  * Send an asynchronous HTTP POST request to the remote API (backend)
  * @param {string} url Relative backend API url
  * @param requestBody The parameters to include in the request body
- * @return {Promise<string>} The response text (body) received from the API.
+ * @return {Promise<JSON>} The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiPost(url, requestBody) {
@@ -32,7 +32,7 @@ export async function asyncApiPost(url, requestBody) {
  * Send an asynchronous HTTP DELETE request to the remote API (backend)
  * @param {string} url Relative backend API url
  * @param requestBody The parameters to include in the request body
- * @return {Promise<string>} The response text (body) received from the API.
+ * @return {Promise<JSON>} The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiDelete(url, requestBody) {
@@ -45,7 +45,7 @@ export async function asyncApiDelete(url, requestBody) {
  * @param {string} method the HTTP method to use: GET, POST, PUT. Case-insensitive.
  * @param {string} url The relative API url (base URL is added automatically)
  * @param {object} requestBody The data to send in request body. Ignored for HTTP GET.
- * @return {Promise<string>} The response text received from the API.
+ * @return @return {Promise<JSON>} The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 async function asyncApiRequest(method, url, requestBody) {
@@ -64,7 +64,7 @@ async function asyncApiRequest(method, url, requestBody) {
     body: body,
   })
     .then(handleErrors)
-    .then((response) => response.text());
+    .then((response) => response.json());
 }
 
 /**

@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
+import { AnswerContext } from "../../../context/AnswerContext";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -16,7 +17,12 @@ export function AnswerPage() {
   const { challengeId } = useParams();
   const allChallenges = useContext(ChallengeContext);
   const challenge = getSelectedChallenge(allChallenges, challengeId);
-  const [answer, setAnswer] = useState(challenge.submittedAnswer);
+  const answerContext = useContext(AnswerContext);
+  const myAnswers = answerContext.answers;
+  const submittedAnswerToThisChallenge = myAnswers.find(
+    (answer) => answer.challengeId === parseInt(challengeId)
+  ).answer;
+  const [answer, setAnswer] = useState(submittedAnswerToThisChallenge);
   const [errorText, setErrorText] = useState("");
   const submissionEnabled = !!answer;
   const hasError = !!errorText;
