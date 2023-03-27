@@ -52,7 +52,7 @@ public class JwtUtil {
    * @return ID of the user
    */
   public int extractUserId(String token) {
-    String idString = extractClaim(token, Claims::getSubject);
+    String idString = extractClaim(token, Claims::getId);
     return Integer.parseInt(idString);
   }
 
