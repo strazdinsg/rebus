@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import "./LoginPage.css";
 import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
+import { sendAuthenticationRequest } from "../../tools/authentication";
 
 /**
  * Page shown when the user must log in.
@@ -38,32 +39,24 @@ export function LoginPage() {
     }
 
     const pin = document.getElementById("pin-input-field").value;
-    let user = findUserBy(pin);
-
-    setPinError(user == null);
-    if (user != null) {
-      userContext.setUser(user);
-    } else {
-      setPinHelperText("Invalid PIN");
-    }
+    sendAuthenticationRequest(pin, onLoginSuccess, onLoginError);
   }
 
-  /**
-   * Find the user by the PIN - send API call.
-   * @param pin The PIN code for the user.
-   * @return {{isAdmin: boolean, username: string}|null} The user or null if no user found.
-   */
-  function findUserBy(pin) {
-    // TODO - send API calls to decide the real user
-    switch (pin) {
-      case "111111":
-        return { username: "Team 1", isAdmin: false };
-      case "222222":
-        return { username: "Team 2", isAdmin: false };
-      case "667667":
-        return { username: "Admin", isAdmin: true };
-      default:
-        return null;
+  function onLoginSuccess(user) {
+    userContext.setUser(user);
+  }
+
+  const HTTP_CODE_UNAUTHORIZED = 403;
+
+  function onLoginError(code, message) {
+    console.log(`Error ${code}: ${message}`);
+    let errorMessage =
+      "Something wrong with the server, contact the Rebus organizer!";
+    if (code === HTTP_CODE_UNAUTHORIZED) {
+      errorMessage = "Wrong PIN";
     }
+
+    setPinError(true);
+    setPinHelperText(errorMessage);
   }
 }

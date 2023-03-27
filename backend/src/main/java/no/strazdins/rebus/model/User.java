@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
 
 /**
@@ -31,5 +33,19 @@ public class User {
    */
   public boolean isAdmin() {
     return isAdmin;
+  }
+
+  /**
+   * Get the granted authorities for this user.
+   *
+   * @return A subset of {ROLE_USER, ROLE_ADMIN}
+   */
+  public Set<String> getAuthorities() {
+    Set<String> authorities = new HashSet<>();
+    authorities.add("ROLE_USER");
+    if (isAdmin) {
+      authorities.add("ROLE_ADMIN");
+    }
+    return authorities;
   }
 }

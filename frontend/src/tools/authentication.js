@@ -10,12 +10,14 @@ import { asyncApiPost } from "./requests";
 export function getAuthenticatedUser() {
   let user = null;
   const userId = getCookie("current_user_id");
+  const userName = getCookie("current_user_name");
   const commaSeparatedRoles = getCookie("current_user_roles");
   if (userId && commaSeparatedRoles) {
     const roles = commaSeparatedRoles.split(",");
     user = {
       userId: userId,
       roles: roles,
+      name: userName,
     };
   }
   return user;
@@ -45,7 +47,11 @@ export function sendAuthenticationRequest(pin, successCallback, errorCallback) {
       const jwtResponse = JSON.parse(responseText);
       onAuthSuccess(jwtResponse, successCallback);
     })
-    .catch((error) => errorCallback(error.getErrorCode(), error.message));
+    .catch((error) => {
+      const code =
+        error.getErrorCode !== undefined ? error.getErrorCode() : 500;
+      errorCallback(code, error.message);
+    });
 }
 
 /**
@@ -59,6 +65,7 @@ function onAuthSuccess(jwtResponse, callback) {
   const userData = parseJwtUser(jwtResponse.jwt);
   if (userData) {
     setCookie("current_user_id", userData.id);
+    setCookie("current_user_name", userData.name);
     setCookie("current_user_roles", userData.roles.join(","));
     callback(userData);
   }
@@ -95,8 +102,9 @@ function parseJwtUser(jwtString) {
   const jwtObject = parseJwt(jwtString);
   if (jwtObject) {
     user = {
-      id: jwtObject.sub,
-      roles: jwtObject.roles.map((r) => r.authority),
+      id: jwtObject.jti,
+      name: jwtObject.sub,
+      roles: jwtObject.roles,
     };
   }
   return user;
@@ -108,5 +116,6 @@ function parseJwtUser(jwtString) {
 export function deleteAuthorizationCookies() {
   deleteCookie("jwt");
   deleteCookie("current_user_id");
+  deleteCookie("current_user_name");
   deleteCookie("current_user_roles");
 }
