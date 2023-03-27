@@ -19,6 +19,7 @@ export function getAuthenticatedUser() {
       roles: roles,
       name: userName,
     };
+    user.isAdmin = isAdmin(user);
   }
   return user;
 }
