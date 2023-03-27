@@ -5,6 +5,8 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import { sendAuthenticationRequest } from "../../tools/authentication";
 
+const HTTP_CODE_UNAUTHORIZED = 403;
+
 /**
  * Page shown when the user must log in.
  * @returns {JSX.Element}
@@ -45,8 +47,6 @@ export function LoginPage() {
   function onLoginSuccess(user) {
     userContext.setUser(user);
   }
-
-  const HTTP_CODE_UNAUTHORIZED = 403;
 
   function onLoginError(code, message) {
     console.log(`Error ${code}: ${message}`);
