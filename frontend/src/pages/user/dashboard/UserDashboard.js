@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
@@ -20,9 +20,10 @@ export function UserDashboard() {
   const myAnswers = answerContext.answers;
 
   useEffect(() => {
+    // TODO - use Redux store instead, load all the questions and answers in the app
     async function loadMyAnswers() {
       const ma = await apiGetMyAnswers();
-      console.log(ma.answers);
+      console.log(ma);
       answerContext.setAnswers(ma.answers);
     }
     loadMyAnswers().catch(console.error);
@@ -55,7 +56,7 @@ export function UserDashboard() {
     let i = 0;
     if (myAnswers)
       while (!answerFound && i < myAnswers.length) {
-        answerFound = myAnswers[i].challengeId == challengeId;
+        answerFound = myAnswers[i].challengeId === challengeId;
         i++;
       }
     return answerFound;

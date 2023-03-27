@@ -19,10 +19,12 @@ export function AnswerPage() {
   const challenge = getSelectedChallenge(allChallenges, challengeId);
   const answerContext = useContext(AnswerContext);
   const myAnswers = answerContext.answers;
-  const submittedAnswerToThisChallenge = myAnswers.find(
+  const submittedAnswer = myAnswers.find(
     (answer) => answer.challengeId === parseInt(challengeId)
-  ).answer;
-  const [answer, setAnswer] = useState(submittedAnswerToThisChallenge);
+  );
+  const submittedAnswerText =
+    submittedAnswer != null ? submittedAnswer.answer : "";
+  const [answer, setAnswer] = useState(submittedAnswerText);
   const [errorText, setErrorText] = useState("");
   const submissionEnabled = !!answer;
   const hasError = !!errorText;
