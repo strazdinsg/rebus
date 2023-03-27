@@ -2,6 +2,8 @@ package no.strazdins.rebus.controllers;
 
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
+import no.strazdins.rebus.model.User;
+import no.strazdins.rebus.security.AccessUserDetails;
 import no.strazdins.rebus.security.JwtUtil;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,8 +56,8 @@ public class AuthenticationController {
     } catch (BadCredentialsException e) {
       return new ResponseEntity<>("Invalid PIN", HttpStatus.UNAUTHORIZED);
     }
-    final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.pin());
-    final String jwt = jwtUtil.generateToken(userDetails);
+    final User user = userService.findByPin(authenticationRequest.pin());
+    final String jwt = jwtUtil.generateToken(user);
     return ResponseEntity.ok(new AuthenticationResponse(jwt));
   }
 

@@ -9,6 +9,7 @@ import { AnswerPage } from "./pages/user/answer/AnswerPage";
 import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
 import { ChallengeContext } from "./context/ChallengeContext";
 import { apiGetChallenges } from "./tools/api";
+import { getAuthenticatedUser } from "./tools/authentication";
 
 /**
  * The main application wrapper.
@@ -17,7 +18,7 @@ import { apiGetChallenges } from "./tools/api";
  */
 function App() {
   const [challenges, setChallenges] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getAuthenticatedUser());
 
   useEffect(fetchChallengesFromApi, []);
 
@@ -52,23 +53,3 @@ function App() {
 }
 
 export default App;
-
-// TODO - load challenges from backend
-// function loadStaticChallenges() {
-//   return [
-//     {
-//       id: 1,
-//       question:
-//         "I am something that everyone has, yet no one can see it. I am precious, but cannot be bought. I am light as a feather, yet can weigh a person down. What am I?",
-//       submittedAnswer: "The breath",
-//     },
-//     {
-//       id: 2,
-//       question: "Second quest",
-//       submittedAnswer: null,
-//     },
-//     { id: 3, question: "Another quest", submittedAnswer: null },
-//     { id: 4, question: "Foursquare", submittedAnswer: "Random answer" },
-//     { id: 5, question: "Pentagon", submittedAnswer: null },
-//   ];
-// }

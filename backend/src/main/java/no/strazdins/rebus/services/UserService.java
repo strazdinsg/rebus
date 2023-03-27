@@ -62,4 +62,14 @@ public class UserService implements UserDetailsService {
     }
     return teams;
   }
+
+  /**
+   * Find the user identified by the PIN code.
+   *
+   * @param pin PIN code of the desired user
+   * @return The user, or null if none found by the PIN
+   */
+  public User findByPin(String pin) {
+    return userRepository.findOneByPin(pin).orElse(null);
+  }
 }

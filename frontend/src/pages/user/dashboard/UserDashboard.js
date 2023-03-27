@@ -19,7 +19,7 @@ export function UserDashboard() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h5">{user.username}</Typography>
+          <Typography variant="h5">{user.name}</Typography>
         </Toolbar>
       </AppBar>
       <main>

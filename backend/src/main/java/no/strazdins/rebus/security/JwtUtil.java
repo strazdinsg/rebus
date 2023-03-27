@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import java.util.function.Function;
+import no.strazdins.rebus.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -25,18 +26,19 @@ public class JwtUtil {
   /**
    * Generate a JWT token for an authenticated user.
    *
-   * @param userDetails Object containing user details
+   * @param user Object containing user details
    * @return JWT token string
    */
-  public String generateToken(UserDetails userDetails) {
+  public String generateToken(User user) {
     final long TIME_NOW = System.currentTimeMillis();
     final long MILLISECONDS_IN_HOUR = 60 * 60 * 1000;
     final long MILLISECONDS_IN_ONE_DAY = 24 * MILLISECONDS_IN_HOUR;
     final long TIME_AFTER_30_DAYS = TIME_NOW + 30 * MILLISECONDS_IN_ONE_DAY;
 
     return Jwts.builder()
-        .setSubject(userDetails.getUsername())
-        .claim(JWT_AUTH_KEY, userDetails.getAuthorities())
+        .setSubject(user.getName())
+        .claim(JWT_AUTH_KEY, user.getAuthorities())
+        .setId("" + user.getId())
         .setIssuedAt(new Date(TIME_NOW))
         .setExpiration(new Date(TIME_AFTER_30_DAYS))
         .signWith(SignatureAlgorithm.HS256, secretKey)
