@@ -44,8 +44,7 @@ export function sendAuthenticationRequest(pin, successCallback, errorCallback) {
     pin: pin,
   };
   asyncApiPost("/authenticate", postData)
-    .then((responseText) => {
-      const jwtResponse = JSON.parse(responseText);
+    .then((jwtResponse) => {
       onAuthSuccess(jwtResponse, successCallback);
     })
     .catch((error) => {
