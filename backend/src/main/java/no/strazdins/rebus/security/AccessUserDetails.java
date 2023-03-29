@@ -70,4 +70,13 @@ public class AccessUserDetails implements UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+  /**
+   * Check whether this user is an administrator.
+   *
+   * @return True when this user is an admin, false otherwise.
+   */
+  public boolean isAdmin() {
+    return isAdmin;
+  }
 }

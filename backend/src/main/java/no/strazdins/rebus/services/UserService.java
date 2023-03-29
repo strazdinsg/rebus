@@ -7,6 +7,8 @@ import no.strazdins.rebus.dto.TeamDto;
 import no.strazdins.rebus.model.User;
 import no.strazdins.rebus.repositories.UserRepository;
 import no.strazdins.rebus.security.AccessUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -72,4 +74,20 @@ public class UserService implements UserDetailsService {
   public User findByPin(String pin) {
     return userRepository.findOneByPin(pin).orElse(null);
   }
+
+  /**
+   * Get the currently authenticated user, Optional.empty() if no authenticated user
+   * in this session.
+   */
+  public Optional<AccessUserDetails> getAuthenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Optional<AccessUserDetails> userDetails;
+    if (authentication != null) {
+      userDetails = Optional.of((AccessUserDetails) authentication.getPrincipal());
+    } else {
+      userDetails = Optional.empty();
+    }
+    return userDetails;
+  }
+
 }

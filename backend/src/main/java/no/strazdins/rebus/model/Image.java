@@ -1,11 +1,9 @@
 package no.strazdins.rebus.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Entity for storing image data.
@@ -17,8 +15,12 @@ public class Image {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
   @Lob
+  @Column(length = 20000000)
   private byte[] data;
   private String extension;
   private String contentType;
-  private Integer userId;
+  @ManyToOne
+  private User user;
+  @ManyToOne
+  private Challenge challenge;
 }
