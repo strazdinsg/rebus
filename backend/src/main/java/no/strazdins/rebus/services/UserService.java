@@ -90,4 +90,13 @@ public class UserService implements UserDetailsService {
     return userDetails;
   }
 
+  /**
+   * Get ID of the currently authenticated user.
+   *
+   * @return The ID of the authenticated user or null if the user has not logged in
+   */
+  public Integer getAuthenticatedUserId() {
+    Optional<AccessUserDetails> authenticatedUser = getAuthenticatedUser();
+    return authenticatedUser.isPresent() ? authenticatedUser.get().getId() : null;
+  }
 }
