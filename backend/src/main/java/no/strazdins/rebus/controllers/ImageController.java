@@ -1,5 +1,6 @@
 package no.strazdins.rebus.controllers;
 
+import java.util.Optional;
 import no.strazdins.rebus.model.Image;
 import no.strazdins.rebus.security.AccessUserDetails;
 import no.strazdins.rebus.services.ImageService;
@@ -9,12 +10,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Optional;
 
 /**
- * Controller for image handling endpoints
+ * Controller for image handling endpoints.
  */
 @RestController
 @CrossOrigin
@@ -26,14 +32,14 @@ public class ImageController {
   UserService userService;
 
   /**
-   * Upload an image to the server
+   * Upload an image to the server.
    *
    * @param multipartFile binary data of the image
    * @param challengeId   ID of the associated challenge
    * @param userId        ID of the owner user
    * @return HTTP 200 OK with image ID in the body on success, 401 Unauthorized when the user
-   * has no permission to do the operation, 400 Bad request if something goes wrong with
-   * storing the image
+   *     has no permission to do the operation, 400 Bad request if something goes wrong with
+   *     storing the image
    */
   @PostMapping("/pictures/{challengeId}/{userId}")
   public ResponseEntity<String> upload(@RequestParam("fileContent") MultipartFile multipartFile,
@@ -55,7 +61,7 @@ public class ImageController {
   }
 
   /**
-   * Return image content from the database
+   * Return image content from the database.
    *
    * @param challengeId ID of the owner user (team)
    * @param userId      ID of the owner user (team)
@@ -82,15 +88,17 @@ public class ImageController {
 
   /**
    * Check whether the currently authenticated user is NOT allowed to access a resource owned by a
-   * user with ID=userId
+   * user with ID=userId.
    *
    * @param userId ID of the owner of a resource
    * @return false when the currently authenticated user is allowed to access the resource,
-   * true otherwise.
+   *     true otherwise.
    */
   private boolean forbiddenToAccessImageOwnedBy(Integer userId) {
     Optional<AccessUserDetails> authenticatedUser = userService.getAuthenticatedUser();
-    if (authenticatedUser.isEmpty()) return true;
+    if (authenticatedUser.isEmpty()) {
+      return true;
+    }
     AccessUserDetails user = authenticatedUser.get();
     return user.getId() != userId && !user.isAdmin();
   }

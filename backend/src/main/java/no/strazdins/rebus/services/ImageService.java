@@ -1,5 +1,7 @@
 package no.strazdins.rebus.services;
 
+import java.io.IOException;
+import java.util.Arrays;
 import no.strazdins.rebus.model.Challenge;
 import no.strazdins.rebus.model.Image;
 import no.strazdins.rebus.model.User;
@@ -8,15 +10,11 @@ import no.strazdins.rebus.repositories.ImageRepository;
 import no.strazdins.rebus.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 
 /**
- * Handles business logic for images
+ * Handles business logic for images.
  */
 @Service
 public class ImageService {
@@ -26,6 +24,13 @@ public class ImageService {
   private final UserRepository userRepository;
   private final ChallengeRepository challengeRepository;
 
+  /**
+   * Create ImageService.
+   *
+   * @param imageRepository     Injected by Spring
+   * @param userRepository      Injected by Spring
+   * @param challengeRepository Injected by Spring
+   */
   public ImageService(ImageRepository imageRepository, UserRepository userRepository,
                       ChallengeRepository challengeRepository) {
     this.imageRepository = imageRepository;
@@ -76,7 +81,7 @@ public class ImageService {
   }
 
   /**
-   * Check if the given file is an image
+   * Check if the given file is an image.
    *
    * @param file File to check
    * @return True if it looks like image, false if not
@@ -86,14 +91,14 @@ public class ImageService {
   }
 
   /**
-   * Types of content which are considered images
+   * Types of content which are considered images.
    */
   private static final String[] IMAGE_CONTENT_TYPES = {
       "image/jpg", "image/png", "image/jpeg", "image/webp", "image/svg+xml"
   };
 
   /**
-   * Checks if a given content-type of a file is an image-type
+   * Checks if a given content-type of a file is an image-type.
    *
    * @param contentType The content type to check
    * @return True if it is an image-tuype, false if it is not
@@ -103,14 +108,16 @@ public class ImageService {
   }
 
   /**
-   * Get extension of the file (.jpg, .png, ...)
+   * Get extension of the file (.jpg, .png, ...).
    *
    * @param imageData Image data as received from the web client
    * @return Image file extension
    */
   private static String getFileExtension(MultipartFile imageData) {
     String filename = imageData.getOriginalFilename();
-    if (filename == null) return "";
+    if (filename == null) {
+      return "";
+    }
     int dotPosition = filename.lastIndexOf('.');
     if (dotPosition > 0) {
       return filename.substring(dotPosition + 1);
@@ -120,7 +127,7 @@ public class ImageService {
   }
 
   /**
-   * Get an image from database
+   * Get an image from database.
    *
    * @param userId      ID of the owner user (team)
    * @param challengeId ID of the associated challenge
