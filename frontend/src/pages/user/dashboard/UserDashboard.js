@@ -1,10 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 import "./UserDashboard.css";
-import { apiGetMyAnswers } from "../../../tools/api";
-import { AnswerContext } from "../../../context/AnswerContext";
 import { useSelector } from "react-redux";
 
 /**
@@ -16,18 +14,7 @@ export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
   const challenges = useSelector((state) => state.challengeStore.challenges);
-  const answerContext = useContext(AnswerContext);
-  const myAnswers = answerContext.answers;
-
-  useEffect(() => {
-    // TODO - use Redux store instead, load all the questions and answers in the app
-    async function loadMyAnswers() {
-      const ma = await apiGetMyAnswers();
-      console.log(ma);
-      answerContext.setAnswers(ma.answers);
-    }
-    loadMyAnswers().catch(console.error);
-  }, []);
+  const myAnswers = useSelector((state) => state.answerStore.myAnswers);
 
   return (
     <>

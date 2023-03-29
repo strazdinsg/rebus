@@ -2,17 +2,22 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+/**
+ * The Redux slice responsible for challenge data.
+ *
+ * @type {Slice<{challenges: *[]}, {setChallenges: reducers.setChallenges}, string>}
+ */
 export const challengeSlice = createSlice({
   name: "challenges",
   initialState: {
     challenges: [],
-    answers: [],
   },
   reducers: {
     /**
-     * Add a single item from the shopping cart
-     * @param state
-     * @param action action.payload must contain the product to add
+     * Set the challenges in the store.
+     *
+     * @param state The old state
+     * @param action The action containing new challenges as the payload property
      */
     setChallenges: function (state, action) {
       state.challenges = action.payload;

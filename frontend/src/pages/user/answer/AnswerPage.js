@@ -1,11 +1,10 @@
 import "./AnswerPage.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
-import { AnswerContext } from "../../../context/AnswerContext";
 import { useSelector } from "react-redux";
 
 /**
@@ -17,21 +16,34 @@ export function AnswerPage() {
   const { challengeId } = useParams();
   const challenges = useSelector((state) => state.challengeStore.challenges);
   const challenge = getSelectedChallenge(challenges, challengeId);
-  const answerContext = useContext(AnswerContext);
-  const myAnswers = answerContext.answers;
-  const submittedAnswer = myAnswers.find(
-    (answer) => answer.challengeId === parseInt(challengeId)
-  );
+  const myAnswers = useSelector((state) => state.answerStore.myAnswers);
+
+  const submittedAnswer =
+    myAnswers === null
+      ? null
+      : myAnswers.find(
+          (answer) => answer.challengeId === parseInt(challengeId)
+        );
   const submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
-  const [answer, setAnswer] = useState(submittedAnswerText);
+
+  console.log("submittedAnswerText in AnswerPage:");
+  console.log(submittedAnswerText);
+
+  const [updatedAnswer, setUpdatedAnswer] = useState(
+    submittedAnswerText !== "" ? submittedAnswerText : null
+  );
   const [errorText, setErrorText] = useState("");
-  const submissionEnabled = !!answer;
+  const submissionEnabled = !!updatedAnswer;
   const hasError = !!errorText;
   const navigate = useNavigate();
 
   if (challenge == null) {
     return <main>Loading challenge data...</main>;
+  }
+
+  if (updatedAnswer === null && submittedAnswerText !== "") {
+    setUpdatedAnswer(submittedAnswerText);
   }
 
   return (
@@ -55,8 +67,8 @@ export function AnswerPage() {
             error={hasError}
             helperText={errorText}
             multiline={true}
-            onChange={(event) => setAnswer(event.target.value)}
-            value={answer}
+            onChange={(event) => setUpdatedAnswer(event.target.value)}
+            value={updatedAnswer || ""}
           />
           <ImageUploader />
           <Button
