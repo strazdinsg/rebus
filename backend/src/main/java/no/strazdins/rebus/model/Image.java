@@ -21,7 +21,6 @@ public class Image {
   @Lob
   @Column(length = 20000000)
   private byte[] data;
-  private String extension;
   private String contentType;
   @ManyToOne
   private User user;
