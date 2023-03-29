@@ -19,7 +19,7 @@ export function AnswerPage() {
   const challenge = getSelectedChallenge(challenges, challengeId);
   const myAnswers = useSelector((state) => state.answerStore.myAnswers);
   const user = useContext(UserContext).user;
-  const userId = user !== null ? user.userId : null;
+  const userId = user !== null ? user.id : null;
 
   const submittedAnswer =
     myAnswers === null

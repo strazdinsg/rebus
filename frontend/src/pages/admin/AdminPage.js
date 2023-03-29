@@ -8,5 +8,5 @@ import { UserContext } from "../../context/UserContext";
  */
 export function AdminPage() {
   const userContext = useContext(UserContext);
-  return <h1>Dashboard for {userContext.user.username}</h1>;
+  return <h1>Dashboard for {userContext.user.name}</h1>;
 }
