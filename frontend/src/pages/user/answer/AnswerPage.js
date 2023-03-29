@@ -12,6 +12,7 @@ import { apiPostAnswer, apiUploadPicture } from "../../../tools/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { dataURItoFile } from "../../../tools/imageTools";
+import { clearPictureToUpload } from "../../../redux/pictureSlice";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -114,6 +115,7 @@ export function AnswerPage() {
   }
 
   function goBack() {
+    dispatch(clearPictureToUpload());
     navigate(-1);
   }
 
@@ -168,6 +170,7 @@ export function AnswerPage() {
           render: "Photo uploaded",
           autoClose: true,
         });
+        dispatch(clearPictureToUpload());
       })
       .catch((error) =>
         toast.update("image-upload-toast", {
