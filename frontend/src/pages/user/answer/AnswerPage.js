@@ -1,11 +1,12 @@
 import "./AnswerPage.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
 import { useSelector } from "react-redux";
+import { UserContext } from "../../../context/UserContext";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -17,6 +18,8 @@ export function AnswerPage() {
   const challenges = useSelector((state) => state.challengeStore.challenges);
   const challenge = getSelectedChallenge(challenges, challengeId);
   const myAnswers = useSelector((state) => state.answerStore.myAnswers);
+  const user = useContext(UserContext).user;
+  const userId = user !== null ? user.userId : null;
 
   const submittedAnswer =
     myAnswers === null
@@ -26,9 +29,6 @@ export function AnswerPage() {
         );
   const submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
-
-  console.log("submittedAnswerText in AnswerPage:");
-  console.log(submittedAnswerText);
 
   const [updatedAnswer, setUpdatedAnswer] = useState(
     submittedAnswerText !== "" ? submittedAnswerText : null
@@ -70,7 +70,7 @@ export function AnswerPage() {
             onChange={(event) => setUpdatedAnswer(event.target.value)}
             value={updatedAnswer || ""}
           />
-          <ImageUploader />
+          <ImageUploader challengeId={challengeId} userId={userId} />
           <Button
             variant="contained"
             onClick={submitAnswer}
@@ -94,6 +94,5 @@ export function AnswerPage() {
 
   function submitAnswer() {
     setErrorText("Not implemented");
-    console.log("Setting error");
   }
 }

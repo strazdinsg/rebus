@@ -1,11 +1,31 @@
 import { Button } from "@mui/material";
+import { useEffect } from "react";
+import { apiGetImage } from "../../../tools/api";
 
 /**
  * A component for uploading images, with a preview of the image.
  * @return {JSX.Element}
  * @constructor
  */
-export function ImageUploader() {
+export function ImageUploader({ challengeId, userId }) {
+  useEffect(
+    function () {
+      async function fetchImage() {
+        const imageElement = document.getElementById("image-preview");
+        const imageBlob = await apiGetImage(challengeId, userId);
+        if (imageBlob) {
+          imageElement.src = URL.createObjectURL(imageBlob);
+          imageElement.style.display = "block";
+        } else {
+          imageElement.style.display = "none";
+        }
+      }
+      fetchImage().catch((error) =>
+        console.log(`Image ${challengeId}/${userId} not found`)
+      );
+    },
+    [challengeId, userId]
+  );
   return (
     <>
       <label htmlFor="image-upload-input">

@@ -17,8 +17,6 @@ export function UserPage() {
   useEffect(() => {
     async function loadMyAnswers() {
       const ma = await apiGetMyAnswers();
-      console.log("API Answers:");
-      console.log(ma);
       dispatch(setMyAnswers(ma.answers));
     }
 

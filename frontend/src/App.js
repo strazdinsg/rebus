@@ -27,8 +27,6 @@ function App() {
 
     async function fetchChallengesFromApi() {
       const allChallenges = await apiGetChallenges();
-      console.log("Challenges from API:");
-      console.log(allChallenges);
       dispatch(setChallenges(allChallenges));
     }
 
