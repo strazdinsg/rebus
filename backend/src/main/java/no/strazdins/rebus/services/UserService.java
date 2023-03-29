@@ -99,4 +99,22 @@ public class UserService implements UserDetailsService {
     Optional<AccessUserDetails> authenticatedUser = getAuthenticatedUser();
     return authenticatedUser.isPresent() ? authenticatedUser.get().getId() : null;
   }
+
+  /**
+   * Check whether the currently authenticated user is NOT allowed to access a resource owned by a
+   * user with ID=userId.
+   *
+   * @param userId ID of the owner of a resource
+   * @return false when the currently authenticated user is allowed to access the resource,
+   *     true otherwise.
+   */
+  public boolean isForbiddenToAccessUser(Integer userId) {
+    Optional<AccessUserDetails> authenticatedUser = getAuthenticatedUser();
+    if (authenticatedUser.isEmpty()) {
+      return true;
+    }
+    AccessUserDetails user = authenticatedUser.get();
+    return user.getId() != userId && !user.isAdmin();
+  }
+
 }

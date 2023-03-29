@@ -66,7 +66,6 @@ public class ImageService {
     try {
       Image image = new Image();
       image.setData(imageData.getBytes());
-      image.setExtension(getFileExtension(imageData));
       image.setContentType(imageData.getContentType());
       image.setUser(user);
       image.setChallenge(challenge);
@@ -108,25 +107,6 @@ public class ImageService {
   }
 
   /**
-   * Get extension of the file (.jpg, .png, ...).
-   *
-   * @param imageData Image data as received from the web client
-   * @return Image file extension
-   */
-  private static String getFileExtension(MultipartFile imageData) {
-    String filename = imageData.getOriginalFilename();
-    if (filename == null) {
-      return "";
-    }
-    int dotPosition = filename.lastIndexOf('.');
-    if (dotPosition > 0) {
-      return filename.substring(dotPosition + 1);
-    } else {
-      return "";
-    }
-  }
-
-  /**
    * Get an image from database.
    *
    * @param userId      ID of the owner user (team)
@@ -141,7 +121,7 @@ public class ImageService {
    * Delete all images for the given user and challenge.
    *
    * @param userId      ID of the associated user
-   * @param challengeId Id of the associated challenge
+   * @param challengeId ID of the associated challenge
    * @return True when deleted, false on error
    */
   public boolean deleteAll(int userId, int challengeId) {

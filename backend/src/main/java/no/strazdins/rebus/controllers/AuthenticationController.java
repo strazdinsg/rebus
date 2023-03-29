@@ -49,6 +49,7 @@ public class AuthenticationController {
   @PostMapping("/authenticate")
   public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
     try {
+      sleepToAvoidBruteForce();
       // We don't have username and password, we simply have a PIN, which is unique
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authenticationRequest.pin(),
@@ -61,4 +62,11 @@ public class AuthenticationController {
     return ResponseEntity.ok(new AuthenticationResponse(jwt));
   }
 
+  private void sleepToAvoidBruteForce() {
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

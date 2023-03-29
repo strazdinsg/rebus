@@ -15,7 +15,7 @@ export function getAuthenticatedUser() {
   if (userId && commaSeparatedRoles) {
     const roles = commaSeparatedRoles.split(",");
     user = {
-      userId: userId,
+      id: userId,
       roles: roles,
       name: userName,
     };

@@ -18,6 +18,16 @@ export async function asyncApiGet(url) {
 }
 
 /**
+ * Send an asynchronous HTTP GET request to the remote API (backend) and get the response as a BLOB instead of JSON
+ * @param {string} url Relative backend API url
+ * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @throws {HttpResponseError} Error code and message from the response body
+ */
+export async function asyncApiGetBlob(url) {
+  return asyncApiRequest("GET", url, null, true);
+}
+
+/**
  * Send an asynchronous HTTP POST request to the remote API (backend)
  * @param {string} url Relative backend API url
  * @param requestBody The parameters to include in the request body
@@ -26,6 +36,17 @@ export async function asyncApiGet(url) {
  */
 export async function asyncApiPost(url, requestBody) {
   return asyncApiRequest("POST", url, requestBody);
+}
+
+/**
+ * Upload a file as multipart form data to the backend, using HTTP POST
+ * @param {string} url Relative backend API url
+ * @param {object} fileContent The content of the file to upload
+ * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @throws {HttpResponseError} Error code and message from the response body
+ */
+export async function asyncApiPostFile(url, fileContent) {
+  return asyncApiRequest("POST", url, null, false, fileContent);
 }
 
 /**
@@ -45,16 +66,28 @@ export async function asyncApiDelete(url, requestBody) {
  * @param {string} method the HTTP method to use: GET, POST, PUT. Case-insensitive.
  * @param {string} url The relative API url (base URL is added automatically)
  * @param {object} requestBody The data to send in request body. Ignored for HTTP GET.
+ * @param {boolean} returnBlob When true, return the response as a Blob instead of JSON
+ * @param {object} fileContent Content of a file to upload.
+ * Note: fileContent is only considered when requestBody is not specified!
  * @return @return {Promise<JSON>} The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
-async function asyncApiRequest(method, url, requestBody) {
+async function asyncApiRequest(
+  method,
+  url,
+  requestBody,
+  returnBlob = false,
+  fileContent = null
+) {
   const fullUrl = API_BASE_URL + url;
   let headers = createAuthenticationHeader();
   let body = null;
   if (method.toLowerCase() !== "get" && requestBody) {
     headers["Content-Type"] = "application/json";
     body = JSON.stringify(requestBody);
+  } else if (fileContent) {
+    body = new FormData();
+    body.append("fileContent", fileContent);
   }
 
   return fetch(fullUrl, {
@@ -64,7 +97,7 @@ async function asyncApiRequest(method, url, requestBody) {
     body: body,
   })
     .then(handleErrors)
-    .then((response) => response.json());
+    .then((response) => (returnBlob ? response.blob() : response.json()));
 }
 
 /**

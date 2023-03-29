@@ -45,7 +45,7 @@ public class ImageController {
   public ResponseEntity<String> upload(@RequestParam("fileContent") MultipartFile multipartFile,
                                        @PathVariable int challengeId,
                                        @PathVariable Integer userId) {
-    if (forbiddenToAccessImageOwnedBy(userId)) {
+    if (userService.isForbiddenToAccessUser(userId)) {
       return new ResponseEntity<>("Not allowed to upload images for other teams",
           HttpStatus.UNAUTHORIZED);
     }
@@ -70,7 +70,7 @@ public class ImageController {
   @GetMapping("/pictures/{challengeId}/{userId}")
   public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
                                     @PathVariable Integer userId) {
-    if (forbiddenToAccessImageOwnedBy(userId)) {
+    if (userService.isForbiddenToAccessUser(userId)) {
       return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
@@ -87,23 +87,6 @@ public class ImageController {
   }
 
   /**
-   * Check whether the currently authenticated user is NOT allowed to access a resource owned by a
-   * user with ID=userId.
-   *
-   * @param userId ID of the owner of a resource
-   * @return false when the currently authenticated user is allowed to access the resource,
-   *     true otherwise.
-   */
-  private boolean forbiddenToAccessImageOwnedBy(Integer userId) {
-    Optional<AccessUserDetails> authenticatedUser = userService.getAuthenticatedUser();
-    if (authenticatedUser.isEmpty()) {
-      return true;
-    }
-    AccessUserDetails user = authenticatedUser.get();
-    return user.getId() != userId && !user.isAdmin();
-  }
-
-  /**
    * Delete image content from the database, for the currently authenticated user and
    * given challenge.
    *
@@ -114,7 +97,7 @@ public class ImageController {
   @DeleteMapping("/pictures/{challengeId}/{userId}")
   public ResponseEntity<String> delete(@PathVariable Integer challengeId,
                                        @PathVariable Integer userId) {
-    if (forbiddenToAccessImageOwnedBy(userId)) {
+    if (userService.isForbiddenToAccessUser(userId)) {
       return new ResponseEntity<>("Not allowed to access images of other teams",
           HttpStatus.UNAUTHORIZED);
     }

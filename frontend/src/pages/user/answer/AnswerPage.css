@@ -24,3 +24,8 @@
 #image-preview {
   display: none;
 }
+
+/* Bugfix for our "1rem = 10px" hack */
+.Toastify {
+  font-size: 1.6em;
+}
