@@ -106,6 +106,7 @@ function parseJwtUser(jwtString) {
       name: jwtObject.sub,
       roles: jwtObject.roles,
     };
+    user.isAdmin = isAdmin(user);
   }
   return user;
 }
