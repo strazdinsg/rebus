@@ -157,7 +157,7 @@ export function AnswerPage() {
 
   function uploadSelectedImage() {
     const imageFile = dataURItoFile(pictureToUpload, "image.jpeg");
-    toast.info("Uploading image...", {
+    toast.info("Uploading photo...", {
       toastId: "image-upload-toast",
       autoClose: false,
     });
@@ -165,14 +165,14 @@ export function AnswerPage() {
       .then(() => {
         toast.update("image-upload-toast", {
           type: "success",
-          render: "Image uploaded",
+          render: "Photo uploaded",
           autoClose: true,
         });
       })
       .catch((error) =>
         toast.update("image-upload-toast", {
           type: "error",
-          render: "Image upload failed",
+          render: "Photo upload failed",
           autoClose: true,
         })
       );

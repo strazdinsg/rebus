@@ -29,7 +29,6 @@ export function ImageUploader({ challengeId, userId }) {
       async function fetchUploadedImage() {
         const imageElement = document.getElementById("image-preview");
         const imageBlob = await apiGetImage(challengeId, userId);
-        console.log("Fetching...");
         if (imageBlob) {
           imageElement.src = URL.createObjectURL(imageBlob);
           imageElement.style.display = "block";
@@ -53,7 +52,7 @@ export function ImageUploader({ challengeId, userId }) {
           onChange={onImagePicked}
         />
         <Button variant="outlined" id="add-image-button" component="span">
-          Add image
+          Add photo
         </Button>
       </label>
       {loading ? <p className="loading-image">Loading image...</p> : ""}
