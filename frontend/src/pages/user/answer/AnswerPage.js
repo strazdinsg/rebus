@@ -8,9 +8,10 @@ import { ImageUploader } from "./ImageUploader";
 import { useDispatch, useSelector } from "react-redux";
 import { UserContext } from "../../../context/UserContext";
 import { setMyAnswerForChallenge } from "../../../redux/answerSlice";
-import { apiPostAnswer } from "../../../tools/api";
+import { apiPostAnswer, apiUploadPicture } from "../../../tools/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { dataURItoFile } from "../../../tools/imageTools";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -94,7 +95,7 @@ export function AnswerPage() {
             position="bottom-center"
             autoClose={3000}
             hideProgressBar
-            newestOnTop={false}
+            newestOnTop={true}
             closeOnClick
             rtl={false}
             pauseOnFocusLoss
@@ -120,12 +121,9 @@ export function AnswerPage() {
     apiPostAnswer(challengeId, userId, updatedAnswer)
       .then(onAnswerSubmitted)
       .catch(handleSubmissionError);
-    dispatch(
-      setMyAnswerForChallenge({
-        challengeId: challengeId,
-        answer: updatedAnswer,
-      })
-    );
+    if (pictureToUpload != null) {
+      uploadSelectedImage();
+    }
   }
 
   /**
@@ -149,5 +147,34 @@ export function AnswerPage() {
   function onAnswerSubmitted() {
     setErrorText("");
     toast.success("Answer saved");
+    dispatch(
+      setMyAnswerForChallenge({
+        challengeId: challengeId,
+        answer: updatedAnswer,
+      })
+    );
+  }
+
+  function uploadSelectedImage() {
+    const imageFile = dataURItoFile(pictureToUpload, "image.jpeg");
+    toast.info("Uploading image...", {
+      toastId: "image-upload-toast",
+      autoClose: false,
+    });
+    apiUploadPicture(challengeId, userId, imageFile)
+      .then(() => {
+        toast.update("image-upload-toast", {
+          type: "success",
+          render: "Image uploaded",
+          autoClose: true,
+        });
+      })
+      .catch((error) =>
+        toast.update("image-upload-toast", {
+          type: "error",
+          render: "Image upload failed",
+          autoClose: true,
+        })
+      );
   }
 }

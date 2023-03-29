@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { apiGetImage } from "../../../tools/api";
 import { useDispatch } from "react-redux";
 import {
@@ -7,6 +7,7 @@ import {
   setPictureToUpload,
 } from "../../../redux/pictureSlice";
 import { resizeImage } from "../../../tools/imageTools";
+import "./ImageUploader.css";
 
 const MAX_IMAGE_WIDTH = 1800;
 const MAX_IMAGE_HEIGHT = 1800;
@@ -20,6 +21,7 @@ const MAX_IMAGE_HEIGHT = 1800;
  */
 export function ImageUploader({ challengeId, userId }) {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   // When the component is initialized - fetch the user-uploaded image for the given challenge
   useEffect(
@@ -27,6 +29,7 @@ export function ImageUploader({ challengeId, userId }) {
       async function fetchUploadedImage() {
         const imageElement = document.getElementById("image-preview");
         const imageBlob = await apiGetImage(challengeId, userId);
+        console.log("Fetching...");
         if (imageBlob) {
           imageElement.src = URL.createObjectURL(imageBlob);
           imageElement.style.display = "block";
@@ -34,9 +37,9 @@ export function ImageUploader({ challengeId, userId }) {
           imageElement.style.display = "none";
         }
       }
-      fetchUploadedImage().catch((_) =>
-        console.log(`Image ${challengeId}/${userId} not found`)
-      );
+      fetchUploadedImage()
+        .catch((error) => {})
+        .finally(() => setLoading(false));
     },
     [challengeId, userId]
   );
@@ -53,6 +56,7 @@ export function ImageUploader({ challengeId, userId }) {
           Add image
         </Button>
       </label>
+      {loading ? <p className="loading-image">Loading image...</p> : ""}
       <img id="image-preview" alt="Preview of the user-selected file" />
     </>
   );
