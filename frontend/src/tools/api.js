@@ -1,4 +1,4 @@
-import { asyncApiGet, asyncApiGetBlob } from "./requests";
+import { asyncApiGet, asyncApiGetBlob, asyncApiPostFile } from "./requests";
 
 //////////////////////////////////////
 // API requests to the backend
@@ -32,4 +32,8 @@ export function apiGetMyAnswers() {
  * Throws an exception on error */
 export function apiGetImage(challengeId, userId) {
   return asyncApiGetBlob(`/pictures/${challengeId}/${userId}`);
+}
+
+export function apiUploadPicture(challengeId, userId, pictureContent) {
+  return asyncApiPostFile(`/pictures/${challengeId}/${userId}`, pictureContent);
 }

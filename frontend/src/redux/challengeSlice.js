@@ -1,5 +1,3 @@
-// Here we manage the Redux store slice responsible for holding challenge data
-
 import { createSlice } from "@reduxjs/toolkit";
 
 /**

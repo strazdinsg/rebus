@@ -18,6 +18,9 @@ export function AnswerPage() {
   const challenges = useSelector((state) => state.challengeStore.challenges);
   const challenge = getSelectedChallenge(challenges, challengeId);
   const myAnswers = useSelector((state) => state.answerStore.myAnswers);
+  const pictureToUpload = useSelector(
+    (state) => state.pictureStore.pictureToUpload
+  );
   const user = useContext(UserContext).user;
   const userId = user !== null ? user.id : null;
 
@@ -44,6 +47,13 @@ export function AnswerPage() {
 
   if (updatedAnswer === null && submittedAnswerText !== "") {
     setUpdatedAnswer(submittedAnswerText);
+  }
+
+  if (pictureToUpload !== null) {
+    console.log("Uploadable picture is set!");
+    console.log(pictureToUpload.substring(0, 60));
+  } else {
+    console.log("Uploadable picture is empty");
   }
 
   return (
