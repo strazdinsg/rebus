@@ -43,6 +43,11 @@ export function dataURItoFile(dataURI, fileName) {
   return new File([blob], fileName, { type: blob.type });
 }
 
+/**
+ * Convert an image in Data URI format to a Blob
+ * @param {string} dataURI Image in a Data URI format
+ * @return {Blob} The same image in Blob format
+ */
 function dataURItoBlob(dataURI) {
   const byteString = atob(dataURI.split(",")[1]);
   const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
