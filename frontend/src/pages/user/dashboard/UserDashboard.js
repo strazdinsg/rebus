@@ -2,10 +2,10 @@ import { useContext, useEffect } from "react";
 import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
-import { ChallengeContext } from "../../../context/ChallengeContext";
 import "./UserDashboard.css";
 import { apiGetMyAnswers } from "../../../tools/api";
 import { AnswerContext } from "../../../context/AnswerContext";
+import { useSelector } from "react-redux";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
@@ -15,7 +15,7 @@ import { AnswerContext } from "../../../context/AnswerContext";
 export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const challenges = useContext(ChallengeContext);
+  const challenges = useSelector((state) => state.challengeStore.challenges);
   const answerContext = useContext(AnswerContext);
   const myAnswers = answerContext.answers;
 

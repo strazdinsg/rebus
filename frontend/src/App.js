@@ -7,10 +7,11 @@ import { AdminPage } from "./pages/admin/AdminPage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AnswerPage } from "./pages/user/answer/AnswerPage";
 import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
-import { ChallengeContext } from "./context/ChallengeContext";
 import { apiGetChallenges } from "./tools/api";
 import { getAuthenticatedUser } from "./tools/authentication";
 import { AnswerContext } from "./context/AnswerContext";
+import { useDispatch } from "react-redux";
+import { setChallenges } from "./redux/challengeSlice";
 
 /**
  * The main application wrapper.
@@ -18,19 +19,20 @@ import { AnswerContext } from "./context/AnswerContext";
  * @constructor
  */
 function App() {
-  const [challenges, setChallenges] = useState([]);
   const [user, setUser] = useState(getAuthenticatedUser());
   const [answers, setAnswers] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchChallengesFromApi() {
       const allChallenges = await apiGetChallenges();
+      console.log("Challenges from API:");
       console.log(allChallenges);
-      setChallenges(allChallenges);
+      dispatch(setChallenges(allChallenges));
     }
 
     fetchChallengesFromApi().catch(console.error);
-  }, []);
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={muiTheme}>
@@ -38,23 +40,18 @@ function App() {
         value={{ answers: answers, setAnswers: setAnswers }}
       >
         <UserContext.Provider value={{ user: user, setUser: setUser }}>
-          <ChallengeContext.Provider value={challenges}>
-            <Router>
-              {user && user.isAdmin ? (
-                <AdminPage />
-              ) : user && !user.isAdmin ? (
-                <Routes>
-                  <Route path={"/"} element={<UserDashboard />} />
-                  <Route
-                    path={"/answer/:challengeId"}
-                    element={<AnswerPage />}
-                  />
-                </Routes>
-              ) : (
-                <LoginPage />
-              )}
-            </Router>
-          </ChallengeContext.Provider>
+          <Router>
+            {user && user.isAdmin ? (
+              <AdminPage />
+            ) : user && !user.isAdmin ? (
+              <Routes>
+                <Route path={"/"} element={<UserDashboard />} />
+                <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
+              </Routes>
+            ) : (
+              <LoginPage />
+            )}
+          </Router>
         </UserContext.Provider>
       </AnswerContext.Provider>
     </ThemeProvider>
