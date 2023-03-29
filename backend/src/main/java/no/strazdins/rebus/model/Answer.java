@@ -22,6 +22,5 @@ public class Answer {
   private User user;
   @ManyToOne
   private Challenge challenge;
-  private Integer imageId;
   private Integer score;
 }

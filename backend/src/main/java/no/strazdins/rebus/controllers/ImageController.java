@@ -1,0 +1,122 @@
+package no.strazdins.rebus.controllers;
+
+import no.strazdins.rebus.model.Image;
+import no.strazdins.rebus.security.AccessUserDetails;
+import no.strazdins.rebus.services.ImageService;
+import no.strazdins.rebus.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.Optional;
+
+/**
+ * Controller for image handling endpoints
+ */
+@RestController
+@CrossOrigin
+@PreAuthorize("hasRole('USER')")
+public class ImageController {
+  @Autowired
+  ImageService imageService;
+  @Autowired
+  UserService userService;
+
+  /**
+   * Upload an image to the server
+   *
+   * @param multipartFile binary data of the image
+   * @param challengeId   ID of the associated challenge
+   * @param userId        ID of the owner user
+   * @return HTTP 200 OK with image ID in the body on success, 401 Unauthorized when the user
+   * has no permission to do the operation, 400 Bad request if something goes wrong with
+   * storing the image
+   */
+  @PostMapping("/pictures/{challengeId}/{userId}")
+  public ResponseEntity<String> upload(@RequestParam("fileContent") MultipartFile multipartFile,
+                                       @PathVariable int challengeId,
+                                       @PathVariable Integer userId) {
+    if (forbiddenToAccessImageOwnedBy(userId)) {
+      return new ResponseEntity<>("Not allowed to upload images for other teams",
+          HttpStatus.UNAUTHORIZED);
+    }
+
+    ResponseEntity<String> response;
+    int imageId = imageService.replace(multipartFile, userId, challengeId);
+    if (imageId > 0) {
+      response = new ResponseEntity<>("" + imageId, HttpStatus.OK);
+    } else {
+      response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    return response;
+  }
+
+  /**
+   * Return image content from the database
+   *
+   * @param challengeId ID of the owner user (team)
+   * @param userId      ID of the owner user (team)
+   * @return Image content (and correct content type) or NOT FOUND
+   */
+  @GetMapping("/pictures/{challengeId}/{userId}")
+  public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
+                                    @PathVariable Integer userId) {
+    if (forbiddenToAccessImageOwnedBy(userId)) {
+      return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+
+    ResponseEntity<byte[]> response;
+    Image image = imageService.getByUserAndChallenge(userId, challengeId);
+    if (image != null) {
+      response = ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_TYPE, image.getContentType())
+          .body(image.getData());
+    } else {
+      response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+    return response;
+  }
+
+  /**
+   * Check whether the currently authenticated user is NOT allowed to access a resource owned by a
+   * user with ID=userId
+   *
+   * @param userId ID of the owner of a resource
+   * @return false when the currently authenticated user is allowed to access the resource,
+   * true otherwise.
+   */
+  private boolean forbiddenToAccessImageOwnedBy(Integer userId) {
+    Optional<AccessUserDetails> authenticatedUser = userService.getAuthenticatedUser();
+    if (authenticatedUser.isEmpty()) return true;
+    AccessUserDetails user = authenticatedUser.get();
+    return user.getId() != userId && !user.isAdmin();
+  }
+
+  /**
+   * Delete image content from the database, for the currently authenticated user and
+   * given challenge.
+   *
+   * @param challengeId ID of the challenge associated with the image
+   * @param userId      ID of the owner user (team)
+   * @return HTTP OK on success, NOT FOUND when image not found
+   */
+  @DeleteMapping("/pictures/{challengeId}/{userId}")
+  public ResponseEntity<String> delete(@PathVariable Integer challengeId,
+                                       @PathVariable Integer userId) {
+    if (forbiddenToAccessImageOwnedBy(userId)) {
+      return new ResponseEntity<>("Not allowed to access images of other teams",
+          HttpStatus.UNAUTHORIZED);
+    }
+
+    ResponseEntity<String> response;
+    if (imageService.deleteAll(userId, challengeId)) {
+      response = ResponseEntity.ok("");
+    } else {
+      response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return response;
+  }
+}
