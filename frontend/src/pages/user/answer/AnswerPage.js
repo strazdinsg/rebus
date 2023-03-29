@@ -1,12 +1,12 @@
 import "./AnswerPage.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
-import { ChallengeContext } from "../../../context/ChallengeContext";
 import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
 import { AnswerContext } from "../../../context/AnswerContext";
+import { useSelector } from "react-redux";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -15,8 +15,8 @@ import { AnswerContext } from "../../../context/AnswerContext";
  */
 export function AnswerPage() {
   const { challengeId } = useParams();
-  const allChallenges = useContext(ChallengeContext);
-  const challenge = getSelectedChallenge(allChallenges, challengeId);
+  const challenges = useSelector((state) => state.challengeStore.challenges);
+  const challenge = getSelectedChallenge(challenges, challengeId);
   const answerContext = useContext(AnswerContext);
   const myAnswers = answerContext.answers;
   const submittedAnswer = myAnswers.find(
