@@ -1,4 +1,9 @@
-import { asyncApiGet, asyncApiGetBlob, asyncApiPostFile } from "./requests";
+import {
+  asyncApiGet,
+  asyncApiGetBlob,
+  asyncApiPost,
+  asyncApiPostFile,
+} from "./requests";
 
 //////////////////////////////////////
 // API requests to the backend
@@ -36,4 +41,13 @@ export function apiGetImage(challengeId, userId) {
 
 export function apiUploadPicture(challengeId, userId, pictureContent) {
   return asyncApiPostFile(`/pictures/${challengeId}/${userId}`, pictureContent);
+}
+
+export function apiPostAnswer(challengeId, userId, answer) {
+  // P.S. We include the challengeId simply because then we can re-use the AnswerDto object for parsing the
+  // payload on the backend side
+  return asyncApiPost(`/answers/${challengeId}/${userId}`, {
+    challengeId: challengeId,
+    answer: answer,
+  });
 }

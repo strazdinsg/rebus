@@ -1,12 +1,12 @@
 import { Button } from "@mui/material";
 import { useEffect } from "react";
-import { apiGetImage, apiUploadPicture } from "../../../tools/api";
+import { apiGetImage } from "../../../tools/api";
 import { useDispatch } from "react-redux";
 import {
   clearPictureToUpload,
   setPictureToUpload,
 } from "../../../redux/pictureSlice";
-import { dataURItoFile, resizeImage } from "../../../tools/imageTools";
+import { resizeImage } from "../../../tools/imageTools";
 
 const MAX_IMAGE_WIDTH = 1800;
 const MAX_IMAGE_HEIGHT = 1800;
@@ -65,26 +65,18 @@ export function ImageUploader({ challengeId, userId }) {
     const imageElement = document.getElementById("image-preview");
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      const originalFileName = file.name;
       const reader = new FileReader();
-
       reader.onload = (readerEvent) => {
         const image = new Image();
         image.onload = () => {
-          const resizedImage = resizeImage(
+          const resizedDataUriImage = resizeImage(
             image,
             MAX_IMAGE_WIDTH,
             MAX_IMAGE_HEIGHT
           );
-          imageElement.src = resizedImage;
+          imageElement.src = resizedDataUriImage;
           imageElement.style.display = "block";
-          dispatch(setPictureToUpload(resizedImage));
-          // !!! TODO - remove this
-          apiUploadPicture(
-            challengeId,
-            userId,
-            dataURItoFile(resizedImage, originalFileName)
-          );
+          dispatch(setPictureToUpload(resizedDataUriImage));
         };
         image.src = readerEvent.target.result;
       };

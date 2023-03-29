@@ -5,8 +5,12 @@ import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserContext } from "../../../context/UserContext";
+import { setMyAnswerForChallenge } from "../../../redux/answerSlice";
+import { apiPostAnswer } from "../../../tools/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -24,12 +28,7 @@ export function AnswerPage() {
   const user = useContext(UserContext).user;
   const userId = user !== null ? user.id : null;
 
-  const submittedAnswer =
-    myAnswers === null
-      ? null
-      : myAnswers.find(
-          (answer) => answer.challengeId === parseInt(challengeId)
-        );
+  const submittedAnswer = findChallengeAnswer();
   const submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
 
@@ -41,6 +40,8 @@ export function AnswerPage() {
   const hasError = !!errorText;
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   if (challenge == null) {
     return <main>Loading challenge data...</main>;
   }
@@ -49,12 +50,13 @@ export function AnswerPage() {
     setUpdatedAnswer(submittedAnswerText);
   }
 
-  if (pictureToUpload !== null) {
-    console.log("Uploadable picture is set!");
-    console.log(pictureToUpload.substring(0, 60));
-  } else {
-    console.log("Uploadable picture is empty");
-  }
+  // !!!
+  // if (pictureToUpload !== null) {
+  //   console.log("Uploadable picture is set!");
+  //   console.log(pictureToUpload.substring(0, 60));
+  // } else {
+  //   console.log("Uploadable picture is empty");
+  // }
 
   return (
     <>
@@ -88,6 +90,18 @@ export function AnswerPage() {
           >
             Send
           </Button>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </main>
     </>
@@ -103,6 +117,37 @@ export function AnswerPage() {
   }
 
   function submitAnswer() {
-    setErrorText("Not implemented");
+    apiPostAnswer(challengeId, userId, updatedAnswer)
+      .then(onAnswerSubmitted)
+      .catch(handleSubmissionError);
+    dispatch(
+      setMyAnswerForChallenge({
+        challengeId: challengeId,
+        answer: updatedAnswer,
+      })
+    );
+  }
+
+  /**
+   * Find answer for this particular challenge
+   * @return {null|string}
+   */
+  function findChallengeAnswer() {
+    return myAnswers === null
+      ? null
+      : myAnswers.find(
+          (answer) => answer.challengeId === parseInt(challengeId)
+        );
+  }
+
+  function handleSubmissionError(error) {
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
+      setErrorText("Something wrong with submission, contact the organizers!");
+    }
+  }
+
+  function onAnswerSubmitted() {
+    setErrorText("");
+    toast.success("Answer saved");
   }
 }
