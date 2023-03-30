@@ -1,4 +1,11 @@
-import { ScoreSelectBox } from "./ScoreSelectBox";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { apiGetAllAnswers, apiGetTeams } from "../../../tools/api";
+import { setTeams } from "../../../redux/teamSlice";
+import { GradingTableHeader } from "./GradingTableHeader";
+import { GradingTableRow } from "./GradingTableRow";
+import { setAllAnswers } from "../../../redux/answerSlice";
+import "./GradingPage.css";
 
 /**
  * Page where the admin can assign score to each challenge of each team.
@@ -6,33 +13,25 @@ import { ScoreSelectBox } from "./ScoreSelectBox";
  * @constructor
  */
 export function GradingPage() {
-  const challengeNumbers = [1, 2, 3, 4, 5];
-  const teams = ["Team A", "Team B", "Team C"];
+  const teams = useSelector((state) => state.teamStore.teams);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    apiGetTeams()
+      .then((teams) => dispatch(setTeams(teams)))
+      .catch((error) => console.error(error));
+
+    apiGetAllAnswers()
+      .then((answers) => dispatch(setAllAnswers(answers)))
+      .catch((error) => console.log(error));
+  }, [dispatch]);
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Team</th>
-          {challengeNumbers.map((i) => (
-            <th>Challenge {i}</th>
-          ))}
-        </tr>
-      </thead>
+    <table cellSpacing="0">
+      <GradingTableHeader />
       <tbody>
-        {teams.map((teamName) => (
-          <tr>
-            <td>{teamName}</td>
-            {challengeNumbers.map((i) => (
-              <td>
-                12{" "}
-                <img
-                  src="https://picsum.photos/150/100"
-                  alt="Graphical answer to the quiz"
-                />
-                <ScoreSelectBox />
-              </td>
-            ))}
-          </tr>
+        {teams.map((team, index) => (
+          <GradingTableRow team={team} key={index} />
         ))}
       </tbody>
     </table>
