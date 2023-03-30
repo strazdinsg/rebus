@@ -12,6 +12,7 @@ import lombok.Data;
 public class ShortTeamAnswerDto {
   private int teamId;
   private String[] answers;
+  private Integer[] scores;
 
   /**
    * Create a shor version of team answers.
@@ -21,11 +22,13 @@ public class ShortTeamAnswerDto {
    *                       we know how large the answer array must be.
    */
   public ShortTeamAnswerDto(TeamAnswerDto longDto, int challengeCount) {
-    String[] answers = new String[challengeCount];
+    this.answers = new String[challengeCount];
+    this.scores = new Integer[challengeCount];
     for (AnswerDto answer : longDto.answers()) {
-      answers[answer.challengeId() - 1] = answer.answer();
+      int answerIndex = answer.challengeId() - 1;
+      this.answers[answerIndex] = answer.answer();
+      this.scores[answerIndex] = answer.score();
     }
     this.teamId = longDto.teamId();
-    this.answers = answers;
   }
 }

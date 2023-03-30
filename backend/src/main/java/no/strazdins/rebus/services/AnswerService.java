@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import no.strazdins.rebus.dto.AnswerDto;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
+import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.model.Answer;
 import no.strazdins.rebus.repositories.AnswerRepository;
@@ -47,7 +48,7 @@ public class AnswerService {
   public TeamAnswerDto getForTeam(int teamId) {
     List<AnswerDto> challengeAnswers = new LinkedList<>();
     for (Answer answer : answerRepository.findByUserId(teamId)) {
-      challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer()));
+      challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null));
     }
     return new TeamAnswerDto(teamId, challengeAnswers);
   }
@@ -60,15 +61,7 @@ public class AnswerService {
    * @param answerText  The answer text
    */
   public void updateAnswerText(int challengeId, int userId, String answerText) {
-    Optional<Answer> answer = answerRepository.findByUserIdAndChallengeId(userId, challengeId);
-    Answer newAnswer;
-    if (answer.isPresent()) {
-      newAnswer = answer.get();
-    } else {
-      newAnswer = new Answer();
-      newAnswer.setUser(userRepository.findById(userId).orElse(null));
-      newAnswer.setChallenge(challengeRepository.findById(challengeId).orElse(null));
-    }
+    Answer newAnswer = findOrCreateAnswer(challengeId, userId);
     newAnswer.setAnswer(answerText);
     answerRepository.save(newAnswer);
   }
@@ -83,7 +76,9 @@ public class AnswerService {
     Map<Integer, TeamAnswerDto> formattedAnswers = new TreeMap<>();
     for (Answer answer : allAnswers) {
       TeamAnswerDto teamAnswers = findOrCreateTeamAnswerDto(formattedAnswers, answer);
-      teamAnswers.answers().add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer()));
+      teamAnswers.answers().add(
+          new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), answer.getScore())
+      );
     }
     int challengeCount = (int) challengeRepository.count();
     List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
@@ -107,4 +102,42 @@ public class AnswerService {
 
     return teamAnswers;
   }
+
+  /**
+   * Set score for a particular answer.
+   *
+   * @param challengeId The ID of the challenge
+   * @param userId      The ID of the team (user)
+   * @param score       The score to set. null value is allowed and means "no score is set".
+   */
+  public void setScore(int challengeId, int userId, Integer score) {
+    Answer answer = findOrCreateAnswer(challengeId, userId);
+    answer.setScore(score);
+    answerRepository.save(answer);
+  }
+
+  /**
+   * Delete the score for a specific answer.
+   *
+   * @param challengeId The ID of the challenge
+   * @param userId      The ID of the team (user)
+   */
+  public void deleteScore(int challengeId, int userId) {
+    setScore(challengeId, userId, null);
+  }
+
+  private Answer findOrCreateAnswer(int challengeId, int userId) {
+    Optional<Answer> existingAnswer = answerRepository.findByUserIdAndChallengeId(
+        userId, challengeId);
+    Answer answer;
+    if (existingAnswer.isPresent()) {
+      answer = existingAnswer.get();
+    } else {
+      answer = new Answer();
+      answer.setUser(userRepository.findById(userId).orElse(null));
+      answer.setChallenge(challengeRepository.findById(challengeId).orElse(null));
+    }
+    return answer;
+  }
+
 }

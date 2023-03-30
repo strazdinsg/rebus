@@ -38,6 +38,18 @@ export const answerSlice = createSlice({
     setAllAnswers: function (state, action) {
       state.allAnswers = action.payload;
     },
+    /**
+     * Set (or update) score for one answer for a specific user and challenge
+     * @param state
+     * @param action Must contain payload in the format {challengeId, userId, score}
+     */
+    updateScore: function (state, action) {
+      const challengeId = parseInt(action.payload.challengeId);
+      const userId = parseInt(action.payload.userId);
+      const score = parseInt(action.payload.score);
+      const scoresToUpdate = findOrCreateScores(state.allAnswers, userId);
+      scoresToUpdate[challengeId - 1] = score;
+    },
   },
 });
 
@@ -55,6 +67,46 @@ function findOrCreateAnswer(myAnswers, challengeId) {
   return answerToUpdate;
 }
 
-export const { setMyAnswers, setMyAnswerForChallenge, setAllAnswers } =
-  answerSlice.actions;
+function findOrCreateScores(allAnswers, userId) {
+  let teamAnswers = allAnswers.find(
+    (allTeamAnswers) => allTeamAnswers.teamId === userId
+  );
+  if (teamAnswers) {
+    return teamAnswers.scores;
+  } else {
+    const challengeCount = getChallengeCount(allAnswers);
+    teamAnswers = createTeamAnswers(userId, challengeCount);
+    console.log("Created scores: ");
+    console.log(teamAnswers);
+    allAnswers.push(teamAnswers);
+  }
+  return teamAnswers.scores;
+}
+
+function createTeamAnswers(userId, challengeCount) {
+  return {
+    teamId: userId,
+    answers: createNullArray(challengeCount),
+    scores: createNullArray(challengeCount),
+  };
+}
+
+function getChallengeCount(allAnswers) {
+  return allAnswers[0].answers.length;
+}
+
+function createNullArray(length) {
+  const a = [];
+  for (let i = 0; i < length; ++i) {
+    a.push(null);
+  }
+  return a;
+}
+
+export const {
+  setMyAnswers,
+  setMyAnswerForChallenge,
+  setAllAnswers,
+  updateScore,
+} = answerSlice.actions;
 export default answerSlice.reducer;

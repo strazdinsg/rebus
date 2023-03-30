@@ -69,3 +69,14 @@ export function apiPostAnswer(challengeId, userId, answer) {
 export function apiGetTeams() {
   return asyncApiGet("/teams");
 }
+
+/**
+ * Send request to API - POST score for a specific question, specific team
+ * @param challengeId ID of the challenge
+ * @param userId ID of the user (team)
+ * @param score The score. Null when score is deleted
+ * @return {Promise<JSON>}
+ */
+export function apiPostScore(challengeId, userId, score) {
+  return asyncApiPost(`/score/${challengeId}/${userId}`, { score: score });
+}
