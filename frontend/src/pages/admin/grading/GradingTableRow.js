@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { ScoreSelectBox } from "./ScoreSelectBox";
 import { useEffect } from "react";
-import { apiGetImage } from "../../../tools/api";
+import { apiGetImage, apiPostScore } from "../../../tools/api";
 
 /**
  * One row in the grading table - for one team
@@ -23,7 +23,10 @@ export function GradingTableRow({ team }) {
       <td>{team.name}</td>
       {challenges.map((challenge, index) => (
         <td key={index}>
-          <ScoreSelectBox maxScore={challenge.maxScore} />
+          <ScoreSelectBox
+            maxScore={challenge.maxScore}
+            saveScore={(score) => saveScore(score, challenge.id)}
+          />
           {getAnswerForChallenge(challenge.id)}
           <img
             className="team-photo"
@@ -74,5 +77,15 @@ export function GradingTableRow({ team }) {
     } else {
       imageElement.style.display = "none";
     }
+  }
+
+  function saveScore(score, challengeId) {
+    if (score < 0) {
+      score = null;
+    }
+    // TODO - save score in Redux
+    apiPostScore(challengeId, team.id, score)
+      .then((response) => console.log(response))
+      .catch((error) => console.error(error));
   }
 }

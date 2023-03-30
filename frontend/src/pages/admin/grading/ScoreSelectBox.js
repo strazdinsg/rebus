@@ -4,8 +4,12 @@
  * @return {JSX.Element}
  * @constructor
  */
-export function ScoreSelectBox({ maxScore }) {
-  return <select>{generateOptions()}</select>;
+export function ScoreSelectBox({ maxScore, saveScore }) {
+  return (
+    <select onChange={(event) => saveScore(event.target.value)}>
+      {generateOptions()}
+    </select>
+  );
 
   function generateOptions() {
     const options = [<option key={-1} value={-1}></option>];
