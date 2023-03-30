@@ -1,9 +1,13 @@
 package no.strazdins.rebus.services;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import no.strazdins.rebus.dto.AnswerDto;
+import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.model.Answer;
 import no.strazdins.rebus.repositories.AnswerRepository;
@@ -67,5 +71,40 @@ public class AnswerService {
     }
     newAnswer.setAnswer(answerText);
     answerRepository.save(newAnswer);
+  }
+
+  /**
+   * Get all answers, for all teams, in a shortened format.
+   *
+   * @return All answers, sorted per team
+   */
+  public Collection<ShortTeamAnswerDto> getAll() {
+    Iterable<Answer> allAnswers = answerRepository.findAll();
+    Map<Integer, TeamAnswerDto> formattedAnswers = new TreeMap<>();
+    for (Answer answer : allAnswers) {
+      TeamAnswerDto teamAnswers = findOrCreateTeamAnswerDto(formattedAnswers, answer);
+      teamAnswers.answers().add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer()));
+    }
+    int challengeCount = (int) challengeRepository.count();
+    List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
+    for (TeamAnswerDto longDto : formattedAnswers.values()) {
+      shortenedList.add(new ShortTeamAnswerDto(longDto, challengeCount));
+    }
+    return shortenedList;
+  }
+
+  private static TeamAnswerDto findOrCreateTeamAnswerDto(Map<Integer, TeamAnswerDto> answers,
+                                                         Answer answer) {
+    TeamAnswerDto teamAnswers;
+    int userId = answer.getUser().getId();
+    if (!answers.containsKey(userId)) {
+      List<AnswerDto> answerList = new LinkedList<>();
+      teamAnswers = new TeamAnswerDto(userId, answerList);
+      answers.put(userId, teamAnswers);
+    } else {
+      teamAnswers = answers.get(userId);
+    }
+
+    return teamAnswers;
   }
 }

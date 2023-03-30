@@ -3,7 +3,6 @@ package no.strazdins.rebus.controllers;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
 import no.strazdins.rebus.model.User;
-import no.strazdins.rebus.security.AccessUserDetails;
 import no.strazdins.rebus.security.JwtUtil;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpStatus;
