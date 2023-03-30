@@ -52,14 +52,6 @@ export function AnswerPage() {
     setUpdatedAnswer(submittedAnswerText);
   }
 
-  // !!!
-  // if (pictureToUpload !== null) {
-  //   console.log("Uploadable picture is set!");
-  //   console.log(pictureToUpload.substring(0, 60));
-  // } else {
-  //   console.log("Uploadable picture is empty");
-  // }
-
   return (
     <>
       <AppBar position="static">

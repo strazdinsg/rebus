@@ -8,9 +8,9 @@ export function ScoreSelectBox({ maxScore }) {
   return <select>{generateOptions()}</select>;
 
   function generateOptions() {
-    const options = [<option value={-1}></option>];
+    const options = [<option key={-1} value={-1}></option>];
     for (let i = 0; i <= maxScore; ++i) {
-      options.push(<option>{i}</option>);
+      options.push(<option key={i}>{i}</option>);
     }
     return options;
   }
