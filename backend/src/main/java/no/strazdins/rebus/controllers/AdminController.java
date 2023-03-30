@@ -49,24 +49,13 @@ public class AdminController {
   }
 
   /**
-   * Get answers of all teams, to all challenges.
+   * Get answers of all teams, to all challenges. Includes scores.
    *
    * @return A collection of answers, per team
    */
   @GetMapping("/answers")
   public Iterable<ShortTeamAnswerDto> getAllAnswers() {
     return answerService.getAll();
-  }
-
-  /**
-   * Get currently registered scores, for all teams.
-   *
-   * @return A collection of scores, per team
-   */
-  @GetMapping("/score")
-  public Iterable<TeamScoreDto> getScore() {
-    // TODO - implement
-    return new LinkedList<>();
   }
 
   /**

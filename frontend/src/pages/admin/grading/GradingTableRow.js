@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ScoreSelectBox } from "./ScoreSelectBox";
 import { useEffect } from "react";
 import { apiGetImage, apiPostScore } from "../../../tools/api";
+import { updateScore } from "../../../redux/answerSlice";
 
 /**
  * One row in the grading table - for one team
@@ -11,8 +12,10 @@ import { apiGetImage, apiPostScore } from "../../../tools/api";
  */
 export function GradingTableRow({ team }) {
   const challenges = useSelector((state) => state.challengeStore.challenges);
-  const allAnswers = useSelector((state) => state.answerStore.allAnswers);
-  const teamAnswers = allAnswers === null ? null : getTeamAnswers();
+  const teamAnswers = useSelector((state) =>
+    getTeamAnswers(state.answerStore.allAnswers)
+  );
+  const dispatch = useDispatch();
 
   // Ignore the warning about dependencies
   // eslint-disable-next-line
@@ -24,6 +27,7 @@ export function GradingTableRow({ team }) {
       {challenges.map((challenge, index) => (
         <td key={index}>
           <ScoreSelectBox
+            score={getScoreForChallenge(challenge.id)}
             maxScore={challenge.maxScore}
             saveScore={(score) => saveScore(score, challenge.id)}
           />
@@ -38,7 +42,8 @@ export function GradingTableRow({ team }) {
     </tr>
   );
 
-  function getTeamAnswers() {
+  function getTeamAnswers(allAnswers) {
+    if (allAnswers == null) return null;
     const teamAnswers = allAnswers.find((answer) => answer.teamId === team.id);
     return teamAnswers || null;
   }
@@ -51,6 +56,13 @@ export function GradingTableRow({ team }) {
     if (answer === null) return null;
 
     return <p>{answer}</p>;
+  }
+
+  function getScoreForChallenge(challengeId) {
+    if (teamAnswers === null) {
+      return null;
+    }
+    return teamAnswers.scores[challengeId - 1];
   }
 
   function loadImages() {
@@ -85,7 +97,15 @@ export function GradingTableRow({ team }) {
     }
     // TODO - save score in Redux
     apiPostScore(challengeId, team.id, score)
-      .then((response) => console.log(response))
+      .then((response) =>
+        dispatch(
+          updateScore({
+            challengeId: challengeId,
+            userId: team.id,
+            score: score,
+          })
+        )
+      )
       .catch((error) => console.error(error));
   }
 }

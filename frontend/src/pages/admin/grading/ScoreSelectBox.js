@@ -1,12 +1,17 @@
 /**
  * Select box where the adin select score for a team, for a specific challenge
- * @param maxScore Max score allowed in this challenge
+ * @param {number} maxScore Max score allowed in this challenge
+ * @param {number} score The current score
+ * @param {function} saveScore Callback function to call when a new score is selected
  * @return {JSX.Element}
  * @constructor
  */
-export function ScoreSelectBox({ maxScore, saveScore }) {
+export function ScoreSelectBox({ maxScore, score, saveScore }) {
   return (
-    <select onChange={(event) => saveScore(event.target.value)}>
+    <select
+      value={score != null && score > -1 ? score : -1}
+      onChange={(event) => saveScore(event.target.value)}
+    >
       {generateOptions()}
     </select>
   );

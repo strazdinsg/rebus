@@ -48,7 +48,7 @@ public class AnswerService {
   public TeamAnswerDto getForTeam(int teamId) {
     List<AnswerDto> challengeAnswers = new LinkedList<>();
     for (Answer answer : answerRepository.findByUserId(teamId)) {
-      challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer()));
+      challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null));
     }
     return new TeamAnswerDto(teamId, challengeAnswers);
   }
@@ -76,7 +76,9 @@ public class AnswerService {
     Map<Integer, TeamAnswerDto> formattedAnswers = new TreeMap<>();
     for (Answer answer : allAnswers) {
       TeamAnswerDto teamAnswers = findOrCreateTeamAnswerDto(formattedAnswers, answer);
-      teamAnswers.answers().add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer()));
+      teamAnswers.answers().add(
+          new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), answer.getScore())
+      );
     }
     int challengeCount = (int) challengeRepository.count();
     List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
