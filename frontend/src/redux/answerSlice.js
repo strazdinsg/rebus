@@ -76,8 +76,6 @@ function findOrCreateScores(allAnswers, userId) {
   } else {
     const challengeCount = getChallengeCount(allAnswers);
     teamAnswers = createTeamAnswers(userId, challengeCount);
-    console.log("Created scores: ");
-    console.log(teamAnswers);
     allAnswers.push(teamAnswers);
   }
   return teamAnswers.scores;
