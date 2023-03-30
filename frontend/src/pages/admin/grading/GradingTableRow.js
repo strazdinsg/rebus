@@ -23,7 +23,10 @@ export function GradingTableRow({ team }) {
 
   return (
     <tr>
-      <td>{team.name}</td>
+      <td>
+        {team.name}
+        <br />({getTotalScore()})
+      </td>
       {challenges.map((challenge, index) => (
         <td key={index}>
           <ScoreSelectBox
@@ -95,7 +98,6 @@ export function GradingTableRow({ team }) {
     if (score < 0) {
       score = null;
     }
-    // TODO - save score in Redux
     apiPostScore(challengeId, team.id, score)
       .then((response) =>
         dispatch(
@@ -107,5 +109,11 @@ export function GradingTableRow({ team }) {
         )
       )
       .catch((error) => console.error(error));
+  }
+
+  function getTotalScore() {
+    if (!teamAnswers) return 0;
+
+    return teamAnswers.scores.reduce((total, current) => total + current);
   }
 }

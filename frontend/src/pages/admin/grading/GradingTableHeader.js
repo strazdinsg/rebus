@@ -10,7 +10,10 @@ export function GradingTableHeader() {
   return (
     <thead>
       <tr>
-        <th>Team</th>
+        <th>
+          Team <br />
+          (total score)
+        </th>
         {challenges.map((c) => (
           <th key={c.id}>Challenge {c.id}</th>
         ))}

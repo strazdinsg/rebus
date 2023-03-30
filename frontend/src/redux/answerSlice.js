@@ -46,7 +46,7 @@ export const answerSlice = createSlice({
     updateScore: function (state, action) {
       const challengeId = parseInt(action.payload.challengeId);
       const userId = parseInt(action.payload.userId);
-      const score = parseInt(action.payload.score);
+      const score = parseInt(action.payload.score) || null;
       const scoresToUpdate = findOrCreateScores(state.allAnswers, userId);
       scoresToUpdate[challengeId - 1] = score;
     },
