@@ -21,16 +21,12 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function loadGlobalApiData() {
-      await fetchChallengesFromApi();
-    }
-
     async function fetchChallengesFromApi() {
       const allChallenges = await apiGetChallenges();
       dispatch(setChallenges(allChallenges));
     }
 
-    loadGlobalApiData().catch(console.error);
+    fetchChallengesFromApi().catch(console.error);
   }, [dispatch]);
 
   return (

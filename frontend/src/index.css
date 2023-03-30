@@ -44,6 +44,9 @@ p {
   font-size: 2rem;
   line-height: 1.5;
 }
+tr {
+  font-size: 2rem;
+}
 
 main {
   margin: 2rem;

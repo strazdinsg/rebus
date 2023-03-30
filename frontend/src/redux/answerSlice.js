@@ -9,6 +9,7 @@ export const answerSlice = createSlice({
   name: "answers",
   initialState: {
     myAnswers: null,
+    allAnswers: null,
   },
   reducers: {
     /**
@@ -29,6 +30,14 @@ export const answerSlice = createSlice({
       const answerToUpdate = findOrCreateAnswer(state.myAnswers, challengeId);
       answerToUpdate.answer = action.payload.answer;
     },
+    /**
+     * Set all answers for the all users (teams)
+     * @param state
+     * @param action
+     */
+    setAllAnswers: function (state, action) {
+      state.allAnswers = action.payload;
+    },
   },
 });
 
@@ -46,5 +55,6 @@ function findOrCreateAnswer(myAnswers, challengeId) {
   return answerToUpdate;
 }
 
-export const { setMyAnswers, setMyAnswerForChallenge } = answerSlice.actions;
+export const { setMyAnswers, setMyAnswerForChallenge, setAllAnswers } =
+  answerSlice.actions;
 export default answerSlice.reducer;

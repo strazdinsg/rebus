@@ -28,6 +28,15 @@ export function apiGetMyAnswers() {
 }
 
 /**
+ * Send request to API - get answers of all users
+ * @return {Promise<[]>} Promise to return the response body as JSON array
+ * Throws an exception on error
+ */
+export function apiGetAllAnswers() {
+  return asyncApiGet("/answers");
+}
+
+/**
  * Send request to API - get an image
  * @param challengeId ID of the challenge for which the image was submitted
  * @param userId ID of the owner user (team)
@@ -50,4 +59,13 @@ export function apiPostAnswer(challengeId, userId, answer) {
     challengeId: challengeId,
     answer: answer,
   });
+}
+
+/**
+ * Send request to API - Get all teams
+ * @return {Promise<[]>} Promise to return the response body as JSON array
+ * Throws an exception on error
+ */
+export function apiGetTeams() {
+  return asyncApiGet("/teams");
 }

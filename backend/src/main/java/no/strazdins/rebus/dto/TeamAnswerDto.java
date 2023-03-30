@@ -1,9 +1,9 @@
 package no.strazdins.rebus.dto;
 
-import no.strazdins.rebus.model.Answer;
+import java.util.List;
 
 /**
  * Data-transfer object for answers to all challenges for a particular team.
  */
-public record TeamAnswerDto(int teamId, Iterable<AnswerDto> answers) {
+public record TeamAnswerDto(int teamId, List<AnswerDto> answers) {
 }

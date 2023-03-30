@@ -7,9 +7,10 @@ import no.strazdins.rebus.model.Challenge;
  *
  * @param id       ID of the challenge
  * @param question The question of the challenge
+ * @param maxScore Max score for this challenge
  */
-public record ChallengeDto(int id, String question) {
+public record ChallengeDto(int id, String question, int maxScore) {
   public ChallengeDto(Challenge challenge) {
-    this(challenge.getId(), challenge.getQuestion());
+    this(challenge.getId(), challenge.getQuestion(), challenge.getMaxScore());
   }
 }
