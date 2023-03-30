@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { ScoreSelectBox } from "./ScoreSelectBox";
 
 /**
  * One row in the grading table - for one team
@@ -16,8 +17,8 @@ export function GradingTableRow({ team }) {
       <td>{team.name}</td>
       {challenges.map((challenge, index) => (
         <td key={index}>
+          <ScoreSelectBox maxScore={challenge.maxScore} />
           {getAnswerForChallenge(challenge.id)}
-          {/*<ScoreSelectBox />*/}
         </td>
       ))}
     </tr>
