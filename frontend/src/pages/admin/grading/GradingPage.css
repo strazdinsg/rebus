@@ -15,3 +15,9 @@ th {
   padding: 1rem;
   border: 1px solid black;
 }
+
+img.team-photo {
+  display: none;
+  max-width: 20rem;
+  max-height: 30rem;
+}
