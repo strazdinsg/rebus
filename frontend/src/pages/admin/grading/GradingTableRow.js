@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ScoreSelectBox } from "./ScoreSelectBox";
-import { useEffect } from "react";
-import { apiGetImage, apiPostScore } from "../../../tools/api";
+import { apiPostScore } from "../../../tools/api";
 import { updateScore } from "../../../redux/answerSlice";
+import { useEffect } from "react";
 
 /**
  * One row in the grading table - for one team
@@ -17,9 +17,7 @@ export function GradingTableRow({ team }) {
   );
   const dispatch = useDispatch();
 
-  // Ignore the warning about dependencies
-  // eslint-disable-next-line
-  useEffect(loadImages, []);
+  useEffect();
 
   return (
     <tr>
@@ -68,30 +66,8 @@ export function GradingTableRow({ team }) {
     return teamAnswers.scores[challengeId - 1];
   }
 
-  function loadImages() {
-    console.log("Loading images...");
-    for (let challengeIndex in challenges) {
-      const challengeId = challenges[challengeIndex].id;
-      apiGetImage(challengeId, team.id)
-        .then((imageBlob) => showImage(imageBlob, challengeId))
-        .catch((_) => {});
-    }
-  }
-
   function getImageId(teamId, challengeId) {
     return `answer-img-${challengeId}-${teamId}`;
-  }
-
-  function showImage(imageBlob, challengeId) {
-    const imageElement = document.getElementById(
-      getImageId(team.id, challengeId)
-    );
-    if (imageBlob) {
-      imageElement.src = URL.createObjectURL(imageBlob);
-      imageElement.style.display = "block";
-    } else {
-      imageElement.style.display = "none";
-    }
   }
 
   function saveScore(score, challengeId) {
