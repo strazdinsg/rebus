@@ -1,8 +1,6 @@
 package no.strazdins.rebus.controllers;
 
-import java.util.Optional;
 import no.strazdins.rebus.model.Image;
-import no.strazdins.rebus.security.AccessUserDetails;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

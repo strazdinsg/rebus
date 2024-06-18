@@ -1,10 +1,8 @@
 package no.strazdins.rebus.controllers;
 
-import java.util.LinkedList;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamDto;
-import no.strazdins.rebus.dto.TeamScoreDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.ResponseEntity;

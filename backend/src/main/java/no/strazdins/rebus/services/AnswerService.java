@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import no.strazdins.rebus.dto.AnswerDto;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
-import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.model.Answer;
 import no.strazdins.rebus.repositories.AnswerRepository;
