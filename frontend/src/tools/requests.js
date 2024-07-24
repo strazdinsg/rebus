@@ -5,7 +5,7 @@ import { HttpResponseError } from "./HttpResponseError";
 
 // Import REST API BASE URL from the environment variable, see .env file
 // Note: all environment variables must start with REACT_, otherwise React will not handle them!
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * Send an asynchronous HTTP GET request to the remote API (backend)
