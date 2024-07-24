@@ -31,8 +31,11 @@ export function AnswerPage() {
   const userId = user !== null ? user.id : null;
 
   const submittedAnswer = findChallengeAnswer();
-  const submittedAnswerText =
+  let submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
+  if (!submittedAnswerText) {
+    submittedAnswerText = "";
+  }
 
   const [updatedAnswer, setUpdatedAnswer] = useState(
     submittedAnswerText !== "" ? submittedAnswerText : null
