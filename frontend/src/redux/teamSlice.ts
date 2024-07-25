@@ -1,10 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
+
+export type Team = {
+  id: number;
+  name: string;
+};
+
+type TeamStore = { teams: Team[] };
 
 /**
  * The Redux slice responsible for all teams.
- * @type {Slice<{teams: *[]}, {setTeams: reducers.setTeams}, string>}
  */
-export const teamSlice = createSlice({
+export const teamSlice = createSlice<
+  TeamStore,
+  SliceCaseReducers<TeamStore>,
+  string
+>({
   name: "teams",
   initialState: {
     teams: [],
@@ -16,7 +26,7 @@ export const teamSlice = createSlice({
      * @param state The old state
      * @param action The action containing teams as the payload property
      */
-    setTeams: function (state, action) {
+    setTeams: function (state, action: { payload: Team[] }) {
       state.teams = action.payload;
     },
   },

@@ -6,14 +6,13 @@ import { GradingTableHeader } from "./GradingTableHeader";
 import { GradingTableRow } from "./GradingTableRow";
 import { setAllAnswers } from "../../../redux/answerSlice";
 import "./GradingPage.css";
+import { RootState } from "../../../redux/store";
 
 /**
  * Page where the admin can assign score to each challenge of each team.
- * @returns {JSX.Element}
- * @constructor
  */
 export function GradingPage() {
-  const teams = useSelector((state) => state.teamStore.teams);
+  const teams = useSelector((state: RootState) => state.teamStore.teams);
   const dispatch = useDispatch();
 
   useEffect(() => {

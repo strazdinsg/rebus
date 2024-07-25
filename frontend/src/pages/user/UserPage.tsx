@@ -4,19 +4,17 @@ import { AnswerPage } from "./answer/AnswerPage";
 import { useDispatch } from "react-redux";
 import { setMyAnswers } from "../../redux/answerSlice";
 import { useEffect } from "react";
-import { apiGetMyAnswers } from "../../tools/api";
+import { apiGetMyAnswers, TeamAnswers } from "../../tools/api";
 
 /**
  * Main page component for a regular user.
- * @return {JSX.Element}
- * @constructor
  */
 export function UserPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadMyAnswers() {
-      const ma = await apiGetMyAnswers();
+      const ma: TeamAnswers = await apiGetMyAnswers();
       dispatch(setMyAnswers(ma.answers));
     }
 

@@ -1,15 +1,45 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
+
+type NullableNumber = number | null;
+type NullableString = string | null;
+
+type ScoreUpdateAction = {
+  payload: {
+    challengeId: number;
+    userId: number;
+    score: number | null;
+  };
+};
+
+export type Answer = {
+  challengeId: number;
+  answer: string;
+  score: number | null;
+};
+
+export type ShortTeamAnswers = {
+  teamId: number;
+  answers: NullableString[];
+  scores: NullableNumber[];
+};
+
+export type AnswerStore = {
+  myAnswers: Answer[];
+  allAnswers: ShortTeamAnswers[];
+};
 
 /**
  * Redux slice responsible for holding answer data
- * @type {Slice<{myAnswers: null}, {setMyAnswerForChallenge: reducers.setMyAnswerForChallenge,
- * setMyAnswers: reducers.setMyAnswers}, string>}
  */
-export const answerSlice = createSlice({
+export const answerSlice = createSlice<
+  AnswerStore,
+  SliceCaseReducers<AnswerStore>,
+  string
+>({
   name: "answers",
   initialState: {
-    myAnswers: null,
-    allAnswers: null,
+    myAnswers: [],
+    allAnswers: [],
   },
   reducers: {
     /**
@@ -17,7 +47,7 @@ export const answerSlice = createSlice({
      * @param state
      * @param action
      */
-    setMyAnswers: function (state, action) {
+    setMyAnswers: function (state, action: { payload: Answer[] }) {
       state.myAnswers = action.payload;
     },
     /**
@@ -35,7 +65,7 @@ export const answerSlice = createSlice({
      * @param state
      * @param action
      */
-    setAllAnswers: function (state, action) {
+    setAllAnswers: function (state, action: { payload: ShortTeamAnswers[] }) {
       state.allAnswers = action.payload;
     },
     /**
@@ -43,31 +73,31 @@ export const answerSlice = createSlice({
      * @param state
      * @param action Must contain payload in the format {challengeId, userId, score}
      */
-    updateScore: function (state, action) {
-      const challengeId = parseInt(action.payload.challengeId);
-      const userId = parseInt(action.payload.userId);
-      const score = parseInt(action.payload.score) || null;
-      const scoresToUpdate = findOrCreateScores(state.allAnswers, userId);
-      scoresToUpdate[challengeId - 1] = score;
+    updateScore: function (state, action: ScoreUpdateAction) {
+      const scoresToUpdate = findOrCreateScores(
+        state.allAnswers,
+        action.payload.userId
+      );
+      scoresToUpdate[action.payload.challengeId - 1] = action.payload.score;
     },
   },
 });
 
-function findOrCreateAnswer(myAnswers, challengeId) {
+function findOrCreateAnswer(myAnswers: Answer[], challengeId: number) {
   const answerIndex = myAnswers.findIndex(
     (answer) => answer.challengeId === challengeId
   );
-  let answerToUpdate;
+  let answerToUpdate: Answer;
   if (answerIndex >= 0) {
     answerToUpdate = myAnswers[answerIndex];
   } else {
-    answerToUpdate = { challengeId: challengeId };
+    answerToUpdate = { challengeId: challengeId, answer: "", score: null };
     myAnswers.push(answerToUpdate);
   }
   return answerToUpdate;
 }
 
-function findOrCreateScores(allAnswers, userId) {
+function findOrCreateScores(allAnswers: ShortTeamAnswers[], userId: number) {
   let teamAnswers = allAnswers.find(
     (allTeamAnswers) => allTeamAnswers.teamId === userId
   );
@@ -75,13 +105,16 @@ function findOrCreateScores(allAnswers, userId) {
     return teamAnswers.scores;
   } else {
     const challengeCount = getChallengeCount(allAnswers);
-    teamAnswers = createTeamAnswers(userId, challengeCount);
+    teamAnswers = createEmptyTeamAnswers(userId, challengeCount);
     allAnswers.push(teamAnswers);
   }
   return teamAnswers.scores;
 }
 
-function createTeamAnswers(userId, challengeCount) {
+function createEmptyTeamAnswers(
+  userId: number,
+  challengeCount: number
+): ShortTeamAnswers {
   return {
     teamId: userId,
     answers: createNullArray(challengeCount),
@@ -89,11 +122,11 @@ function createTeamAnswers(userId, challengeCount) {
   };
 }
 
-function getChallengeCount(allAnswers) {
+function getChallengeCount(allAnswers: ShortTeamAnswers[]) {
   return allAnswers[0].answers.length;
 }
 
-function createNullArray(length) {
+function createNullArray(length: number): null[] {
   const a = [];
   for (let i = 0; i < length; ++i) {
     a.push(null);

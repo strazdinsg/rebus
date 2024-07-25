@@ -1,14 +1,14 @@
 {
   "name": "rebus-frontend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
     "@mui/icons-material": "5.11.11",
     "@mui/material": "5.11.13",
     "@reduxjs/toolkit": "1.9.3",
+    "@vitejs/plugin-react": "^4.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "8.0.5",
@@ -20,26 +20,5 @@
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.3.1"
   }
 }

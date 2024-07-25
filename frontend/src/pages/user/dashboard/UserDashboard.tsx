@@ -4,17 +4,24 @@ import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 import "./UserDashboard.css";
 import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
- * @return {JSX.Element}
- * @constructor
  */
 export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const challenges = useSelector((state) => state.challengeStore.challenges);
-  const myAnswers = useSelector((state) => state.answerStore.myAnswers);
+  const challenges = useSelector(
+    (state: RootState) => state.challengeStore.challenges
+  );
+  const myAnswers = useSelector(
+    (state: RootState) => state.answerStore.myAnswers
+  );
+
+  if (user == null) {
+    return <main>Loading user data...</main>;
+  }
 
   return (
     <>
@@ -38,7 +45,7 @@ export function UserDashboard() {
     </>
   );
 
-  function isAnswered(challengeId) {
+  function isAnswered(challengeId: number) {
     let answerFound = false;
     let i = 0;
     if (myAnswers)

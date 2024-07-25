@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 /**
  * The headings for the grading table
- * @return {JSX.Element}
- * @constructor
  */
 export function GradingTableHeader() {
-  const challenges = useSelector((state) => state.challengeStore.challenges);
+  const challenges = useSelector(
+    (state: RootState) => state.challengeStore.challenges
+  );
   return (
     <thead>
       <tr>

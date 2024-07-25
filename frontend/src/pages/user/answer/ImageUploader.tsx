@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { apiGetImage } from "../../../tools/api";
 import { useDispatch } from "react-redux";
 import {
@@ -12,14 +12,16 @@ import "./ImageUploader.css";
 const MAX_IMAGE_WIDTH = 1800;
 const MAX_IMAGE_HEIGHT = 1800;
 
+type ImageUploaderProps = {
+  challengeId: number;
+  userId: number;
+};
+
 /**
  * A component for uploading images, with a preview of the image.
- * @param challengeId ID of the challenge for which the image is selected
- * @param userId The ID of the currently logged-in user
- * @return {JSX.Element}
  * @constructor
  */
-export function ImageUploader({ challengeId, userId }) {
+export function ImageUploader(props: ImageUploaderProps) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -27,20 +29,24 @@ export function ImageUploader({ challengeId, userId }) {
   useEffect(
     function () {
       async function fetchUploadedImage() {
-        const imageElement = document.getElementById("image-preview");
-        const imageBlob = await apiGetImage(challengeId, userId);
-        if (imageBlob) {
-          imageElement.src = URL.createObjectURL(imageBlob);
-          imageElement.style.display = "block";
-        } else {
-          imageElement.style.display = "none";
+        const imageElement = document.getElementById(
+          "image-preview"
+        ) as HTMLImageElement | null;
+        const imageBlob = await apiGetImage(props.challengeId, props.userId);
+        if (imageElement) {
+          if (imageBlob) {
+            imageElement.src = URL.createObjectURL(imageBlob);
+            imageElement.style.display = "block";
+          } else {
+            imageElement.style.display = "none";
+          }
         }
       }
       fetchUploadedImage()
         .catch((error) => {})
         .finally(() => setLoading(false));
     },
-    [challengeId, userId]
+    [props]
   );
   return (
     <>
@@ -64,9 +70,11 @@ export function ImageUploader({ challengeId, userId }) {
    * This function is called when the user has selected a new image to be uploaded (before it is uploaded).
    * @param event The image picking event, the selected file(s) is in event.target.files
    */
-  function onImagePicked(event) {
-    const imageElement = document.getElementById("image-preview");
-    if (event.target.files.length > 0) {
+  function onImagePicked(event: ChangeEvent<HTMLInputElement>) {
+    const imageElement = document.getElementById(
+      "image-preview"
+    ) as HTMLImageElement;
+    if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (readerEvent) => {
@@ -81,12 +89,14 @@ export function ImageUploader({ challengeId, userId }) {
           imageElement.style.display = "block";
           dispatch(setPictureToUpload(resizedDataUriImage));
         };
-        image.src = readerEvent.target.result;
+        if (readerEvent.target) {
+          image.src = readerEvent.target.result as string;
+        }
       };
 
       reader.readAsDataURL(file);
     } else {
-      dispatch(clearPictureToUpload());
+      dispatch(clearPictureToUpload(null));
       imageElement.style.display = "none";
     }
   }

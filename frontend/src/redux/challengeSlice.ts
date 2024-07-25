@@ -1,11 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
+
+export type Challenge = {
+  id: number;
+  question: string;
+  maxScore: number;
+};
+
+type ChallengeSetAction = {
+  payload: Challenge[];
+};
+
+type ChallengeStore = { challenges: Challenge[] };
 
 /**
  * The Redux slice responsible for challenge data.
- *
- * @type {Slice<{challenges: *[]}, {setChallenges: reducers.setChallenges}, string>}
  */
-export const challengeSlice = createSlice({
+export const challengeSlice = createSlice<
+  ChallengeStore,
+  SliceCaseReducers<ChallengeStore>,
+  string
+>({
   name: "challenges",
   initialState: {
     challenges: [],
@@ -17,7 +31,7 @@ export const challengeSlice = createSlice({
      * @param state The old state
      * @param action The action containing new challenges as the payload property
      */
-    setChallenges: function (state, action) {
+    setChallenges: function (state, action: ChallengeSetAction) {
       state.challenges = action.payload;
     },
   },

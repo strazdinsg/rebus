@@ -1,16 +1,14 @@
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import "./LoginPage.css";
-import { useContext, useState } from "react";
-import { UserContext } from "../../context/UserContext";
+import { FormEvent, useContext, useState } from "react";
+import { UserContext, UserSession } from "../../context/UserContext";
 import { sendAuthenticationRequest } from "../../tools/authentication";
 
 const HTTP_CODE_UNAUTHORIZED = 403;
 
 /**
  * Page shown when the user must log in.
- * @returns {JSX.Element}
- * @constructor
  */
 export function LoginPage() {
   const [pinError, setPinError] = useState(false);
@@ -35,20 +33,25 @@ export function LoginPage() {
     </form>
   );
 
-  function tryLogin(event) {
+  function tryLogin(event: FormEvent) {
     if (event) {
       event.preventDefault();
     }
 
-    const pin = document.getElementById("pin-input-field").value;
-    sendAuthenticationRequest(pin, onLoginSuccess, onLoginError);
+    const pinElement = document.getElementById(
+      "pin-input-field"
+    ) as HTMLInputElement;
+    const pin = pinElement ? pinElement.value : "";
+    if (pin) {
+      sendAuthenticationRequest(pin, onLoginSuccess, onLoginError);
+    }
   }
 
-  function onLoginSuccess(user) {
+  function onLoginSuccess(user: UserSession) {
     userContext.setUser(user);
   }
 
-  function onLoginError(code, message) {
+  function onLoginError(code: number, message: string) {
     console.log(`Error ${code}: ${message}`);
     let errorMessage =
       "Something wrong with the server, contact the Rebus organizer!";

@@ -1,16 +1,32 @@
 // Authentication stuff
 
-import { deleteCookie, getCookie, setCookie } from "./cookies";
+import {
+  deleteCookie,
+  getCookie,
+  getCookieOrDefault,
+  setCookie,
+} from "./cookies";
 import { asyncApiPost } from "./requests";
+import { UserSession } from "../context/UserContext";
+
+/**
+ * Basic JWT token structure.
+ */
+type BasicJwt = {
+  sub: string;
+  roles: string[];
+  jti: string; // User ID
+};
 
 /**
  * Get the currently authenticated user
  * @returns User object or null if user is not authenticated
  */
-export function getAuthenticatedUser() {
-  let user = null;
-  const userId = getCookie("current_user_id");
-  const userName = getCookie("current_user_name");
+export function getAuthenticatedUser(): UserSession | null {
+  let user: UserSession | null = null;
+  const userIdString = getCookieOrDefault("current_user_id", "");
+  const userId = userIdString ? parseInt(userIdString) : null;
+  const userName = getCookieOrDefault("current_user_name", "");
   const commaSeparatedRoles = getCookie("current_user_roles");
   if (userId && commaSeparatedRoles) {
     const roles = commaSeparatedRoles.split(",");
@@ -18,6 +34,7 @@ export function getAuthenticatedUser() {
       id: userId,
       roles: roles,
       name: userName,
+      isAdmin: false,
     };
     user.isAdmin = isAdmin(user);
   }
@@ -29,7 +46,7 @@ export function getAuthenticatedUser() {
  * @param user
  * @returns {boolean}
  */
-export function isAdmin(user) {
+export function isAdmin(user: UserSession): boolean {
   return user && user.roles && user.roles.includes("ROLE_ADMIN");
 }
 
@@ -39,13 +56,18 @@ export function isAdmin(user) {
  * @param successCallback Function to call on success
  * @param errorCallback Function to call on error, with error code and response text as parameters
  */
-export function sendAuthenticationRequest(pin, successCallback, errorCallback) {
+export function sendAuthenticationRequest(
+  pin: string,
+  successCallback: (user: UserSession) => void,
+  errorCallback: (errorCode: number, errorText: string) => void
+) {
   const postData = {
     pin: pin,
   };
   asyncApiPost("/authenticate", postData)
     .then((jwtResponse) => {
-      onAuthSuccess(jwtResponse, successCallback);
+      const jwtData: { jwt: string } = jwtResponse as any as { jwt: string };
+      onAuthSuccess(jwtData.jwt, successCallback);
     })
     .catch((error) => {
       const code =
@@ -56,15 +78,16 @@ export function sendAuthenticationRequest(pin, successCallback, errorCallback) {
 
 /**
  * Function called when authentication has been successful and JWT is received from the API
- * @param {object} jwtResponse The HTTP response from the API, contains an object with `jwt` property
- * @property jwt JWT token, as a string
+ * @param jwt The JSON Web token from the API
  * @param {function} callback A callback function provided by the invoker, to be called at the end
  */
-function onAuthSuccess(jwtResponse, callback) {
-  setCookie("jwt", jwtResponse.jwt);
-  const userData = parseJwtUser(jwtResponse.jwt);
+function onAuthSuccess(jwt: string, callback: (user: UserSession) => void) {
+  setCookie("jwt", jwt);
+  const userData = parseJwtUser(jwt);
   if (userData) {
-    setCookie("current_user_id", userData.id);
+    if (userData.id) {
+      setCookie("current_user_id", `${userData.id}`);
+    }
     setCookie("current_user_name", userData.name);
     setCookie("current_user_roles", userData.roles.join(","));
     callback(userData);
@@ -77,7 +100,7 @@ function onAuthSuccess(jwtResponse, callback) {
  * @param token JWT token string
  * @returns {any} Decoded JWT object
  */
-function parseJwt(token) {
+function parseJwt(token: string): BasicJwt {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   const jsonPayload = decodeURIComponent(
@@ -97,14 +120,15 @@ function parseJwt(token) {
  * @param jwtString
  * @return User object
  */
-function parseJwtUser(jwtString) {
-  let user = null;
+function parseJwtUser(jwtString: string): UserSession | null {
+  let user: UserSession | null = null;
   const jwtObject = parseJwt(jwtString);
   if (jwtObject) {
     user = {
-      id: jwtObject.jti,
+      id: parseInt(jwtObject.jti),
       name: jwtObject.sub,
       roles: jwtObject.roles,
+      isAdmin: false,
     };
     user.isAdmin = isAdmin(user);
   }

@@ -13,8 +13,6 @@ import { UserPage } from "./pages/user/UserPage";
 
 /**
  * The main application wrapper.
- * @returns {JSX.Element}
- * @constructor
  */
 function App() {
   const [user, setUser] = useState(getAuthenticatedUser());

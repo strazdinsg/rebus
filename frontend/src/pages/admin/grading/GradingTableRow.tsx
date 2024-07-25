@@ -1,18 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import { ScoreSelectBox } from "./ScoreSelectBox";
+import ScoreSelectBox from "./ScoreSelectBox";
 import { useEffect } from "react";
 import { apiGetImage, apiPostScore } from "../../../tools/api";
-import { updateScore } from "../../../redux/answerSlice";
+import { ShortTeamAnswers, updateScore } from "../../../redux/answerSlice";
+import { RootState } from "../../../redux/store";
+import { Team } from "../../../redux/teamSlice";
 
 /**
  * One row in the grading table - for one team
- * @param team The team represented in the row
- * @return {JSX.Element}
- * @constructor
  */
-export function GradingTableRow({ team }) {
-  const challenges = useSelector((state) => state.challengeStore.challenges);
-  const teamAnswers = useSelector((state) =>
+export function GradingTableRow(props: { team: Team }) {
+  const challenges = useSelector(
+    (state: RootState) => state.challengeStore.challenges
+  );
+  const teamAnswers = useSelector((state: RootState) =>
     getTeamAnswers(state.answerStore.allAnswers)
   );
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ export function GradingTableRow({ team }) {
   return (
     <tr>
       <td>
-        {team.name}
+        {props.team.name}
         <br />({getTotalScore()})
       </td>
       {challenges.map((challenge, index) => (
@@ -32,26 +33,28 @@ export function GradingTableRow({ team }) {
           <ScoreSelectBox
             score={getScoreForChallenge(challenge.id)}
             maxScore={challenge.maxScore}
-            saveScore={(score) => saveScore(score, challenge.id)}
+            saveScore={(score: number | null) => saveScore(score, challenge.id)}
           />
           {getAnswerForChallenge(challenge.id)}
           <img
             className="team-photo"
             alt="User-submitted"
-            id={getImageId(team.id, challenge.id)}
+            id={getImageId(props.team.id, challenge.id)}
           />
         </td>
       ))}
     </tr>
   );
 
-  function getTeamAnswers(allAnswers) {
+  function getTeamAnswers(allAnswers: ShortTeamAnswers[]) {
     if (allAnswers == null) return null;
-    const teamAnswers = allAnswers.find((answer) => answer.teamId === team.id);
+    const teamAnswers = allAnswers.find(
+      (answer) => answer.teamId === props.team.id
+    );
     return teamAnswers || null;
   }
 
-  function getAnswerForChallenge(challengeId) {
+  function getAnswerForChallenge(challengeId: number) {
     if (teamAnswers === null) {
       return null;
     }
@@ -61,7 +64,7 @@ export function GradingTableRow({ team }) {
     return <p>{answer}</p>;
   }
 
-  function getScoreForChallenge(challengeId) {
+  function getScoreForChallenge(challengeId: number): number | null {
     if (teamAnswers === null) {
       return null;
     }
@@ -72,21 +75,21 @@ export function GradingTableRow({ team }) {
     console.log("Loading images...");
     for (let challengeIndex in challenges) {
       const challengeId = challenges[challengeIndex].id;
-      apiGetImage(challengeId, team.id)
+      apiGetImage(challengeId, props.team.id)
         .then((imageBlob) => showImage(imageBlob, challengeId))
         .catch((_) => {});
     }
   }
 
-  function getImageId(teamId, challengeId) {
+  function getImageId(teamId: number, challengeId: number) {
     return `answer-img-${challengeId}-${teamId}`;
   }
 
-  function showImage(imageBlob, challengeId) {
+  function showImage(imageBlob: Blob, challengeId: number) {
     const imageElement = document.getElementById(
-      getImageId(team.id, challengeId)
-    );
-    if (imageBlob) {
+      getImageId(props.team.id, challengeId)
+    ) as HTMLImageElement;
+    if (imageElement && imageBlob) {
       imageElement.src = URL.createObjectURL(imageBlob);
       imageElement.style.display = "block";
     } else {
@@ -94,16 +97,13 @@ export function GradingTableRow({ team }) {
     }
   }
 
-  function saveScore(score, challengeId) {
-    if (score < 0) {
-      score = null;
-    }
-    apiPostScore(challengeId, team.id, score)
+  function saveScore(score: number | null, challengeId: number) {
+    apiPostScore(challengeId, props.team.id, score)
       .then((response) =>
         dispatch(
           updateScore({
             challengeId: challengeId,
-            userId: team.id,
+            userId: props.team.id,
             score: score,
           })
         )
@@ -114,6 +114,8 @@ export function GradingTableRow({ team }) {
   function getTotalScore() {
     if (!teamAnswers) return 0;
 
-    return teamAnswers.scores.reduce((total, current) => total + current);
+    return teamAnswers.scores.reduce(
+      (total, current) => (total || 0) + (current || 0)
+    );
   }
 }
