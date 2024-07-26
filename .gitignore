@@ -17,3 +17,5 @@ backend-v2/.idea/
 backend-v2/dist/
 
 backend-v2/node_modules/
+
+backend-v2/.env
