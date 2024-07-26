@@ -24,6 +24,13 @@ public class UserService implements UserDetailsService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Load a user by the PIN code. This is used by Spring Security to authenticate users.
+   *
+   * @param username The PIN code of the user
+   * @return The user, or null if none found by that PIN
+   * @throws UsernameNotFoundException Does not happen, but is needed by Spring Security
+   */
   @Override
   public AccessUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<User> user = userRepository.findOneByPin(username);
