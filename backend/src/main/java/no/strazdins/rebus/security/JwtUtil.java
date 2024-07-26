@@ -30,7 +30,7 @@ public class JwtUtil {
    */
   public String generateToken(User user) {
     final long TIME_NOW = System.currentTimeMillis();
-    final long MILLISECONDS_IN_HOUR = 60 * 60 * 1000;
+    final long MILLISECONDS_IN_HOUR = 60 * 60 * 1000L;
     final long MILLISECONDS_IN_ONE_DAY = 24 * MILLISECONDS_IN_HOUR;
     final long TIME_AFTER_30_DAYS = TIME_NOW + 30 * MILLISECONDS_IN_ONE_DAY;
 
@@ -62,7 +62,7 @@ public class JwtUtil {
    * @param userDetails Object containing user details
    * @return True if the token matches the current user and is still valid
    */
-  public Boolean validateToken(String token, AccessUserDetails userDetails) {
+  public boolean validateToken(String token, AccessUserDetails userDetails) {
     final int userId = extractUserId(token);
     return userId == userDetails.getId() && !isTokenExpired(token);
   }
@@ -81,9 +81,7 @@ public class JwtUtil {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
   }
 
-  private Boolean isTokenExpired(String token) {
+  private boolean isTokenExpired(String token) {
     return extractExpiration(token).before(new Date());
   }
-
-
 }

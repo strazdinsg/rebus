@@ -72,7 +72,7 @@ public class ImageService {
       imageRepository.save(image);
       imageId = image.getId();
     } catch (IOException e) {
-      logger.error("Could not store image: " + e.getMessage());
+      logger.error("Could not store image: {}", e.getMessage());
       imageId = -1;
     }
 
@@ -128,8 +128,8 @@ public class ImageService {
     boolean deleted = false;
     Iterable<Image> images = imageRepository.findAllByChallengeIdAndUserId(challengeId, userId);
     for (Image image : images) {
-      logger.info("Deleting image " + image.getId() + ": challengeId="
-          + challengeId + ", userId =" + userId);
+      logger.info("Deleting image {}: challengeId={}, userId ={}",
+          image.getId(), challengeId, userId);
       imageRepository.delete(image);
       deleted = true;
     }
