@@ -1,21 +1,2 @@
-
 *.DS_Store
 
-frontend/.idea/
-
-frontend/node_modules
-
-frontend/build/
-
-backend/.env
-
-frontend/.env
-
-frontend/src/**/*.js
-backend-v2/.idea/
-
-backend-v2/dist/
-
-backend-v2/node_modules/
-
-backend-v2/.env
