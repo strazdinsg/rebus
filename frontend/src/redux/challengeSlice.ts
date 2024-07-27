@@ -6,10 +6,6 @@ export type Challenge = {
   maxScore: number;
 };
 
-type ChallengeSetAction = {
-  payload: Challenge[];
-};
-
 type ChallengeStore = { challenges: Challenge[] };
 
 /**
@@ -31,7 +27,7 @@ export const challengeSlice = createSlice<
      * @param state The old state
      * @param action The action containing new challenges as the payload property
      */
-    setChallenges: function (state, action: ChallengeSetAction) {
+    setChallenges: function (state, action: { payload: Challenge[] }) {
       state.challenges = action.payload;
     },
   },

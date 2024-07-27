@@ -4,12 +4,21 @@ The visible user interface (frontend) of the project. Uses React JS framework.
 
 ## Getting Started
 
-You need to provide the following environment variable: `VITE_API_BASE_URL`. It needs to point to
-the location of your backend. For example:
+You need to provide the following environment variables:
+
+* `VITE_API_V1_BASE_URL`. It needs to point to the location of your backend, version 1 (Spring
+  Boot).
+* `VITE_API_V2_BASE_URL`. It needs to point to the location of your backend, version 2 (Node.js,
+  Express).
+ 
+For example:
 
 ```
-VITE_API_BASE_URL=http://localhost:8080
+VITE_API_V1_BASE_URL=http://localhost:8080
+VITE_API_V2_BASE_URL=http://localhost:3000
 ```
+
+*
 
 The easiest way is to store it inside `.env` file. Note: the value in the `.env` file will be only
 considered when you run or build the application. You can't update it after the frontend application

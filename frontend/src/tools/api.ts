@@ -1,6 +1,7 @@
 import {
   asyncApiGet,
   asyncApiGetBlob,
+  asyncApiGetV2,
   asyncApiPost,
   asyncApiPostFile,
 } from "./requests";
@@ -23,7 +24,7 @@ export type TeamAnswers = {
  * Throws an exception on error
  */
 export function apiGetChallenges(): Promise<Challenge[]> {
-  return asyncApiGet("/challenges") as any as Promise<Challenge[]>;
+  return asyncApiGetV2("/challenges") as any as Promise<Challenge[]>;
 }
 
 /**

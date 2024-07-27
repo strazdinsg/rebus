@@ -8,14 +8,16 @@ interface HttpHeaders {
 }
 
 // Import REST API BASE URL from the environment variable, see .env file
-// Note: all environment variables must start with REACT_, otherwise React will not handle them!
+// Note: all environment variables must start with VITE_, otherwise Vite will not handle them!
 // @ts-ignore - TypeScript does not know about the environment variable
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_V1_BASE_URL = import.meta.env.VITE_API_V1_BASE_URL;
+// @ts-ignore - TypeScript does not know about the environment variable
+export const API_V2_BASE_URL = import.meta.env.VITE_API_V2_BASE_URL;
 
 /**
  * Send an asynchronous HTTP GET request to the remote API (backend)
  * @param url Relative backend API url
- * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @return The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiGet(url: string) {
@@ -23,9 +25,19 @@ export async function asyncApiGet(url: string) {
 }
 
 /**
+ * Send an asynchronous HTTP GET request to the remote API, version 2 (backend)
+ * @param url Relative backend API url
+ * @return The response body, parsed as a JSON
+ * @throws {HttpResponseError} Error code and message from the response body
+ */
+export async function asyncApiGetV2(url: string) {
+  return asyncApiRequest("GET", url, null, false, null, true);
+}
+
+/**
  * Send an asynchronous HTTP GET request to the remote API (backend) and get the response as a BLOB instead of JSON
  * @param url Relative backend API url
- * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @return The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiGetBlob(url: string): Promise<Blob> {
@@ -36,7 +48,7 @@ export async function asyncApiGetBlob(url: string): Promise<Blob> {
  * Send an asynchronous HTTP POST request to the remote API (backend)
  * @param url Relative backend API url
  * @param requestBody The parameters to include in the request body
- * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @return The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiPost(
@@ -50,7 +62,7 @@ export async function asyncApiPost(
  * Upload a file as multipart form data to the backend, using HTTP POST
  * @param {string} url Relative backend API url
  * @param fileContent The content of the file to upload
- * @return {Promise<JSON>} The response body, parsed as a JSON
+ * @return The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiPostFile(
@@ -89,7 +101,8 @@ export async function asyncApiDelete(
  * @param returnBlob When true, return the response as a Blob instead of JSON
  * @param fileContent Content of a file to upload.
  * Note: fileContent is only considered when requestBody is not specified!
- * @return @return {Promise<JSON>} The response body, parsed as a JSON
+ * @param api_version2 When true, use the API version 2 (Node.js Express)
+ * @return The response body, parsed as a JSON
  * @throws {HttpResponseError} Error code and message from the response body
  */
 async function asyncApiRequest(
@@ -97,9 +110,12 @@ async function asyncApiRequest(
   url: string,
   requestBody: object | null = null,
   returnBlob: boolean = false,
-  fileContent: File | null = null
+  fileContent: File | null = null,
+  api_version2: boolean = false
 ): Promise<JSON | Blob> {
-  const fullUrl: string = API_BASE_URL + url;
+  const baseUrl = api_version2 ? API_V2_BASE_URL : API_V1_BASE_URL;
+  const fullUrl: string = baseUrl + url;
+
   let headers: HttpHeaders = createAuthenticationHeader();
   let body = null;
   if (method.toLowerCase() !== "get" && requestBody) {
@@ -124,7 +140,7 @@ async function asyncApiRequest(
 
 /**
  * Get HTTP request headers with authentication info, if it is available
- * @return {object} Header object, which will include an "Authorization" header,
+ * @return Header object, which will include an "Authorization" header,
  * if JWT token is available.
  */
 function createAuthenticationHeader(): HttpHeaders {
