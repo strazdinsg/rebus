@@ -1,13 +1,16 @@
 import express from "express";
 import db from "./db/dbConfig.js";
-import dotenv from "dotenv";
+import cors from "cors";
+import { corsOptions } from "./corsOptions.js";
+import { loadEnvironmentVariables } from "./environment.js";
 
-dotenv.config();
+loadEnvironmentVariables();
 
 const DEFAULT_PORT = 3000;
 const port = process.env.SERVER_PORT || DEFAULT_PORT;
 
 const server = express();
+server.use(cors(corsOptions));
 
 server.get("/", (req, res) => {
   res.send("Rebus backend, v2");

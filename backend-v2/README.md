@@ -16,6 +16,7 @@ First you need to ensure the following requirements are met:
     - DB_PORT - TCP port number for the database
     - JWT_SECRET_KEY - secret key used to sign JWT tokens
     - SERVER_PORT - port number to run the server on
+    - ALLOWED_ORIGINS - comma-separated list of allowed origins for CORS
 
 You can start the backend by executing `npm run restart` in the terminal. This will compile the
 TypeScript code and start the server.
