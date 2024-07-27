@@ -3,6 +3,8 @@ import db from "./db/dbConfig.js";
 import cors from "cors";
 import { corsOptions } from "./corsOptions.js";
 import { loadEnvironmentVariables } from "./environment.js";
+import { ChallengeDto } from "schemas/src/dto/challenge";
+import { RowDataPacket } from "mysql2";
 
 loadEnvironmentVariables();
 
@@ -17,12 +19,19 @@ server.get("/", (req, res) => {
 });
 
 server.get("/challenges", (req, res) => {
-  db.query("SELECT * FROM challenge", (err, results) => {
+  db.query("SELECT * FROM challenge", (err, results: RowDataPacket[]) => {
     if (err) {
       console.error(err);
       res.status(500).send("Internal server error");
     } else {
-      res.send(results);
+      const challenges: ChallengeDto[] = results.map((row) => {
+        return {
+          id: row.id,
+          question: row.question,
+          maxScore: row.max_score,
+        };
+      });
+      res.send(challenges);
     }
   });
 });

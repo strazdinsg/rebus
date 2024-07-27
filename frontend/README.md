@@ -18,11 +18,14 @@ VITE_API_V1_BASE_URL=http://localhost:8080
 VITE_API_V2_BASE_URL=http://localhost:3000
 ```
 
-*
-
 The easiest way is to store it inside `.env` file. Note: the value in the `.env` file will be only
 considered when you run or build the application. You can't update it after the frontend application
 is already running!
+
+Then you need to link this project to the [schemas](../schemas) project. This can be done by
+running `npm link` in the schemas project directory, then running `npm link schemas` in this
+project directory. The reason for this is that this project needs to access the schemas package
+because it needs the Data Transfer Objects (DTOs) defined in the schemas package.
 
 ## Authentication
 
