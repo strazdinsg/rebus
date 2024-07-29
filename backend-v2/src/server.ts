@@ -3,7 +3,7 @@ import db from "./db/dbConfig.js";
 import cors from "cors";
 import { corsOptions } from "./corsOptions.js";
 import { loadEnvironmentVariables } from "./environment.js";
-import { ChallengeDto } from "schemas/src/dto/challenge";
+import { ChallengeDto } from "schemas/src/challenge";
 import { RowDataPacket } from "mysql2";
 
 loadEnvironmentVariables();
