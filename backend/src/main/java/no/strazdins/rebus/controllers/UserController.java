@@ -1,6 +1,7 @@
 package no.strazdins.rebus.controllers;
 
 import no.strazdins.rebus.dto.AnswerDto;
+import no.strazdins.rebus.dto.MyAnswerDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class UserController {
   @PostMapping("/answers/{challengeId}/{userId}")
   public ResponseEntity<String> postAnswer(@PathVariable Integer challengeId,
                                            @PathVariable Integer userId,
-                                           @RequestBody AnswerDto answer) {
+                                           @RequestBody MyAnswerDto answer) {
     if (userService.isForbiddenToAccessUser(userId)) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body("Can't post an answer in the name of another team");

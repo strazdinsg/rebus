@@ -8,6 +8,7 @@ import {
 } from "./cookies";
 import { asyncApiPost } from "./requests";
 import { UserSession } from "../context/UserContext";
+import { JwtDto } from "schemas/src/jwt";
 
 /**
  * Basic JWT token structure.
@@ -64,10 +65,9 @@ export function sendAuthenticationRequest(
   const postData = {
     pin: pin,
   };
-  asyncApiPost("/authenticate", postData)
+  asyncApiPost<JwtDto>("/authenticate", JwtDto, postData)
     .then((jwtResponse) => {
-      const jwtData: { jwt: string } = jwtResponse as any as { jwt: string };
-      onAuthSuccess(jwtData.jwt, successCallback);
+      onAuthSuccess(jwtResponse.jwt, successCallback);
     })
     .catch((error) => {
       const code =
