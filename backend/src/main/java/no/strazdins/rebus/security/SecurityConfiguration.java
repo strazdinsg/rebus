@@ -25,10 +25,14 @@ public class SecurityConfiguration {
   /**
    * A service providing our users from the database.
    */
-  @Autowired
-  private UserDetailsService userDetailsService;
-  @Autowired
-  private JwtRequestFilter jwtRequestFilter;
+  private final UserDetailsService userDetailsService;
+  private final JwtRequestFilter jwtRequestFilter;
+
+  public SecurityConfiguration(UserDetailsService userDetailsService,
+                               JwtRequestFilter jwtRequestFilter) {
+    this.userDetailsService = userDetailsService;
+    this.jwtRequestFilter = jwtRequestFilter;
+  }
 
   /**
    * This method will be called automatically by the framework to find out what authentication

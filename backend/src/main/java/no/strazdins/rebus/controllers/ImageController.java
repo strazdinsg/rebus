@@ -3,7 +3,6 @@ package no.strazdins.rebus.controllers;
 import no.strazdins.rebus.model.Image;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin
 @PreAuthorize("hasRole('USER')")
 public class ImageController {
-  @Autowired
-  ImageService imageService;
-  @Autowired
-  UserService userService;
+  private final ImageService imageService;
+  private final UserService userService;
+
+  public ImageController(ImageService imageService, UserService userService) {
+    this.imageService = imageService;
+    this.userService = userService;
+  }
 
   /**
    * Upload an image to the server.
@@ -69,7 +71,7 @@ public class ImageController {
   public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
                                     @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
-      return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(new byte[]{}, HttpStatus.UNAUTHORIZED);
     }
 
     ResponseEntity<byte[]> response;
@@ -79,7 +81,7 @@ public class ImageController {
           .header(HttpHeaders.CONTENT_TYPE, image.getContentType())
           .body(image.getData());
     } else {
-      response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      response = new ResponseEntity<>(new byte[]{}, HttpStatus.NOT_FOUND);
     }
     return response;
   }

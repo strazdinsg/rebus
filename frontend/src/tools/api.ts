@@ -1,29 +1,30 @@
 import {
   asyncApiGet,
   asyncApiGetBlob,
+  asyncApiGetV2,
   asyncApiPost,
   asyncApiPostFile,
 } from "./requests";
-import { Answer, ShortTeamAnswers } from "../redux/answerSlice";
-import { Challenge } from "../redux/challengeSlice";
-import { Team } from "../redux/teamSlice";
+import { z } from "zod";
+import { ChallengeDto } from "schemas/src/challenge";
+import { ShortTeamAnswersDto, TeamAnswersDto } from "schemas/src/answer";
+import { TeamDto } from "schemas/src/team";
+import { MyAnswerDto } from "schemas/src/answer";
 
 //////////////////////////////////////
 // API requests to the backend
 //////////////////////////////////////
-
-export type TeamAnswers = {
-  teamId: number;
-  answers: Answer[];
-};
 
 /**
  * Send request to API - Get all challenges
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export function apiGetChallenges(): Promise<Challenge[]> {
-  return asyncApiGet("/challenges") as any as Promise<Challenge[]>;
+export async function apiGetChallenges(): Promise<ChallengeDto[] | null> {
+  return await asyncApiGetV2<ChallengeDto[]>(
+    "/challenges",
+    z.array(ChallengeDto)
+  );
 }
 
 /**
@@ -31,8 +32,8 @@ export function apiGetChallenges(): Promise<Challenge[]> {
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export function apiGetMyAnswers(): Promise<TeamAnswers> {
-  return asyncApiGet("/answers/my") as any as Promise<TeamAnswers>;
+export async function apiGetMyAnswers(): Promise<TeamAnswersDto> {
+  return await asyncApiGet<TeamAnswersDto>("/answers/my", TeamAnswersDto);
 }
 
 /**
@@ -40,8 +41,11 @@ export function apiGetMyAnswers(): Promise<TeamAnswers> {
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export function apiGetAllAnswers(): Promise<ShortTeamAnswers[]> {
-  return asyncApiGet("/answers") as any as Promise<ShortTeamAnswers[]>;
+export async function apiGetAllAnswers(): Promise<ShortTeamAnswersDto[]> {
+  return await asyncApiGet<ShortTeamAnswersDto[]>(
+    "/answers",
+    z.array(ShortTeamAnswersDto)
+  );
 }
 
 /**
@@ -52,32 +56,38 @@ export function apiGetAllAnswers(): Promise<ShortTeamAnswers[]> {
  * generate image source. Use the response in this way: img.src = URL.createObjectURL(responseBlob)
  *
  * Throws an exception on error */
-export function apiGetImage(
+export async function apiGetImage(
   challengeId: number,
   userId: number
 ): Promise<Blob> {
-  return asyncApiGetBlob(`/pictures/${challengeId}/${userId}`);
+  return await asyncApiGetBlob(`/pictures/${challengeId}/${userId}`);
 }
 
-export function apiUploadPicture(
+export async function apiUploadPicture(
   challengeId: number,
   userId: number,
   pictureContent: File
 ): Promise<JSON> {
-  return asyncApiPostFile(`/pictures/${challengeId}/${userId}`, pictureContent);
+  return await asyncApiPostFile(
+    `/pictures/${challengeId}/${userId}`,
+    pictureContent
+  );
 }
 
-export function apiPostAnswer(
+export async function apiPostAnswer(
   challengeId: number,
   userId: number,
   answer: string
-): Promise<JSON> {
-  // P.S. We include the challengeId simply because then we can re-use the AnswerDto object for parsing the
-  // payload on the backend side
-  return asyncApiPost(`/answers/${challengeId}/${userId}`, {
+): Promise<string> {
+  const answerDto: MyAnswerDto = {
     challengeId: challengeId,
     answer: answer,
-  });
+  };
+  return await asyncApiPost<string>(
+    `/answers/${challengeId}/${userId}`,
+    z.string(),
+    answerDto
+  );
 }
 
 /**
@@ -85,8 +95,8 @@ export function apiPostAnswer(
  * @return {Promise<[]>} Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export function apiGetTeams(): Promise<Team[]> {
-  return asyncApiGet("/teams") as any as Promise<Team[]>;
+export async function apiGetTeams(): Promise<TeamDto[]> {
+  return await asyncApiGet<TeamDto[]>("/teams", z.array(TeamDto));
 }
 
 /**
@@ -95,10 +105,16 @@ export function apiGetTeams(): Promise<Team[]> {
  * @param userId ID of the user (team)
  * @param score The score. Null when score is deleted
  */
-export function apiPostScore(
+export async function apiPostScore(
   challengeId: number,
   userId: number,
   score: number | null
-): Promise<JSON> {
-  return asyncApiPost(`/score/${challengeId}/${userId}`, { score: score });
+): Promise<string> {
+  return await asyncApiPost<string>(
+    `/score/${challengeId}/${userId}`,
+    z.string(),
+    {
+      score: score,
+    }
+  );
 }

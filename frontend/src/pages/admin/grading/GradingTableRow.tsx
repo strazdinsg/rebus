@@ -2,14 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import ScoreSelectBox from "./ScoreSelectBox";
 import { useEffect } from "react";
 import { apiGetImage, apiPostScore } from "../../../tools/api";
-import { ShortTeamAnswers, updateScore } from "../../../redux/answerSlice";
+import { updateScore } from "../../../redux/answerSlice";
 import { RootState } from "../../../redux/store";
-import { Team } from "../../../redux/teamSlice";
+import { TeamDto } from "schemas/src/team";
+import { ShortTeamAnswersDto } from "schemas/src/answer";
 
 /**
  * One row in the grading table - for one team
  */
-export function GradingTableRow(props: { team: Team }) {
+export function GradingTableRow(props: { team: TeamDto }) {
   const challenges = useSelector(
     (state: RootState) => state.challengeStore.challenges
   );
@@ -46,7 +47,7 @@ export function GradingTableRow(props: { team: Team }) {
     </tr>
   );
 
-  function getTeamAnswers(allAnswers: ShortTeamAnswers[]) {
+  function getTeamAnswers(allAnswers: ShortTeamAnswersDto[]) {
     if (allAnswers == null) return null;
     const teamAnswers = allAnswers.find(
       (answer) => answer.teamId === props.team.id

@@ -1,16 +1,7 @@
 import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
+import { ChallengeDto } from "schemas/src/challenge";
 
-export type Challenge = {
-  id: number;
-  question: string;
-  maxScore: number;
-};
-
-type ChallengeSetAction = {
-  payload: Challenge[];
-};
-
-type ChallengeStore = { challenges: Challenge[] };
+type ChallengeStore = { challenges: ChallengeDto[] };
 
 /**
  * The Redux slice responsible for challenge data.
@@ -31,7 +22,7 @@ export const challengeSlice = createSlice<
      * @param state The old state
      * @param action The action containing new challenges as the payload property
      */
-    setChallenges: function (state, action: ChallengeSetAction) {
+    setChallenges: function (state, action: { payload: ChallengeDto[] }) {
       state.challenges = action.payload;
     },
   },

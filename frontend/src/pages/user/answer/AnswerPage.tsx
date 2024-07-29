@@ -7,14 +7,15 @@ import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
 import { useDispatch, useSelector } from "react-redux";
 import { UserContext } from "../../../context/UserContext";
-import { Answer, setMyAnswerForChallenge } from "../../../redux/answerSlice";
+import { setMyAnswerForChallenge } from "../../../redux/answerSlice";
 import { apiPostAnswer, apiUploadPicture } from "../../../tools/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { dataURItoFile } from "../../../tools/imageTools";
 import { clearPictureToUpload } from "../../../redux/pictureSlice";
 import { RootState } from "../../../redux/store";
-import { Challenge } from "../../../redux/challengeSlice";
+import { ChallengeDto } from "schemas/src/challenge";
+import { AnswerDto } from "schemas/src/answer";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -110,10 +111,10 @@ export function AnswerPage() {
   );
 
   function getSelectedChallenge(
-    challenges: Challenge[],
+    challenges: ChallengeDto[],
     id: number | null
-  ): Challenge | null {
-    let challenge: Challenge | null = null;
+  ): ChallengeDto | null {
+    let challenge: ChallengeDto | null = null;
     if (id) {
       challenge = challenges.find((challenge) => challenge.id === id) || null;
     }
@@ -138,7 +139,7 @@ export function AnswerPage() {
    * Find answer for this particular challenge
    * @return {null|string}
    */
-  function findChallengeAnswer(): Answer | null {
+  function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
     if (myAnswers && challengeId) {
       answer =
