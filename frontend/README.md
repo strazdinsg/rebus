@@ -10,12 +10,15 @@ You need to provide the following environment variables:
   Boot).
 * `VITE_API_V2_BASE_URL`. It needs to point to the location of your backend, version 2 (Node.js,
   Express).
+* `VITE_SERVER_PORT` - TCP port number to use for the development-run of the frontend with Vite 
+  (The one you launch with `npm run start`).
  
 For example:
 
 ```
 VITE_API_V1_BASE_URL=http://localhost:8080
 VITE_API_V2_BASE_URL=http://localhost:3000
+VITE_SERVER_PORT=80
 ```
 
 The easiest way is to store it inside `.env` file. Note: the value in the `.env` file will be only
