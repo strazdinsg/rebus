@@ -1,11 +1,7 @@
 import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
+import { TeamDto } from "schemas/src/team";
 
-export type Team = {
-  id: number;
-  name: string;
-};
-
-type TeamStore = { teams: Team[] };
+type TeamStore = { teams: TeamDto[] };
 
 /**
  * The Redux slice responsible for all teams.
@@ -26,7 +22,7 @@ export const teamSlice = createSlice<
      * @param state The old state
      * @param action The action containing teams as the payload property
      */
-    setTeams: function (state, action: { payload: Team[] }) {
+    setTeams: function (state, action: { payload: TeamDto[] }) {
       state.teams = action.payload;
     },
   },

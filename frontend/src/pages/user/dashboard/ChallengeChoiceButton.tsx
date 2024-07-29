@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Challenge } from "../../../redux/challengeSlice";
+import { ChallengeDto } from "schemas/src/challenge";
 
 // Properties of the challenge button
 type ChallengeChoiceButtonProps = {
-  challenge: Challenge; // The challenge this button represents
+  challenge: ChallengeDto; // The challenge this button represents
   submitted: boolean; // Is the user already answered this challenge?
 };
 

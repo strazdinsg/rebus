@@ -4,7 +4,8 @@ import { AnswerPage } from "./answer/AnswerPage";
 import { useDispatch } from "react-redux";
 import { setMyAnswers } from "../../redux/answerSlice";
 import { useEffect } from "react";
-import { apiGetMyAnswers, TeamAnswers } from "../../tools/api";
+import { apiGetMyAnswers } from "../../tools/api";
+import { TeamAnswersDto } from "schemas/src/answer";
 
 /**
  * Main page component for a regular user.
@@ -14,7 +15,7 @@ export function UserPage() {
 
   useEffect(() => {
     async function loadMyAnswers() {
-      const ma: TeamAnswers = await apiGetMyAnswers();
+      const ma: TeamAnswersDto = await apiGetMyAnswers();
       dispatch(setMyAnswers(ma.answers));
     }
 

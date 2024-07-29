@@ -1,7 +1,5 @@
 import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
-
-type NullableNumber = number | null;
-type NullableString = string | null;
+import { AnswerDto, ShortTeamAnswersDto } from "schemas/src/answer";
 
 type ScoreUpdateAction = {
   payload: {
@@ -11,21 +9,9 @@ type ScoreUpdateAction = {
   };
 };
 
-export type Answer = {
-  challengeId: number;
-  answer: string;
-  score: number | null;
-};
-
-export type ShortTeamAnswers = {
-  teamId: number;
-  answers: NullableString[];
-  scores: NullableNumber[];
-};
-
-export type AnswerStore = {
-  myAnswers: Answer[];
-  allAnswers: ShortTeamAnswers[];
+type AnswerStore = {
+  myAnswers: AnswerDto[];
+  allAnswers: ShortTeamAnswersDto[];
 };
 
 /**
@@ -47,7 +33,7 @@ export const answerSlice = createSlice<
      * @param state
      * @param action
      */
-    setMyAnswers: function (state, action: { payload: Answer[] }) {
+    setMyAnswers: function (state, action: { payload: AnswerDto[] }) {
       state.myAnswers = action.payload;
     },
     /**
@@ -65,7 +51,10 @@ export const answerSlice = createSlice<
      * @param state
      * @param action
      */
-    setAllAnswers: function (state, action: { payload: ShortTeamAnswers[] }) {
+    setAllAnswers: function (
+      state,
+      action: { payload: ShortTeamAnswersDto[] }
+    ) {
       state.allAnswers = action.payload;
     },
     /**
@@ -83,11 +72,11 @@ export const answerSlice = createSlice<
   },
 });
 
-function findOrCreateAnswer(myAnswers: Answer[], challengeId: number) {
+function findOrCreateAnswer(myAnswers: AnswerDto[], challengeId: number) {
   const answerIndex = myAnswers.findIndex(
     (answer) => answer.challengeId === challengeId
   );
-  let answerToUpdate: Answer;
+  let answerToUpdate: AnswerDto;
   if (answerIndex >= 0) {
     answerToUpdate = myAnswers[answerIndex];
   } else {
@@ -97,7 +86,7 @@ function findOrCreateAnswer(myAnswers: Answer[], challengeId: number) {
   return answerToUpdate;
 }
 
-function findOrCreateScores(allAnswers: ShortTeamAnswers[], userId: number) {
+function findOrCreateScores(allAnswers: ShortTeamAnswersDto[], userId: number) {
   let teamAnswers = allAnswers.find(
     (allTeamAnswers) => allTeamAnswers.teamId === userId
   );
@@ -114,7 +103,7 @@ function findOrCreateScores(allAnswers: ShortTeamAnswers[], userId: number) {
 function createEmptyTeamAnswers(
   userId: number,
   challengeCount: number
-): ShortTeamAnswers {
+): ShortTeamAnswersDto {
   return {
     teamId: userId,
     answers: createNullArray(challengeCount),
@@ -122,7 +111,7 @@ function createEmptyTeamAnswers(
   };
 }
 
-function getChallengeCount(allAnswers: ShortTeamAnswers[]) {
+function getChallengeCount(allAnswers: ShortTeamAnswersDto[]) {
   return allAnswers[0].answers.length;
 }
 
