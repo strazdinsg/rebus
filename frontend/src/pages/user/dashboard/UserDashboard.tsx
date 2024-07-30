@@ -5,6 +5,7 @@ import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 import "./UserDashboard.css";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { useChallenges } from "../../../queries/challengeQueries";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
@@ -12,15 +13,21 @@ import { RootState } from "../../../redux/store";
 export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const challenges = useSelector(
-    (state: RootState) => state.challengeStore.challenges
-  );
+  const { isPending, error, data: challenges } = useChallenges();
   const myAnswers = useSelector(
     (state: RootState) => state.answerStore.myAnswers
   );
 
-  if (user == null) {
+  if (!user || isPending) {
     return <main>Loading user data...</main>;
+  }
+
+  if (error) {
+    return <main>Could not load challenges, contact the developer</main>;
+  }
+
+  if (!challenges) {
+    return <main>No challenges found</main>;
   }
 
   return (

@@ -16,6 +16,7 @@ import { clearPictureToUpload } from "../../../redux/pictureSlice";
 import { RootState } from "../../../redux/store";
 import { ChallengeDto } from "schemas/src/challenge";
 import { AnswerDto } from "schemas/src/answer";
+import { useChallenges } from "../../../queries/challengeQueries";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -23,9 +24,20 @@ import { AnswerDto } from "schemas/src/answer";
 export function AnswerPage() {
   const { challengeId } = useParams();
   const challengeIdNum = challengeId ? parseInt(challengeId) : null;
-  const challenges = useSelector(
-    (state: RootState) => state.challengeStore.challenges
-  );
+  const { isPending, error, data: challenges } = useChallenges();
+
+  if (isPending) {
+    return <main>Loading challenges...</main>;
+  }
+
+  if (error) {
+    return <main>Could not load challenges, contact the developer</main>;
+  }
+
+  if (!challenges) {
+    return <main>No challenges found</main>;
+  }
+
   const challenge = getSelectedChallenge(challenges, challengeIdNum);
   const myAnswers = useSelector(
     (state: RootState) => state.answerStore.myAnswers
@@ -156,6 +168,7 @@ export function AnswerPage() {
 
   function onAnswerSubmitted() {
     setErrorText("");
+
     toast.success("Answer saved");
     dispatch(
       setMyAnswerForChallenge({

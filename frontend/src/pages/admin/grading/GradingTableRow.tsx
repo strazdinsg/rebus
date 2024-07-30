@@ -6,21 +6,31 @@ import { updateScore } from "../../../redux/answerSlice";
 import { RootState } from "../../../redux/store";
 import { TeamDto } from "schemas/src/team";
 import { ShortTeamAnswersDto } from "schemas/src/answer";
+import { useChallenges } from "../../../queries/challengeQueries";
 
 /**
  * One row in the grading table - for one team
  */
 export function GradingTableRow(props: { team: TeamDto }) {
-  const challenges = useSelector(
-    (state: RootState) => state.challengeStore.challenges
-  );
+  const { isPending, error, data: challenges } = useChallenges();
   const teamAnswers = useSelector((state: RootState) =>
     getTeamAnswers(state.answerStore.allAnswers)
   );
   const dispatch = useDispatch();
 
+  if (isPending) {
+    return renderMessage("Loading challenges...");
+  }
+
+  if (error) {
+    return renderMessage("Could not load challenges, contact the developer");
+  }
+
+  if (!challenges) {
+    return renderMessage("No challenges found");
+  }
+
   // Ignore the warning about dependencies
-  // eslint-disable-next-line
   useEffect(loadImages, []);
 
   return (
@@ -73,9 +83,11 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   function loadImages() {
+    if (!challenges) return;
     console.log("Loading images...");
-    for (let challengeIndex in challenges) {
-      const challengeId = challenges[challengeIndex].id;
+
+    for (let i = 0; i < challenges.length; ++i) {
+      const challengeId = challenges[i].id;
       apiGetImage(challengeId, props.team.id)
         .then((imageBlob) => showImage(imageBlob, challengeId))
         .catch((_) => {});
@@ -118,5 +130,9 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return teamAnswers.scores.reduce(
       (total, current) => (total || 0) + (current || 0)
     );
+  }
+
+  function renderMessage(message: string) {
+    return <tr>{message}</tr>;
   }
 }
