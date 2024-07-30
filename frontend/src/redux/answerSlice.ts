@@ -29,14 +29,6 @@ export const answerSlice = createSlice<
   },
   reducers: {
     /**
-     * Set answers for the current user
-     * @param state
-     * @param action
-     */
-    setMyAnswers: function (state, action: { payload: AnswerDto[] }) {
-      state.myAnswers = action.payload;
-    },
-    /**
      * Set (or update) one answer for the current user
      * @param state
      * @param action Must contain payload in the format {challengeId, answer}
@@ -45,17 +37,6 @@ export const answerSlice = createSlice<
       const challengeId = parseInt(action.payload.challengeId);
       const answerToUpdate = findOrCreateAnswer(state.myAnswers, challengeId);
       answerToUpdate.answer = action.payload.answer;
-    },
-    /**
-     * Set all answers for the all users (teams)
-     * @param state
-     * @param action
-     */
-    setAllAnswers: function (
-      state,
-      action: { payload: ShortTeamAnswersDto[] }
-    ) {
-      state.allAnswers = action.payload;
     },
     /**
      * Set (or update) score for one answer for a specific user and challenge
@@ -123,10 +104,5 @@ function createNullArray(length: number): null[] {
   return a;
 }
 
-export const {
-  setMyAnswers,
-  setMyAnswerForChallenge,
-  setAllAnswers,
-  updateScore,
-} = answerSlice.actions;
+export const { setMyAnswerForChallenge, updateScore } = answerSlice.actions;
 export default answerSlice.reducer;
