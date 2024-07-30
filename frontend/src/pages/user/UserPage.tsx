@@ -6,6 +6,7 @@ import { setMyAnswers } from "../../redux/answerSlice";
 import { useEffect } from "react";
 import { apiGetMyAnswers } from "../../tools/api";
 import { TeamAnswersDto } from "schemas/src/answer";
+import { ZodError } from "zod";
 
 /**
  * Main page component for a regular user.
@@ -19,7 +20,9 @@ export function UserPage() {
       dispatch(setMyAnswers(ma.answers));
     }
 
-    loadMyAnswers().catch(console.error);
+    loadMyAnswers().catch((error: ZodError) => {
+      console.error(error.message);
+    });
   }, [dispatch]);
 
   return (
