@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 /**
  * Challenge DTO.
@@ -7,11 +7,11 @@ import {z} from "zod";
  * @property maxScore Maximum score for the challenge
  */
 const ChallengeDto = z.object({
-    id: z.number().int("ID must be an integer"),
-    question: z.string(),
-    maxScore: z.number().int("Max score must be an integer"),
+  id: z.number().int("ID must be an integer"),
+  question: z.string(),
+  maxScore: z.number().int("Max score must be an integer"),
 });
 
 type ChallengeDto = z.infer<typeof ChallengeDto>;
 
-export {ChallengeDto};
+export { ChallengeDto };
