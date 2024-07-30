@@ -47,7 +47,9 @@ public class AnswerService {
   public TeamAnswerDto getForTeam(int teamId) {
     List<AnswerDto> challengeAnswers = new LinkedList<>();
     for (Answer answer : answerRepository.findByUserId(teamId)) {
-      challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null));
+      if (answer.getAnswer() != null) {
+        challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null));
+      }
     }
     return new TeamAnswerDto(teamId, challengeAnswers);
   }
