@@ -4,7 +4,7 @@ Rebus management system, with a web-based user interface. First used in CFlow PÃ
 Strazdina.
 
 The solution consists of a [React frontend](frontend) and a [Spring Boot backend](backend). See the setup instructions
-in each sub-project folder.
+in each subproject folder.
 
 ## Disclaimer
 
