@@ -5,36 +5,43 @@ import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { ImageUploader } from "./ImageUploader";
-import { useDispatch, useSelector } from "react-redux";
 import { UserContext } from "../../../context/UserContext";
-import { setMyAnswerForChallenge } from "../../../redux/answerSlice";
-import { apiPostAnswer, apiUploadPicture } from "../../../tools/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { dataURItoFile } from "../../../tools/imageTools";
-import { clearPictureToUpload } from "../../../redux/pictureSlice";
-import { RootState } from "../../../redux/store";
 import { ChallengeDto } from "schemas/src/challenge";
 import { AnswerDto } from "schemas/src/answer";
+import { useChallenges } from "../../../queries/challengeQueries";
+import {
+  useMyAnswers,
+  useUpdateMyAnswer,
+} from "../../../queries/answerQueries";
+import { useImage, useUploadImage } from "../../../queries/imageQueries";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
  */
 export function AnswerPage() {
   const { challengeId } = useParams();
-  const challengeIdNum = challengeId ? parseInt(challengeId) : null;
-  const challenges = useSelector(
-    (state: RootState) => state.challengeStore.challenges
-  );
-  const challenge = getSelectedChallenge(challenges, challengeIdNum);
-  const myAnswers = useSelector(
-    (state: RootState) => state.answerStore.myAnswers
-  );
-  const pictureToUpload = useSelector(
-    (state: RootState) => state.pictureStore.pictureToUpload
-  );
+  const challengeIdNum = challengeId ? parseInt(challengeId) : 0;
+  const challenges = useChallenges();
+  const updateMyAnswer = useUpdateMyAnswer(onAnswerSaved, onAnswerSaveFailed);
+  const myAnswers = useMyAnswers();
   const user = useContext(UserContext).user;
-  const userId = user !== null ? user.id : null;
+  const userId = user !== null ? user.id : -1;
+
+  // Image stuff
+  const [updatedImageData, setUpdatedImageData] = useState<string | null>(null);
+  const existingImage = useImage(challengeIdNum, userId);
+  const uploadImage = useUploadImage(
+    challengeIdNum,
+    userId,
+    onImageUploaded,
+    onImageUploadFailed
+  );
+
+  const challenge = challenges.data
+    ? getSelectedChallenge(challenges.data, challengeIdNum)
+    : null;
 
   const submittedAnswer = findChallengeAnswer();
   let submittedAnswerText =
@@ -47,11 +54,25 @@ export function AnswerPage() {
     submittedAnswerText !== "" ? submittedAnswerText : null
   );
   const [errorText, setErrorText] = useState("");
-  const submissionEnabled = !!updatedAnswer;
+  const submissionEnabled = !updateMyAnswer.isPending && updatedAnswer != "";
   const hasError = !!errorText;
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  if (challenges.isPending || myAnswers.isPending || existingImage.isPending) {
+    return <main>Loading...</main>;
+  }
+
+  if (challenges.error) {
+    return <main>Could not load challenges, contact the developer</main>;
+  }
+
+  if (updateMyAnswer.error) {
+    return <main>Could not save answer, contact the developer</main>;
+  }
+
+  if (!challenges.data) {
+    return <main>No challenges found</main>;
+  }
 
   if (userId == null || challengeIdNum == null || challenge == null) {
     return <main>Loading challenge data...</main>;
@@ -85,7 +106,12 @@ export function AnswerPage() {
             onChange={(event) => setUpdatedAnswer(event.target.value)}
             value={updatedAnswer || ""}
           />
-          <ImageUploader challengeId={challengeIdNum} userId={userId} />
+          <ImageUploader
+            challengeId={challengeIdNum}
+            userId={userId}
+            existingImage={existingImage.data || null}
+            setImageToUpload={setUpdatedImageData}
+          />
           <Button
             variant="contained"
             onClick={submitAnswer}
@@ -122,15 +148,16 @@ export function AnswerPage() {
   }
 
   function goBack() {
-    dispatch(clearPictureToUpload(null));
+    // setPictureToUpload(null); // Is this necessary?
     navigate(-1);
   }
 
   function submitAnswer() {
     if (challengeIdNum && userId && updatedAnswer) {
-      apiPostAnswer(challengeIdNum, userId, updatedAnswer)
-        .then(onAnswerSubmitted)
-        .catch(handleSubmissionError);
+      updateMyAnswer.mutate({
+        challengeId: challengeIdNum,
+        answer: updatedAnswer,
+      });
       uploadSelectedImage();
     }
   }
@@ -141,58 +168,55 @@ export function AnswerPage() {
    */
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
-    if (myAnswers && challengeId) {
+    if (myAnswers.data && myAnswers.data.answers && challengeIdNum > 0) {
       answer =
-        myAnswers.find((a) => a.challengeId === parseInt(challengeId)) || null;
+        myAnswers.data.answers.find((a) => a.challengeId === challengeIdNum) ||
+        null;
     }
     return answer;
   }
 
-  function handleSubmissionError(error: any) {
-    if (error instanceof TypeError && error.message === "Failed to fetch") {
-      setErrorText("Something wrong with submission, contact the organizers!");
-    }
+  function onAnswerSaveFailed() {
+    toast.error("Could not save answer, contact the organizers!");
   }
 
-  function onAnswerSubmitted() {
+  function onAnswerSaved() {
     setErrorText("");
-    toast.success("Answer saved");
-    dispatch(
-      setMyAnswerForChallenge({
-        challengeId: challengeId,
-        answer: updatedAnswer,
-      })
-    );
+    // Delay the toast to avoid flickering
+    setTimeout(() => {
+      toast.success("Answer saved", {
+        toastId: "answer-save-toast",
+      });
+    }, 10);
   }
 
   function uploadSelectedImage() {
-    if (pictureToUpload == null) {
+    if (!updatedImageData) {
       return;
     }
 
-    const imageFile = dataURItoFile(pictureToUpload, "image.jpeg");
+    uploadImage.mutate(updatedImageData);
+
     toast.info("Uploading photo...", {
       toastId: "image-upload-toast",
       autoClose: false,
     });
-    if (challengeId && userId) {
-      const challengeIdNum: number = parseInt(challengeId);
-      apiUploadPicture(challengeIdNum, userId, imageFile)
-        .then(() => {
-          toast.update("image-upload-toast", {
-            type: "success",
-            render: "Photo uploaded",
-            autoClose: 3000,
-          });
-          dispatch(clearPictureToUpload(null));
-        })
-        .catch((error) =>
-          toast.update("image-upload-toast", {
-            type: "error",
-            render: "Photo upload failed",
-            autoClose: 3000,
-          })
-        );
-    }
+  }
+
+  function onImageUploaded() {
+    toast.update("image-upload-toast", {
+      type: "success",
+      render: "Photo uploaded",
+      autoClose: 3000,
+    });
+    setUpdatedImageData(null);
+  }
+
+  function onImageUploadFailed() {
+    toast.update("image-upload-toast", {
+      type: "error",
+      render: "Photo upload failed",
+      autoClose: 3000,
+    });
   }
 }

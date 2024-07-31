@@ -1,38 +1,42 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { apiGetAllAnswers, apiGetTeams } from "../../../tools/api";
-import { setTeams } from "../../../redux/teamSlice";
 import { GradingTableHeader } from "./GradingTableHeader";
 import { GradingTableRow } from "./GradingTableRow";
-import { setAllAnswers } from "../../../redux/answerSlice";
 import "./GradingPage.css";
-import { RootState } from "../../../redux/store";
+import { useTeams } from "../../../queries/teamQueries";
 
 /**
  * Page where the admin can assign score to each challenge of each team.
  */
 export function GradingPage() {
-  const teams = useSelector((state: RootState) => state.teamStore.teams);
-  const dispatch = useDispatch();
+  const { isPending, error, data: teams } = useTeams();
 
-  useEffect(() => {
-    apiGetTeams()
-      .then((teams) => dispatch(setTeams(teams)))
-      .catch((error) => console.error(error));
+  if (error) {
+    return showMessage("Could not load teams, contact the developer");
+  }
 
-    apiGetAllAnswers()
-      .then((answers) => dispatch(setAllAnswers(answers)))
-      .catch((error) => console.log(error));
-  }, [dispatch]);
+  let content;
+
+  if (isPending) {
+    content = showMessage("Loading teams...");
+  } else if (teams) {
+    content = teams.map((team, index) => (
+      <GradingTableRow team={team} key={index} />
+    ));
+  } else {
+    content = <main>No teams found</main>;
+  }
 
   return (
     <table cellSpacing="0">
       <GradingTableHeader />
-      <tbody>
-        {teams.map((team, index) => (
-          <GradingTableRow team={team} key={index} />
-        ))}
-      </tbody>
+      <tbody>{content}</tbody>
     </table>
   );
+
+  function showMessage(message: string) {
+    return (
+      <tr>
+        <td>{message}</td>
+      </tr>
+    );
+  }
 }

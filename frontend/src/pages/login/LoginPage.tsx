@@ -52,7 +52,6 @@ export function LoginPage() {
   }
 
   function onLoginError(code: number, message: string) {
-    console.log(`Error ${code}: ${message}`);
     let errorMessage =
       "Something wrong with the server, contact the Rebus organizer!";
     if (code === HTTP_CODE_UNAUTHORIZED) {

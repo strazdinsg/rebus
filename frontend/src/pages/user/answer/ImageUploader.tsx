@@ -1,11 +1,5 @@
 import { Button } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import { apiGetImage } from "../../../tools/api";
-import { useDispatch } from "react-redux";
-import {
-  clearPictureToUpload,
-  setPictureToUpload,
-} from "../../../redux/pictureSlice";
 import { resizeImage } from "../../../tools/imageTools";
 import "./ImageUploader.css";
 
@@ -15,6 +9,8 @@ const MAX_IMAGE_HEIGHT = 1800;
 type ImageUploaderProps = {
   challengeId: number;
   userId: number;
+  setImageToUpload: (picture: string | null) => void;
+  existingImage: Blob | null;
 };
 
 /**
@@ -22,32 +18,14 @@ type ImageUploaderProps = {
  * @constructor
  */
 export function ImageUploader(props: ImageUploaderProps) {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const [preview, setPreview] = useState<string>("");
 
-  // When the component is initialized - fetch the user-uploaded image for the given challenge
-  useEffect(
-    function () {
-      async function fetchUploadedImage() {
-        const imageElement = document.getElementById(
-          "image-preview"
-        ) as HTMLImageElement | null;
-        const imageBlob = await apiGetImage(props.challengeId, props.userId);
-        if (imageElement) {
-          if (imageBlob) {
-            imageElement.src = URL.createObjectURL(imageBlob);
-            imageElement.style.display = "block";
-          } else {
-            imageElement.style.display = "none";
-          }
-        }
-      }
-      fetchUploadedImage()
-        .catch((error) => {})
-        .finally(() => setLoading(false));
-    },
-    [props]
-  );
+  useEffect(() => {
+    if (props.existingImage) {
+      setPreview(URL.createObjectURL(props.existingImage));
+    }
+  }, [props.existingImage]);
+
   return (
     <>
       <label htmlFor="image-upload-input">
@@ -61,8 +39,12 @@ export function ImageUploader(props: ImageUploaderProps) {
           Add photo
         </Button>
       </label>
-      {loading ? <p className="loading-image">Loading image...</p> : ""}
-      <img id="image-preview" alt="Preview of the user-selected file" />
+      <img
+        id="image-preview"
+        src={preview}
+        style={{ display: preview ? "block" : "none" }}
+        alt="Preview of the user-selected file"
+      />
     </>
   );
 
@@ -87,7 +69,7 @@ export function ImageUploader(props: ImageUploaderProps) {
           );
           imageElement.src = resizedDataUriImage;
           imageElement.style.display = "block";
-          dispatch(setPictureToUpload(resizedDataUriImage));
+          props.setImageToUpload(resizedDataUriImage);
         };
         if (readerEvent.target) {
           image.src = readerEvent.target.result as string;
@@ -96,7 +78,7 @@ export function ImageUploader(props: ImageUploaderProps) {
 
       reader.readAsDataURL(file);
     } else {
-      dispatch(clearPictureToUpload(null));
+      props.setImageToUpload(null);
       imageElement.style.display = "none";
     }
   }

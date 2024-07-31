@@ -1,27 +1,34 @@
-import { useDispatch, useSelector } from "react-redux";
 import ScoreSelectBox from "./ScoreSelectBox";
-import { useEffect } from "react";
-import { apiGetImage, apiPostScore } from "../../../tools/api";
-import { updateScore } from "../../../redux/answerSlice";
-import { RootState } from "../../../redux/store";
 import { TeamDto } from "schemas/src/team";
 import { ShortTeamAnswersDto } from "schemas/src/answer";
+import { useChallenges } from "../../../queries/challengeQueries";
+import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 
 /**
  * One row in the grading table - for one team
  */
 export function GradingTableRow(props: { team: TeamDto }) {
-  const challenges = useSelector(
-    (state: RootState) => state.challengeStore.challenges
-  );
-  const teamAnswers = useSelector((state: RootState) =>
-    getTeamAnswers(state.answerStore.allAnswers)
-  );
-  const dispatch = useDispatch();
+  const challenges = useChallenges();
+  const allAnswers = useAllAnswers();
+  const updateScore = useUpdateScore();
 
-  // Ignore the warning about dependencies
-  // eslint-disable-next-line
-  useEffect(loadImages, []);
+  if (challenges.isPending || allAnswers.isPending) {
+    return renderMessage("Loading...");
+  }
+
+  if (challenges.error || allAnswers.error) {
+    return renderMessage("Could not load data, contact the developer");
+  }
+
+  if (updateScore.error) {
+    return renderMessage("Could not save score, contact the developer");
+  }
+
+  if (!challenges || !challenges.data) {
+    return renderMessage("No challenges found");
+  }
+
+  const teamAnswers = getTeamAnswers(allAnswers.data);
 
   return (
     <tr>
@@ -29,7 +36,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
         {props.team.name}
         <br />({getTotalScore()})
       </td>
-      {challenges.map((challenge, index) => (
+      {challenges.data.map((challenge, index) => (
         <td key={index}>
           <ScoreSelectBox
             score={getScoreForChallenge(challenge.id)}
@@ -37,11 +44,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
             saveScore={(score: number | null) => saveScore(score, challenge.id)}
           />
           {getAnswerForChallenge(challenge.id)}
-          <img
-            className="team-photo"
-            alt="User-submitted"
-            id={getImageId(props.team.id, challenge.id)}
-          />
         </td>
       ))}
     </tr>
@@ -72,44 +74,12 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return teamAnswers.scores[challengeId - 1];
   }
 
-  function loadImages() {
-    console.log("Loading images...");
-    for (let challengeIndex in challenges) {
-      const challengeId = challenges[challengeIndex].id;
-      apiGetImage(challengeId, props.team.id)
-        .then((imageBlob) => showImage(imageBlob, challengeId))
-        .catch((_) => {});
-    }
-  }
-
-  function getImageId(teamId: number, challengeId: number) {
-    return `answer-img-${challengeId}-${teamId}`;
-  }
-
-  function showImage(imageBlob: Blob, challengeId: number) {
-    const imageElement = document.getElementById(
-      getImageId(props.team.id, challengeId)
-    ) as HTMLImageElement;
-    if (imageElement && imageBlob) {
-      imageElement.src = URL.createObjectURL(imageBlob);
-      imageElement.style.display = "block";
-    } else {
-      imageElement.style.display = "none";
-    }
-  }
-
   function saveScore(score: number | null, challengeId: number) {
-    apiPostScore(challengeId, props.team.id, score)
-      .then((response) =>
-        dispatch(
-          updateScore({
-            challengeId: challengeId,
-            userId: props.team.id,
-            score: score,
-          })
-        )
-      )
-      .catch((error) => console.error(error));
+    updateScore.mutate({
+      challengeId: challengeId,
+      userId: props.team.id,
+      score: score,
+    });
   }
 
   function getTotalScore() {
@@ -117,6 +87,14 @@ export function GradingTableRow(props: { team: TeamDto }) {
 
     return teamAnswers.scores.reduce(
       (total, current) => (total || 0) + (current || 0)
+    );
+  }
+
+  function renderMessage(message: string) {
+    return (
+      <tr>
+        <td>{message}</td>
+      </tr>
     );
   }
 }
