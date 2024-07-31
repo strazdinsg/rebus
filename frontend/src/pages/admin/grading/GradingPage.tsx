@@ -10,13 +10,13 @@ export function GradingPage() {
   const { isPending, error, data: teams } = useTeams();
 
   if (error) {
-    return <main>Could not load teams, contact the developer</main>;
+    return showMessage("Could not load teams, contact the developer");
   }
 
   let content;
 
   if (isPending) {
-    content = <main>Loading teams...</main>;
+    content = showMessage("Loading teams...");
   } else if (teams) {
     content = teams.map((team, index) => (
       <GradingTableRow team={team} key={index} />
@@ -31,4 +31,12 @@ export function GradingPage() {
       <tbody>{content}</tbody>
     </table>
   );
+
+  function showMessage(message: string) {
+    return (
+      <tr>
+        <td>{message}</td>
+      </tr>
+    );
+  }
 }

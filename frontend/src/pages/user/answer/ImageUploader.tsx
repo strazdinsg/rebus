@@ -1,11 +1,6 @@
 import { Button } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { apiGetImage } from "../../../tools/api";
-import { useDispatch } from "react-redux";
-import {
-  clearPictureToUpload,
-  setPictureToUpload,
-} from "../../../redux/pictureSlice";
 import { resizeImage } from "../../../tools/imageTools";
 import "./ImageUploader.css";
 
@@ -15,6 +10,7 @@ const MAX_IMAGE_HEIGHT = 1800;
 type ImageUploaderProps = {
   challengeId: number;
   userId: number;
+  setPictureToUpload: (picture: string | null) => void;
 };
 
 /**
@@ -22,7 +18,6 @@ type ImageUploaderProps = {
  * @constructor
  */
 export function ImageUploader(props: ImageUploaderProps) {
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   // When the component is initialized - fetch the user-uploaded image for the given challenge
@@ -87,7 +82,7 @@ export function ImageUploader(props: ImageUploaderProps) {
           );
           imageElement.src = resizedDataUriImage;
           imageElement.style.display = "block";
-          dispatch(setPictureToUpload(resizedDataUriImage));
+          props.setPictureToUpload(resizedDataUriImage);
         };
         if (readerEvent.target) {
           image.src = readerEvent.target.result as string;
@@ -96,7 +91,7 @@ export function ImageUploader(props: ImageUploaderProps) {
 
       reader.readAsDataURL(file);
     } else {
-      dispatch(clearPictureToUpload(null));
+      props.setPictureToUpload(null);
       imageElement.style.display = "none";
     }
   }

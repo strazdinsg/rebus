@@ -3,9 +3,10 @@ import { UserContext } from "../../../context/UserContext";
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 import "./UserDashboard.css";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
 import { useChallenges } from "../../../queries/challengeQueries";
+import { useMyAnswers } from "../../../queries/answerQueries";
+import { TeamAnswersDto } from "schemas/src/answer";
+import { UseQueryResult } from "@tanstack/react-query";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
@@ -13,20 +14,18 @@ import { useChallenges } from "../../../queries/challengeQueries";
 export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
-  const { isPending, error, data: challenges } = useChallenges();
-  const myAnswers = useSelector(
-    (state: RootState) => state.answerStore.myAnswers
-  );
+  const challenges = useChallenges();
+  const myAnswers: UseQueryResult<TeamAnswersDto> = useMyAnswers();
 
-  if (!user || isPending) {
-    return <main>Loading user data...</main>;
+  if (!user || challenges.isPending || myAnswers.isPending) {
+    return <main>Loading...</main>;
   }
 
-  if (error) {
-    return <main>Could not load challenges, contact the developer</main>;
+  if (challenges.error || myAnswers.error) {
+    return <main>Data error, contact the developer</main>;
   }
 
-  if (!challenges) {
+  if (!challenges || !challenges.data) {
     return <main>No challenges found</main>;
   }
 
@@ -40,7 +39,7 @@ export function UserDashboard() {
       <main>
         <h2>Choose a challenge</h2>
         <div id="challenge-container">
-          {challenges.map((challenge, index) => (
+          {challenges.data.map((challenge, index) => (
             <ChallengeChoiceButton
               challenge={challenge}
               submitted={isAnswered(challenge.id)}
@@ -54,12 +53,13 @@ export function UserDashboard() {
 
   function isAnswered(challengeId: number) {
     let answerFound = false;
-    let i = 0;
-    if (myAnswers)
-      while (!answerFound && i < myAnswers.length) {
-        answerFound = myAnswers[i].challengeId === challengeId;
+    if (myAnswers.data) {
+      let i = 0;
+      while (!answerFound && i < myAnswers.data.answers.length) {
+        answerFound = myAnswers.data.answers[i].challengeId === challengeId;
         i++;
       }
+    }
     return answerFound;
   }
 }

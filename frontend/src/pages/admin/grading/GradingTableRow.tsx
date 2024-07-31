@@ -1,34 +1,34 @@
-import { useDispatch, useSelector } from "react-redux";
 import ScoreSelectBox from "./ScoreSelectBox";
-import { useEffect } from "react";
-import { apiGetImage, apiPostScore } from "../../../tools/api";
-import { updateScore } from "../../../redux/answerSlice";
-import { RootState } from "../../../redux/store";
 import { TeamDto } from "schemas/src/team";
 import { ShortTeamAnswersDto } from "schemas/src/answer";
 import { useChallenges } from "../../../queries/challengeQueries";
+import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 
 /**
  * One row in the grading table - for one team
  */
 export function GradingTableRow(props: { team: TeamDto }) {
-  const { isPending, error, data: challenges } = useChallenges();
-  const teamAnswers = useSelector((state: RootState) =>
-    getTeamAnswers(state.answerStore.allAnswers)
-  );
-  const dispatch = useDispatch();
+  const challenges = useChallenges();
+  const allAnswers = useAllAnswers();
+  const updateScore = useUpdateScore();
 
-  if (isPending) {
-    return renderMessage("Loading challenges...");
+  if (challenges.isPending || allAnswers.isPending) {
+    return renderMessage("Loading...");
   }
 
-  if (error) {
-    return renderMessage("Could not load challenges, contact the developer");
+  if (challenges.error || allAnswers.error) {
+    return renderMessage("Could not load data, contact the developer");
   }
 
-  if (!challenges) {
+  if (updateScore.error) {
+    return renderMessage("Could not save score, contact the developer");
+  }
+
+  if (!challenges || !challenges.data) {
     return renderMessage("No challenges found");
   }
+
+  const teamAnswers = getTeamAnswers(allAnswers.data);
 
   return (
     <tr>
@@ -36,7 +36,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
         {props.team.name}
         <br />({getTotalScore()})
       </td>
-      {challenges.map((challenge, index) => (
+      {challenges.data.map((challenge, index) => (
         <td key={index}>
           <ScoreSelectBox
             score={getScoreForChallenge(challenge.id)}
@@ -75,17 +75,11 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   function saveScore(score: number | null, challengeId: number) {
-    apiPostScore(challengeId, props.team.id, score)
-      .then((response) =>
-        dispatch(
-          updateScore({
-            challengeId: challengeId,
-            userId: props.team.id,
-            score: score,
-          })
-        )
-      )
-      .catch((error) => console.error(error));
+    updateScore.mutate({
+      challengeId: challengeId,
+      userId: props.team.id,
+      score: score,
+    });
   }
 
   function getTotalScore() {
@@ -97,6 +91,10 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   function renderMessage(message: string) {
-    return <tr>{message}</tr>;
+    return (
+      <tr>
+        <td>{message}</td>
+      </tr>
+    );
   }
 }
