@@ -182,9 +182,12 @@ export function AnswerPage() {
 
   function onAnswerSaved() {
     setErrorText("");
-    toast.success("Answer saved", {
-      toastId: "answer-save-toast",
-    });
+    // Delay the toast to avoid flickering
+    setTimeout(() => {
+      toast.success("Answer saved", {
+        toastId: "answer-save-toast",
+      });
+    }, 10);
   }
 
   function uploadSelectedImage() {
