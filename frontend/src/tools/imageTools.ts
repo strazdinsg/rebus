@@ -16,7 +16,6 @@ export function resizeImage(
   const canvas = document.createElement("canvas");
   let width = image.width;
   let height = image.height;
-  console.log(`Original image dimensions: ${width} x ${height}`);
 
   if (width > maxWidth || height > maxHeight) {
     if (width > height) {
@@ -27,7 +26,6 @@ export function resizeImage(
       height = maxHeight;
     }
   }
-  console.log(`Resizing to ${width} x ${height}`);
 
   canvas.width = width;
   canvas.height = height;
