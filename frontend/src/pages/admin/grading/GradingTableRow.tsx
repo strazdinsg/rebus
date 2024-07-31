@@ -30,9 +30,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
-  // Ignore the warning about dependencies
-  useEffect(loadImages, []);
-
   return (
     <tr>
       <td>
@@ -47,11 +44,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
             saveScore={(score: number | null) => saveScore(score, challenge.id)}
           />
           {getAnswerForChallenge(challenge.id)}
-          <img
-            className="team-photo"
-            alt="User-submitted"
-            id={getImageId(props.team.id, challenge.id)}
-          />
         </td>
       ))}
     </tr>
@@ -80,34 +72,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
       return null;
     }
     return teamAnswers.scores[challengeId - 1];
-  }
-
-  function loadImages() {
-    if (!challenges) return;
-    console.log("Loading images...");
-
-    for (let i = 0; i < challenges.length; ++i) {
-      const challengeId = challenges[i].id;
-      apiGetImage(challengeId, props.team.id)
-        .then((imageBlob) => showImage(imageBlob, challengeId))
-        .catch((_) => {});
-    }
-  }
-
-  function getImageId(teamId: number, challengeId: number) {
-    return `answer-img-${challengeId}-${teamId}`;
-  }
-
-  function showImage(imageBlob: Blob, challengeId: number) {
-    const imageElement = document.getElementById(
-      getImageId(props.team.id, challengeId)
-    ) as HTMLImageElement;
-    if (imageElement && imageBlob) {
-      imageElement.src = URL.createObjectURL(imageBlob);
-      imageElement.style.display = "block";
-    } else {
-      imageElement.style.display = "none";
-    }
   }
 
   function saveScore(score: number | null, challengeId: number) {
