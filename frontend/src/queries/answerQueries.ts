@@ -77,7 +77,7 @@ export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
       },
       onSuccess: async () => {
         onSuccess();
-        await queryClient.invalidateQueries({ queryKey: ["allAnswers"] });
+        await queryClient.invalidateQueries({ queryKey: ["myAnswers"] });
       },
       onError: onError,
     },
