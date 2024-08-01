@@ -137,18 +137,17 @@ public class ImageController {
    * @return HTTP OK on success, NOT FOUND when image not found
    */
   @DeleteMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<String> delete(@PathVariable Integer challengeId,
-                                       @PathVariable Integer userId) {
+  public ResponseEntity<HttpResponseDto<String>> delete(@PathVariable Integer challengeId,
+                                                        @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
-      return new ResponseEntity<>("Not allowed to access images of other teams",
-          HttpStatus.UNAUTHORIZED);
+      throw new AccessDeniedException("Not allowed to access images of other teams");
     }
 
-    ResponseEntity<String> response;
+    ResponseEntity<HttpResponseDto<String>> response;
     if (imageService.deleteAll(userId, challengeId)) {
-      response = ResponseEntity.ok("");
+      response = HttpResponseDto.okResponse("");
     } else {
-      response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      response = HttpResponseDto.errorResponse(HttpStatus.NOT_FOUND, "Image not found");
     }
     return response;
   }
