@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
+import no.strazdins.rebus.dto.HttpResponseDto;
+import no.strazdins.rebus.dto.ResponseStatus;
 import no.strazdins.rebus.model.User;
 import no.strazdins.rebus.security.JwtUtil;
 import no.strazdins.rebus.services.UserService;
@@ -56,16 +58,20 @@ public class AuthenticationController {
       description = "Log in with a PIN code. The PIN code is unique for each team."
   )
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "OK, Authentication response in the body"),
       @ApiResponse(
-          responseCode = "401",
-          description = "Unauthorized, invalid PIN",
+          responseCode = "200", description = "OK, Authentication response as data"
+      ),
+      @ApiResponse(
+          responseCode = "401", description = "Unauthorized, invalid PIN, null data",
+          // Content has no data, status: ERROR and error message
           content = @Content(
-              schema = @Schema(contentSchema = String.class, description = "Error message")
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Invalid PIN\", \"data\":null}"
+              )
           )
       )
   })
-  public ResponseEntity<AuthenticationResponse> authenticate(
+  public ResponseEntity<HttpResponseDto<AuthenticationResponse>> authenticate(
       @RequestBody AuthenticationRequest authenticationRequest
   ) {
     try {
@@ -74,12 +80,12 @@ public class AuthenticationController {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authenticationRequest.pin(),
           authenticationRequest.pin()));
+      final User user = userService.findByPin(authenticationRequest.pin());
+      final String jwt = jwtUtil.generateToken(user);
+      return HttpResponseDto.okResponse(new AuthenticationResponse(jwt));
     } catch (Exception e) {
-      throw new BadCredentialsException("Invalid PIN", e);
+      return HttpResponseDto.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid PIN");
     }
-    final User user = userService.findByPin(authenticationRequest.pin());
-    final String jwt = jwtUtil.generateToken(user);
-    return ResponseEntity.ok(new AuthenticationResponse(jwt));
   }
 
   private void sleepToAvoidBruteForce() {
