@@ -1,6 +1,7 @@
 package no.strazdins.rebus.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -136,6 +137,33 @@ public class ImageController {
    * @param userId      ID of the owner user (team)
    * @return HTTP OK on success, NOT FOUND when image not found
    */
+  @Operation(summary = "Delete an image submitted as an answer to a challenge by a team")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, image deleted",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"SUCCESS\",\"message\":\"\", \"data\":\"\"}"
+              )
+          )
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, not allowed to access images of other teams",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Not allowed to access images of other teams\", \"data\":\"\"}"
+              )
+          )
+      ),
+      @ApiResponse(
+          responseCode = "404", description = "Not found, Image not found",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Image not found\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @DeleteMapping("/pictures/{challengeId}/{userId}")
   public ResponseEntity<HttpResponseDto<String>> delete(@PathVariable Integer challengeId,
                                                         @PathVariable Integer userId) {
