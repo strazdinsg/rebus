@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Controller for image handling endpoints.
@@ -98,23 +99,33 @@ public class ImageController {
    * @param userId      ID of the owner user (team)
    * @return Image content (and correct content type) or NOT FOUND
    */
+  @Operation(summary = "Get image submitted as an answer to a challenge by a team")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, image content in the body"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, not allowed to access images of other teams"
+      ),
+      @ApiResponse(
+          responseCode = "404", description = "Not found, image not found"
+      )
+  })
   @GetMapping("/pictures/{challengeId}/{userId}")
   public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
                                     @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
-      return new ResponseEntity<>(new byte[]{}, HttpStatus.UNAUTHORIZED);
+      throw new AccessDeniedException("Not allowed to access images of other teams");
     }
 
-    ResponseEntity<byte[]> response;
     Image image = imageService.getByUserAndChallenge(userId, challengeId);
-    if (image != null) {
-      response = ResponseEntity.ok()
-          .header(HttpHeaders.CONTENT_TYPE, image.getContentType())
-          .body(image.getData());
-    } else {
-      response = new ResponseEntity<>(new byte[]{}, HttpStatus.NOT_FOUND);
+    if (image == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found");
     }
-    return response;
+
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_TYPE, image.getContentType())
+        .body(image.getData());
   }
 
   /**
