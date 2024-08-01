@@ -7,7 +7,6 @@ import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
  * REST API controller for admin endpoints.
  */
 @RestController
-@CrossOrigin
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
   private final UserService userService;

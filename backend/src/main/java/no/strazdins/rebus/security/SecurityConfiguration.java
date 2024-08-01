@@ -62,7 +62,6 @@ public class SecurityConfiguration {
     http
         // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
         .csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
         // Authentication URL is accessible for everyone
         .authorizeHttpRequests((auth) -> auth.requestMatchers("/authenticate").permitAll())
         // Challenge list is accessible for everyone

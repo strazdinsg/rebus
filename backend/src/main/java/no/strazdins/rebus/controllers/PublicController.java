@@ -4,14 +4,12 @@ import java.util.stream.StreamSupport;
 import no.strazdins.rebus.dto.ChallengeDto;
 import no.strazdins.rebus.model.Challenge;
 import no.strazdins.rebus.services.ChallengeService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST API controller for public endpoints.
  */
-@CrossOrigin
 @RestController
 public class PublicController {
   private final ChallengeService challengeService;
