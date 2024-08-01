@@ -1,7 +1,15 @@
 package no.strazdins.rebus.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * Our team's answer for one specific challenge.
  */
-public record MyAnswerDto(int challengeId, String answer) {
+@Schema(description = "Our team's answer for one specific challenge")
+public record MyAnswerDto(
+    @Schema(description = "ID of the challenge", example = "123")
+    int challengeId,
+    @Schema(description = "The answer text", example = "Hello World")
+    String answer
+) {
 }
