@@ -1,5 +1,6 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamDto;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin endpoints")
 public class AdminController {
   private final UserService userService;
 

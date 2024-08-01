@@ -1,5 +1,6 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.model.Image;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @PreAuthorize("hasRole('USER')")
+@Tag(name = "User endpoints")
 public class ImageController {
   private final ImageService imageService;
   private final UserService userService;

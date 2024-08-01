@@ -1,5 +1,6 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
 import no.strazdins.rebus.model.User;
@@ -43,6 +44,7 @@ public class AuthenticationController {
    * @param authenticationRequest The request JSON object containing username and password
    * @return OK + JWT token; Or UNAUTHORIZED
    */
+  @Tag(name = "Public endpoints")
   @PostMapping("/authenticate")
   public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
     try {

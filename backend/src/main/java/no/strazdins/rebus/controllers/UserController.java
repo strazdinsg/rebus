@@ -1,5 +1,6 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.MyAnswerDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @PreAuthorize("hasRole('USER')")
+@Tag(name = "User endpoints")
 public class UserController {
   private final AnswerService answerService;
   private final UserService userService;
