@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -55,15 +56,22 @@ public class SecurityConfiguration {
    */
   @Bean
   public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
-    // Allow JWT authentication
-    http.cors().and().csrf().disable()
-        .authorizeHttpRequests()
-        .requestMatchers("/authenticate").permitAll()
-        .requestMatchers("/challenges").permitAll()
-        .anyRequest().authenticated()
-        .and().sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+    // Set up the authorization requests, starting from most restrictive at the top,
+    // to least restrictive on the bottom
+    http
+        // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable)
+        // Authentication URL is accessible for everyone
+        .authorizeHttpRequests((auth) -> auth.requestMatchers("/authenticate").permitAll())
+        // Challenge list is accessible for everyone
+        .authorizeHttpRequests((auth) -> auth.requestMatchers("/challenges").permitAll())
+        // Any other request will be authenticated with a stateless policy
+        .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+        // Enable stateless session policy
+        .sessionManagement((session) ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // Enable our JWT authentication filter
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     // Necessary authorization for each endpoint will be configured by each method,
