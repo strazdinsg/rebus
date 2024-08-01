@@ -19,3 +19,9 @@ First you need to ensure the following requirements are met:
 You can start the backend by executing `mvn spring-boot:run` in the terminal. 
 
 During development can simply run `RebusApplication.main()` method from your IDE.
+
+# API documentation
+
+The Swagger UI for API documentation is available at `/swagger-ui/index.html`.
+
+The OpenAPI specification is available at `/openapi-docs.json`.

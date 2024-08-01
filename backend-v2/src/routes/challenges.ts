@@ -6,6 +6,38 @@ import { SUCCESS } from "../server.js";
 
 export const challengeRoutes = Router();
 
+/**
+ * @swagger
+ * /challenges:
+ *   get:
+ *     description: Get all challenges
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully fetched all challenges
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   enum: [success]
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       question:
+ *                         type: string
+ *                       maxScore:
+ *                         type: integer
+ *                 message:
+ *                   type: string
+ */
 challengeRoutes.get("/challenges", (req, res) => {
   db.query("SELECT * FROM challenge", (err, results: RowDataPacket[]) => {
     if (err) {

@@ -17,7 +17,20 @@ const options: Options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 const setupSwaggerDocs = (app: Application) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(
+    "/swagger-ui/index.html",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+  );
+
+  app.use("/swagger-ui", (req, res) => {
+    res.redirect("/swagger-ui/index.html");
+  });
+
+  app.use("/openapi-docs.json", (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(swaggerSpec);
+  });
 };
 
 export default setupSwaggerDocs;
