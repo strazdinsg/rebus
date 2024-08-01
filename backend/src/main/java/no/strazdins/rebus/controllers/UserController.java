@@ -41,7 +41,21 @@ public class UserController {
    *
    * @return The answers of the currently logged-in user, or 401 Unauthorized
    */
+  @Operation(summary = "Get answers of the currently logged-in user")
   @GetMapping("/answers/my")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, answers of the currently logged-in user"
+      ),
+      @ApiResponse(
+          responseCode = "401", description = "Unauthorized, must log in",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
   public HttpResponseDto<TeamAnswerDto> getMyAnswers() {
     Integer userId = userService.getAuthenticatedUserId();
     if (userId == null) {
