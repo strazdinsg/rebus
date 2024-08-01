@@ -66,6 +66,10 @@ public class SecurityConfiguration {
         .authorizeHttpRequests((auth) -> auth.requestMatchers("/authenticate").permitAll())
         // Challenge list is accessible for everyone
         .authorizeHttpRequests((auth) -> auth.requestMatchers("/challenges").permitAll())
+        // Swagger UI is accessible for everyone
+        .authorizeHttpRequests((auth) -> auth.requestMatchers("/swagger-ui/**").permitAll())
+        .authorizeHttpRequests((auth) -> auth.requestMatchers("/openapi-docs/**").permitAll())
+
         // Allow OPTIONS requests for CORS
         .authorizeHttpRequests((auth) -> auth.requestMatchers(HttpMethod.OPTIONS).permitAll())
         // Any other request will be authenticated with a stateless policy
