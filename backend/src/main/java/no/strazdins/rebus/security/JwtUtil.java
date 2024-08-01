@@ -1,16 +1,20 @@
 package no.strazdins.rebus.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import no.strazdins.rebus.model.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
- * Utility class for handling JWT tokens
+ * Utility class for handling JWT tokens.
  * Code from https://youtu.be/X80nJ5T7YpE
  */
 @Component
@@ -20,7 +24,7 @@ public class JwtUtil {
   /**
    * Key inside JWT token where roles are stored.
    */
-  private static final String JWT_AUTH_KEY = "roles";
+  private static final String ROLE_KEY = "roles";
 
   /**
    * Generate a JWT token for an authenticated user.
@@ -29,19 +33,23 @@ public class JwtUtil {
    * @return JWT token string
    */
   public String generateToken(User user) {
-    final long TIME_NOW = System.currentTimeMillis();
-    final long MILLISECONDS_IN_HOUR = 60 * 60 * 1000L;
-    final long MILLISECONDS_IN_ONE_DAY = 24 * MILLISECONDS_IN_HOUR;
-    final long TIME_AFTER_30_DAYS = TIME_NOW + 30 * MILLISECONDS_IN_ONE_DAY;
+    final long timeNow = System.currentTimeMillis();
+    final long millisecondsInHour = 60 * 60 * 1000;
+    final long timeAfterOneHour = timeNow + millisecondsInHour;
 
     return Jwts.builder()
-        .setSubject(user.getName())
-        .claim(JWT_AUTH_KEY, user.getAuthorities())
-        .setId("" + user.getId())
-        .setIssuedAt(new Date(TIME_NOW))
-        .setExpiration(new Date(TIME_AFTER_30_DAYS))
-        .signWith(SignatureAlgorithm.HS256, secretKey)
+        .subject(user.getName())
+        .id("" + user.getId())
+        .claim(ROLE_KEY, user.getAuthorities())
+        .issuedAt(new Date(timeNow))
+        .expiration(new Date(timeAfterOneHour))
+        .signWith(getSigningKey())
         .compact();
+  }
+
+  private SecretKey getSigningKey() {
+    byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+    return new SecretKeySpec(keyBytes, 0, keyBytes.length, "HmacSHA256");
   }
 
   /**
@@ -52,7 +60,7 @@ public class JwtUtil {
    */
   public int extractUserId(String token) {
     String idString = extractClaim(token, Claims::getId);
-    return Integer.parseInt(idString);
+    return idString != null ? Integer.parseInt(idString) : -1;
   }
 
   /**
@@ -78,7 +86,7 @@ public class JwtUtil {
   }
 
   private Claims extractAllClaims(String token) {
-    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
   }
 
   private boolean isTokenExpired(String token) {
