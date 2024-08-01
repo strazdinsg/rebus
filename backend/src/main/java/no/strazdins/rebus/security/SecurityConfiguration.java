@@ -3,6 +3,7 @@ package no.strazdins.rebus.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -66,6 +67,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests((auth) -> auth.requestMatchers("/authenticate").permitAll())
         // Challenge list is accessible for everyone
         .authorizeHttpRequests((auth) -> auth.requestMatchers("/challenges").permitAll())
+        // Allow OPTIONS requests for CORS
+        .authorizeHttpRequests((auth) -> auth.requestMatchers(HttpMethod.OPTIONS).permitAll())
         // Any other request will be authenticated with a stateless policy
         .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
         // Enable stateless session policy
