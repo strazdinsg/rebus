@@ -1,20 +1,20 @@
 import { z, ZodType } from "zod";
-import { JwtDto } from "./jwt";
-import { ChallengeDto } from "./challenge";
 
-const Responses = <T>(dataSchema: ZodType<T>) =>
+export const SUCCESS = "SUCCESS";
+export const ERROR = "ERROR";
+
+export const ResponseBody = <T>(dataSchema: ZodType<T>) =>
   z.object({
-    status: z.enum(["SUCCESS", "ERROR"]),
+    status: z.enum([SUCCESS, ERROR]),
     message: z.string(),
     data: dataSchema.nullable(),
   });
 
-const AuthenticationResponseBody = Responses(JwtDto);
-
-type AuthenticationResponseBody = z.infer<typeof AuthenticationResponseBody>;
-
-const ChallengeResponseBody = Responses(z.array(ChallengeDto));
-
-type ChallengeResponseBody = z.infer<typeof ChallengeResponseBody>;
-
-export { AuthenticationResponseBody, ChallengeResponseBody };
+/**
+ * Check whether the response status is Error
+ * @param responseBody The response body to check
+ * @return True if the response status is Error
+ */
+export function isError(responseBody: { status: string }) {
+  return responseBody.status === ERROR;
+}

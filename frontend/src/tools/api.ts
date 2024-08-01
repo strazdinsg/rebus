@@ -6,7 +6,7 @@ import {
   asyncApiPostFile,
 } from "./requests";
 import { z } from "zod";
-import { ChallengeResponseBody } from "schemas/src/responses";
+import { ChallengeDto } from "schemas/src/challenge";
 import { ShortTeamAnswersDto, TeamAnswersDto } from "schemas/src/answer";
 import { TeamDto } from "schemas/src/team";
 import { MyAnswerDto } from "schemas/src/answer";
@@ -20,10 +20,10 @@ import { MyAnswerDto } from "schemas/src/answer";
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export async function apiGetChallenges(): Promise<ChallengeResponseBody> {
-  return await asyncApiGetV2<ChallengeResponseBody>(
+export async function apiGetChallenges(): Promise<ChallengeDto[]> {
+  return await asyncApiGetV2<ChallengeDto[]>(
     "/challenges",
-    ChallengeResponseBody
+    z.array(ChallengeDto)
   );
 }
 
@@ -67,7 +67,7 @@ export async function apiUploadPicture(
   challengeId: number,
   userId: number,
   pictureContent: File
-): Promise<JSON> {
+): Promise<string> {
   return await asyncApiPostFile(
     `/pictures/${challengeId}/${userId}`,
     pictureContent

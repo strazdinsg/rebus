@@ -10,12 +10,7 @@ export function useChallenges() {
     {
       queryKey: ["challenges"],
       queryFn: async () => {
-        const response = await apiGetChallenges();
-        if (response.status === "SUCCESS") {
-          return response.data;
-        } else {
-          throw new Error(response.message);
-        }
+        return await apiGetChallenges();
       },
     },
     queryClient
