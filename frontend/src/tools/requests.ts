@@ -74,7 +74,7 @@ export async function asyncApiPost<T>(
  * Upload a file as multipart form data to the backend, using HTTP POST
  * @param {string} url Relative backend API url
  * @param fileContent The content of the file to upload
- * @return The response data, parsed as a string
+ * @return The response data, parsed as a number
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiPostFile<T>(
