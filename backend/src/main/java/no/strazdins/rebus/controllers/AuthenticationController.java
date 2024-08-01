@@ -65,7 +65,7 @@ public class AuthenticationController {
           )
       )
   })
-  public ResponseEntity<?> authenticate(
+  public ResponseEntity<AuthenticationResponse> authenticate(
       @RequestBody AuthenticationRequest authenticationRequest
   ) {
     try {
@@ -74,8 +74,8 @@ public class AuthenticationController {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authenticationRequest.pin(),
           authenticationRequest.pin()));
-    } catch (BadCredentialsException e) {
-      return new ResponseEntity<>("Invalid PIN", HttpStatus.UNAUTHORIZED);
+    } catch (Exception e) {
+      throw new BadCredentialsException("Invalid PIN", e);
     }
     final User user = userService.findByPin(authenticationRequest.pin());
     final String jwt = jwtUtil.generateToken(user);

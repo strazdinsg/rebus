@@ -5,7 +5,7 @@ import { FormEvent, useContext, useState } from "react";
 import { UserContext, UserSession } from "../../context/UserContext";
 import { sendAuthenticationRequest } from "../../tools/authentication";
 
-const HTTP_CODE_UNAUTHORIZED = 403;
+const HTTP_CODE_UNAUTHORIZED = 401;
 
 /**
  * Page shown when the user must log in.
