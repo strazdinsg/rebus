@@ -14,6 +14,8 @@ const port = process.env.SERVER_PORT || DEFAULT_PORT;
 const server = express();
 server.use(cors(corsOptions));
 
+const SUCCESS = "SUCCESS";
+
 server.get("/", (req, res) => {
   res.send("Rebus backend, v2");
 });
@@ -32,7 +34,7 @@ server.get("/challenges", (req, res) => {
         };
       });
       const response = {
-        status: "success",
+        status: SUCCESS,
         data: challenges,
         message: "",
       };
