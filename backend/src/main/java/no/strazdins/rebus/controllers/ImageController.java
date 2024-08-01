@@ -1,12 +1,19 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.model.Image;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,23 +48,47 @@ public class ImageController {
    *     has no permission to do the operation, 400 Bad request if something goes wrong with
    *     storing the image
    */
+  @Operation(summary = "Upload an image to the server")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, Image ID in the body",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"SUCCESS\",\"message\":\"\", \"data\":\"123\"}"
+              )
+          )
+      ),
+      @ApiResponse(
+          responseCode = "403",
+          description = "Forbidden, not allowed to upload images for other teams",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Not allowed to upload images for other teams\", \"data\":\"\"}"
+              )
+          )
+      ),
+      @ApiResponse(
+          responseCode = "400", description = "Bad request, something went wrong with storing the image",
+          // Content has no data, status: ERROR and error message
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Could not store image\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @PostMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<String> upload(@RequestParam("fileContent") MultipartFile multipartFile,
-                                       @PathVariable int challengeId,
-                                       @PathVariable Integer userId) {
+  public ResponseEntity<HttpResponseDto<Integer>> upload(
+      @RequestParam("fileContent") MultipartFile multipartFile,
+      @PathVariable int challengeId,
+      @PathVariable Integer userId
+  ) {
     if (userService.isForbiddenToAccessUser(userId)) {
-      return new ResponseEntity<>("Not allowed to upload images for other teams",
-          HttpStatus.UNAUTHORIZED);
+      throw new AccessDeniedException("Not allowed to upload images for other teams");
     }
 
-    ResponseEntity<String> response;
     int imageId = imageService.replace(multipartFile, userId, challengeId);
-    if (imageId > 0) {
-      response = new ResponseEntity<>("" + imageId, HttpStatus.OK);
-    } else {
-      response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-    return response;
+    return HttpResponseDto.okResponse(imageId);
   }
 
   /**

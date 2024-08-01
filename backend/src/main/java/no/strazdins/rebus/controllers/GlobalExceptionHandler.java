@@ -16,12 +16,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(BadCredentialsException.class)
-  public ResponseEntity<HttpResponseDto<String>> handleBadCredentialsException(BadCredentialsException ex) {
+  public ResponseEntity<HttpResponseDto<String>> handleBadCredentials(BadCredentialsException ex) {
     return HttpResponseDto.errorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<HttpResponseDto<String>> handleAccessDeniedException(AccessDeniedException ex) {
+  public ResponseEntity<HttpResponseDto<String>> handleAccessDenied(AccessDeniedException ex) {
     return HttpResponseDto.errorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<HttpResponseDto<String>> handleIllegalArgument(
+      IllegalArgumentException ex) {
+    return HttpResponseDto.errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
   }
 }
