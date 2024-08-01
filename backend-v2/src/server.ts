@@ -31,7 +31,12 @@ server.get("/challenges", (req, res) => {
           maxScore: row.max_score,
         };
       });
-      res.send(challenges);
+      const response = {
+        status: "success",
+        data: challenges,
+        message: "",
+      };
+      res.send(response);
     }
   });
 });
