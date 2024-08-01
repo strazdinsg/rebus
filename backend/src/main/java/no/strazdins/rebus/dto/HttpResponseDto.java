@@ -23,6 +23,7 @@ public record HttpResponseDto<T>(
 ) {
   /**
    * Create a static response with given data.
+   *
    * @param data The data that the server will send in the response
    * @param <T>  The type of the data that the server will send in the response
    */
@@ -47,7 +48,8 @@ public record HttpResponseDto<T>(
    * @param message The message explaining the error
    * @param <T>     The type of the data that the server will send in the response
    */
-  public static <T> ResponseEntity<HttpResponseDto<T>> errorResponse(HttpStatus code, String message) {
+  public static <T> ResponseEntity<HttpResponseDto<T>> errorResponse(
+      HttpStatus code, String message) {
     return ResponseEntity
         .status(code)
         .body(new HttpResponseDto<>(ResponseStatus.ERROR, null, message));

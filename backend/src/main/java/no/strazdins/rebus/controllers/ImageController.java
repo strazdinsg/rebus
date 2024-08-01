@@ -1,7 +1,6 @@
 package no.strazdins.rebus.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -65,16 +64,19 @@ public class ImageController {
           description = "Forbidden, not allowed to upload images for other teams",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Not allowed to upload images for other teams\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":"
+                      + "\"Not allowed to upload images for other teams\", \"data\":\"\"}"
               )
           )
       ),
       @ApiResponse(
-          responseCode = "400", description = "Bad request, something went wrong with storing the image",
+          responseCode = "400",
+          description = "Bad request, something went wrong with storing the image",
           // Content has no data, status: ERROR and error message
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Could not store image\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":"
+                      + "\"Could not store image\", \"data\":\"\"}"
               )
           )
       )
@@ -106,7 +108,8 @@ public class ImageController {
           responseCode = "200", description = "OK, image content in the body"
       ),
       @ApiResponse(
-          responseCode = "403", description = "Forbidden, not allowed to access images of other teams"
+          responseCode = "403",
+          description = "Forbidden, not allowed to access images of other teams"
       ),
       @ApiResponse(
           responseCode = "404", description = "Not found, image not found"
@@ -148,10 +151,12 @@ public class ImageController {
           )
       ),
       @ApiResponse(
-          responseCode = "403", description = "Forbidden, not allowed to access images of other teams",
+          responseCode = "403",
+          description = "Forbidden, not allowed to access images of other teams",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Not allowed to access images of other teams\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":"
+                      + "\"Not allowed to access images of other teams\", \"data\":\"\"}"
               )
           )
       ),

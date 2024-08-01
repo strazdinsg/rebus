@@ -1,9 +1,9 @@
 package no.strazdins.rebus.controllers;
 
-import java.util.List;
-import java.util.stream.StreamSupport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.stream.StreamSupport;
 import no.strazdins.rebus.dto.ChallengeDto;
 import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.model.Challenge;
@@ -23,6 +23,11 @@ public class PublicController {
     this.challengeService = challengeService;
   }
 
+  /**
+   * Get all challenges.
+   *
+   * @return List of all challenges
+   */
   @Operation(summary = "Get all challenges")
   @GetMapping("/challenges")
   public HttpResponseDto<List<ChallengeDto>> getAll() {

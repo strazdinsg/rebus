@@ -6,20 +6,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 /**
  * REST API controller for admin endpoints.
@@ -57,7 +56,8 @@ public class AdminController {
           responseCode = "403", description = "Forbidden, no access to team listing",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
               )
           )
       )
@@ -81,7 +81,8 @@ public class AdminController {
           responseCode = "403", description = "Forbidden, no access to answer listing",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
               )
           )
       )
@@ -108,7 +109,8 @@ public class AdminController {
           responseCode = "403", description = "Forbidden, no access",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
               )
           )
       )

@@ -32,7 +32,7 @@ public class JwtUtil {
    */
   public String generateToken(User user) {
     final long timeNow = System.currentTimeMillis();
-    final long millisecondsInHour = 60 * 60 * 1000;
+    final long millisecondsInHour = 60 * 60 * 1000L;
     final long timeAfterOneDay = timeNow + millisecondsInHour * 24;
 
     return Jwts.builder()

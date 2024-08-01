@@ -32,6 +32,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return HttpResponseDto.errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
   }
 
+  /**
+   * Handles all exceptions of type ResponseStatusException thrown by the controllers.
+   *
+   * @param ex Exception thrown
+   * @return ResponseEntity with error response
+   */
   @ExceptionHandler(ResponseStatusException.class)
   public ResponseEntity<HttpResponseDto<String>> handleResponseStatusException(
       ResponseStatusException ex) {

@@ -15,13 +15,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
+  /**
+   * Create a custom OpenAPI object with security requirements. This will enable authentication
+   * in the Swagger UI.
+   *
+   * @return OpenAPI object with security requirements
+   */
   @Bean
-  public OpenAPI customOpenAPI() {
+  public OpenAPI customOpenApi() {
     return new OpenAPI()
         .info(new Info().title("API Documentation").version("1.0"))
         .components(new Components()
             .addSecuritySchemes("bearer-key",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
+                new SecurityScheme()
+                    .type(SecurityScheme.Type.HTTP)
+                    .scheme("bearer")
+                    .bearerFormat("JWT")
+            )
+        )
         .addSecurityItem(new SecurityRequirement().addList("bearer-key"));
   }
 }

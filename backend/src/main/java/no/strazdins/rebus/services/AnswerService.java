@@ -1,6 +1,5 @@
 package no.strazdins.rebus.services;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,9 @@ public class AnswerService {
     List<AnswerDto> challengeAnswers = new LinkedList<>();
     for (Answer answer : answerRepository.findByUserId(teamId)) {
       if (answer.getAnswer() != null) {
-        challengeAnswers.add(new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null));
+        challengeAnswers.add(
+            new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null)
+        );
       }
     }
     return new TeamAnswerDto(teamId, challengeAnswers);
