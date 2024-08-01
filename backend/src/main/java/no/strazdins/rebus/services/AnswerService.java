@@ -72,7 +72,7 @@ public class AnswerService {
    *
    * @return All answers, sorted per team
    */
-  public Collection<ShortTeamAnswerDto> getAll() {
+  public List<ShortTeamAnswerDto> getAll() {
     Iterable<Answer> allAnswers = answerRepository.findAll();
     Map<Integer, TeamAnswerDto> formattedAnswers = new TreeMap<>();
     for (Answer answer : allAnswers) {

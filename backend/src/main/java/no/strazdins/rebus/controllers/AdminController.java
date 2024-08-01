@@ -57,12 +57,11 @@ public class AdminController {
           responseCode = "403", description = "Forbidden, no access to team listing",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in\", \"data\":\"\"}"
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
               )
           )
       )
   })
-
   @GetMapping("/teams")
   public HttpResponseDto<List<TeamDto>> getAllTeams() {
     return HttpResponseDto.withData(userService.getAllTeams());
@@ -73,9 +72,23 @@ public class AdminController {
    *
    * @return A collection of answers, per team
    */
+  @Operation(summary = "Get all answers")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, list of all answers"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access to answer listing",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @GetMapping("/answers")
-  public Iterable<ShortTeamAnswerDto> getAllAnswers() {
-    return answerService.getAll();
+  public HttpResponseDto<List<ShortTeamAnswerDto>> getAllAnswers() {
+    return HttpResponseDto.withData(answerService.getAll());
   }
 
   /**
