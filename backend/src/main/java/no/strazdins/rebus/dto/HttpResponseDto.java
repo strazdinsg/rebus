@@ -22,6 +22,15 @@ public record HttpResponseDto<T>(
     String message
 ) {
   /**
+   * Create a static response with given data.
+   * @param data The data that the server will send in the response
+   * @param <T>  The type of the data that the server will send in the response
+   */
+  public static <T> HttpResponseDto<T> withData(T data) {
+    return new HttpResponseDto<>(ResponseStatus.SUCCESS, data, "");
+  }
+
+  /**
    * Create a static ResponseEntity with given data.
    *
    * @param data The data that the server will send in the response
