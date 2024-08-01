@@ -99,15 +99,29 @@ public class AdminController {
    * @param score       The score, can be null (then the score will be deleted)
    * @return "success"
    */
+  @Operation(summary = "Set score for a specific team, specific challenge")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, score set"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @PostMapping("/score/{challengeId}/{userId}")
-  public ResponseEntity<String> setScore(@PathVariable Integer challengeId,
-                                         @PathVariable Integer userId,
-                                         @RequestBody SingleScoreDto score) {
+  public HttpResponseDto<String> setScore(@PathVariable Integer challengeId,
+                                          @PathVariable Integer userId,
+                                          @RequestBody SingleScoreDto score) {
     if (score.score() != null) {
       answerService.setScore(challengeId, userId, score.score());
     } else {
       answerService.deleteScore(challengeId, userId);
     }
-    return ResponseEntity.ok("\"success\"");
+    return HttpResponseDto.withData("");
   }
 }
