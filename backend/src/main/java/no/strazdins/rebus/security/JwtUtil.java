@@ -1,7 +1,6 @@
 package no.strazdins.rebus.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -10,7 +9,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import no.strazdins.rebus.model.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,14 +33,14 @@ public class JwtUtil {
   public String generateToken(User user) {
     final long timeNow = System.currentTimeMillis();
     final long millisecondsInHour = 60 * 60 * 1000;
-    final long timeAfterOneHour = timeNow + millisecondsInHour;
+    final long timeAfterOneDay = timeNow + millisecondsInHour * 24;
 
     return Jwts.builder()
         .subject(user.getName())
         .id("" + user.getId())
         .claim(ROLE_KEY, user.getAuthorities())
         .issuedAt(new Date(timeNow))
-        .expiration(new Date(timeAfterOneHour))
+        .expiration(new Date(timeAfterOneDay))
         .signWith(getSigningKey())
         .compact();
   }
