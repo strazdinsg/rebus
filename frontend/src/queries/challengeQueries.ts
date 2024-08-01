@@ -9,7 +9,14 @@ export function useChallenges() {
   return useQuery(
     {
       queryKey: ["challenges"],
-      queryFn: async () => await apiGetChallenges(),
+      queryFn: async () => {
+        const response = await apiGetChallenges();
+        if (response.status === "SUCCESS") {
+          return response.data;
+        } else {
+          throw new Error(response.message);
+        }
+      },
     },
     queryClient
   );

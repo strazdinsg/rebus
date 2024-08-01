@@ -6,7 +6,7 @@ import {
   asyncApiPostFile,
 } from "./requests";
 import { z } from "zod";
-import { ChallengeDto } from "schemas/src/challenge";
+import { ChallengeResponseBody } from "schemas/src/responses";
 import { ShortTeamAnswersDto, TeamAnswersDto } from "schemas/src/answer";
 import { TeamDto } from "schemas/src/team";
 import { MyAnswerDto } from "schemas/src/answer";
@@ -20,10 +20,10 @@ import { MyAnswerDto } from "schemas/src/answer";
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export async function apiGetChallenges(): Promise<ChallengeDto[] | null> {
-  return await asyncApiGetV2<ChallengeDto[]>(
+export async function apiGetChallenges(): Promise<ChallengeResponseBody> {
+  return await asyncApiGetV2<ChallengeResponseBody>(
     "/challenges",
-    z.array(ChallengeDto)
+    ChallengeResponseBody
   );
 }
 

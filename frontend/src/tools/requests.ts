@@ -114,7 +114,15 @@ async function asyncApiRequest<T>(
 
   const bodyJson: T = await response.json();
   if (schema) {
-    schema.parse(bodyJson);
+    try {
+      schema.parse(bodyJson);
+    } catch (e) {
+      if (e instanceof ZodError) {
+        console.log(`Error parsing response:`);
+        console.log(e.message);
+      }
+      throw e;
+    }
   }
   return bodyJson;
 }
