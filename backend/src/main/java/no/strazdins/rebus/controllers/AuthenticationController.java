@@ -1,5 +1,10 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
@@ -28,8 +33,8 @@ public class AuthenticationController {
    * Initialize the controller. Called by Spring framework.
    *
    * @param authenticationManager AuthenticationManager instance
-   * @param userService UserService instance
-   * @param jwtUtil JwtUtil instance
+   * @param userService           UserService instance
+   * @param jwtUtil               JwtUtil instance
    */
   public AuthenticationController(AuthenticationManager authenticationManager,
                                   UserService userService, JwtUtil jwtUtil) {
@@ -46,7 +51,23 @@ public class AuthenticationController {
    */
   @Tag(name = "Public endpoints")
   @PostMapping("/authenticate")
-  public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+  @Operation(
+      summary = "Log in",
+      description = "Log in with a PIN code. The PIN code is unique for each team."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "OK, Authentication response in the body"),
+      @ApiResponse(
+          responseCode = "401",
+          description = "Unauthorized, invalid PIN",
+          content = @Content(
+              schema = @Schema(contentSchema = String.class, description = "Error message")
+          )
+      )
+  })
+  public ResponseEntity<?> authenticate(
+      @RequestBody AuthenticationRequest authenticationRequest
+  ) {
     try {
       sleepToAvoidBruteForce();
       // We don't have username and password, we simply have a PIN, which is unique
