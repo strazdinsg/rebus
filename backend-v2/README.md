@@ -25,3 +25,9 @@ because it needs the Data Transfer Objects (DTOs) defined in the schemas package
 
 You can start the backend by executing `npm run restart` in the terminal. This will compile the
 TypeScript code and start the server.
+
+# API documentation
+
+The Swagger UI for API documentation is available at `/swagger-ui/index.html`.
+
+The OpenAPI specification is available at `/openapi-docs.json`.

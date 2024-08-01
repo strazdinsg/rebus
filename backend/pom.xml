@@ -11,7 +11,7 @@
     </parent>
     <groupId>no.strazdins</groupId>
     <artifactId>rebus</artifactId>
-    <version>0.2.0</version>
+    <version>1.0.0</version>
     <name>rebus</name>
     <description>Rebus backend</description>
     <properties>
@@ -64,6 +64,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Doc for Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
         </dependency>
     </dependencies>
 

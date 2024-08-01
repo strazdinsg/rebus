@@ -20,7 +20,7 @@ import { MyAnswerDto } from "schemas/src/answer";
  * @return Promise to return the response body as JSON array
  * Throws an exception on error
  */
-export async function apiGetChallenges(): Promise<ChallengeDto[] | null> {
+export async function apiGetChallenges(): Promise<ChallengeDto[]> {
   return await asyncApiGetV2<ChallengeDto[]>(
     "/challenges",
     z.array(ChallengeDto)
@@ -67,7 +67,7 @@ export async function apiUploadPicture(
   challengeId: number,
   userId: number,
   pictureContent: File
-): Promise<JSON> {
+): Promise<number> {
   return await asyncApiPostFile(
     `/pictures/${challengeId}/${userId}`,
     pictureContent

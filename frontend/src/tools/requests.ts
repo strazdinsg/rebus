@@ -2,7 +2,8 @@
 
 import { getCookie } from "./cookies";
 import { HttpResponseError } from "./HttpResponseError";
-import { ZodError, ZodSchema } from "zod";
+import { z, ZodError, ZodSchema } from "zod";
+import { isError, ResponseBody } from "schemas/src/responses";
 
 interface HttpHeaders {
   [key: string]: string;
@@ -26,7 +27,7 @@ export async function asyncApiGet<T>(
   url: string,
   schema: ZodSchema<T>
 ): Promise<T> {
-  return await asyncApiRequest("GET", url, null, null, false, schema);
+  return await asyncApiRequest("GET", url, schema, null, null, false);
 }
 
 /**
@@ -40,7 +41,7 @@ export async function asyncApiGetV2<T>(
   url: string,
   schema: ZodSchema<T>
 ): Promise<T> {
-  return await asyncApiRequest("GET", url, null, null, true, schema);
+  return await asyncApiRequest<T>("GET", url, schema, null, null, true);
 }
 
 /**
@@ -66,21 +67,27 @@ export async function asyncApiPost<T>(
   schema: ZodSchema<T>,
   requestBody: object | string | null
 ): Promise<T> {
-  return await asyncApiRequest("POST", url, requestBody, null, false, schema);
+  return await asyncApiRequest("POST", url, schema, requestBody, null, false);
 }
 
 /**
  * Upload a file as multipart form data to the backend, using HTTP POST
  * @param {string} url Relative backend API url
  * @param fileContent The content of the file to upload
- * @return The response body, parsed as a JSON
+ * @return The response data, parsed as a number
  * @throws {HttpResponseError} Error code and message from the response body
  */
 export async function asyncApiPostFile<T>(
   url: string,
   fileContent: File
-): Promise<T> {
-  return await asyncApiRequest("POST", url, null, fileContent);
+): Promise<number> {
+  return await asyncApiRequest<number>(
+    "POST",
+    url,
+    z.number(),
+    null,
+    fileContent
+  );
 }
 
 /**
@@ -99,10 +106,10 @@ export async function asyncApiPostFile<T>(
 async function asyncApiRequest<T>(
   method: string,
   url: string,
+  schema: ZodSchema<T>,
   requestBody: object | string | null = null,
   fileContent: File | null = null,
-  api_version2: boolean = false,
-  schema: ZodSchema<T> | null = null
+  api_version2: boolean = false
 ): Promise<T> {
   const response: Response = await sendRequest(
     method,
@@ -112,11 +119,25 @@ async function asyncApiRequest<T>(
     api_version2
   ).then(handleErrors);
 
-  const bodyJson: T = await response.json();
-  if (schema) {
-    schema.parse(bodyJson);
+  const ResponseStructure = ResponseBody(schema);
+  type ResponseType = z.infer<typeof ResponseStructure>;
+
+  const bodyJson: ResponseType = await response.json();
+  try {
+    ResponseStructure.parse(bodyJson);
+  } catch (e) {
+    if (e instanceof ZodError) {
+      console.log(`Error parsing response:`);
+      console.log(e.message);
+    }
+    throw e;
   }
-  return bodyJson;
+
+  if (isError(bodyJson)) {
+    throw new HttpResponseError(response.status, bodyJson.message);
+  }
+
+  return bodyJson.data as T;
 }
 
 /**

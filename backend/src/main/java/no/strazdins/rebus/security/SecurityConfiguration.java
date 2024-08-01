@@ -62,18 +62,20 @@ public class SecurityConfiguration {
     http
         // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
         .csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
         // Authentication URL is accessible for everyone
-        .authorizeHttpRequests((auth) -> auth.requestMatchers("/authenticate").permitAll())
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/authenticate").permitAll())
         // Challenge list is accessible for everyone
-        .authorizeHttpRequests((auth) -> auth.requestMatchers("/challenges").permitAll())
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/challenges").permitAll())
+        // Swagger UI is accessible for everyone
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**").permitAll())
+        .authorizeHttpRequests(auth -> auth.requestMatchers("/openapi-docs/**").permitAll())
+
         // Allow OPTIONS requests for CORS
-        .authorizeHttpRequests((auth) -> auth.requestMatchers(HttpMethod.OPTIONS).permitAll())
+        .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.OPTIONS).permitAll())
         // Any other request will be authenticated with a stateless policy
-        .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
         // Enable stateless session policy
-        .sessionManagement((session) ->
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         // Enable our JWT authentication filter
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

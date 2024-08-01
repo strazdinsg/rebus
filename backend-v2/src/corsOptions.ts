@@ -1,6 +1,9 @@
 // CORS configuration for the Express server
 
 import { CorsOptions } from "cors";
+import { loadEnvironmentVariables } from "./environment.js";
+
+loadEnvironmentVariables();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")

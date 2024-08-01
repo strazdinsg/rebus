@@ -1,13 +1,19 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
  * REST API controller for admin endpoints.
  */
 @RestController
-@CrossOrigin
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin endpoints")
 public class AdminController {
   private final UserService userService;
 
@@ -41,9 +47,24 @@ public class AdminController {
    *
    * @return List of all teams
    */
+  @Operation(summary = "Get all teams")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, list of all teams"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access to team listing",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @GetMapping("/teams")
-  public Iterable<TeamDto> getAllTeams() {
-    return userService.getAllTeams();
+  public HttpResponseDto<List<TeamDto>> getAllTeams() {
+    return HttpResponseDto.withData(userService.getAllTeams());
   }
 
   /**
@@ -51,9 +72,24 @@ public class AdminController {
    *
    * @return A collection of answers, per team
    */
+  @Operation(summary = "Get all answers")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, list of all answers"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access to answer listing",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @GetMapping("/answers")
-  public Iterable<ShortTeamAnswerDto> getAllAnswers() {
-    return answerService.getAll();
+  public HttpResponseDto<List<ShortTeamAnswerDto>> getAllAnswers() {
+    return HttpResponseDto.withData(answerService.getAll());
   }
 
   /**
@@ -64,15 +100,30 @@ public class AdminController {
    * @param score       The score, can be null (then the score will be deleted)
    * @return "success"
    */
+  @Operation(summary = "Set score for a specific team, specific challenge")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, score set"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
+                      + " \"data\":\"\"}"
+              )
+          )
+      )
+  })
   @PostMapping("/score/{challengeId}/{userId}")
-  public ResponseEntity<String> setScore(@PathVariable Integer challengeId,
-                                         @PathVariable Integer userId,
-                                         @RequestBody SingleScoreDto score) {
+  public HttpResponseDto<String> setScore(@PathVariable Integer challengeId,
+                                          @PathVariable Integer userId,
+                                          @RequestBody SingleScoreDto score) {
     if (score.score() != null) {
       answerService.setScore(challengeId, userId, score.score());
     } else {
       answerService.deleteScore(challengeId, userId);
     }
-    return ResponseEntity.ok("\"success\"");
+    return HttpResponseDto.withData("");
   }
 }

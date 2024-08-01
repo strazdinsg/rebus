@@ -45,24 +45,24 @@ public class ImageService {
    * @param imageData   The image file data, as received from the web client
    * @param userId      ID of the owner user (team)
    * @param challengeId ID of the associated challenge
-   * @return ID of the newly created image or -1 on error
+   * @throws IllegalArgumentException If the input data is wrong
    */
-  public int replace(MultipartFile imageData, int userId, int challengeId) {
+  public int replace(MultipartFile imageData, int userId, int challengeId)
+      throws IllegalArgumentException {
     if (!isImage(imageData)) {
-      return -1;
+      throw new IllegalArgumentException("Not an image");
     }
     User user = userRepository.findById(userId).orElse(null);
     if (user == null) {
-      return -1;
+      throw new IllegalArgumentException("Wrong User ID");
     }
     Challenge challenge = challengeRepository.findById(challengeId).orElse(null);
     if (challenge == null) {
-      return -1;
+      throw new IllegalArgumentException("Wrong Challenge ID");
     }
 
     deleteAll(userId, challengeId);
 
-    int imageId;
     try {
       Image image = new Image();
       image.setData(imageData.getBytes());
@@ -70,13 +70,12 @@ public class ImageService {
       image.setUser(user);
       image.setChallenge(challenge);
       imageRepository.save(image);
-      imageId = image.getId();
+      return image.getId();
+
     } catch (IOException e) {
       logger.error("Could not store image: {}", e.getMessage());
-      imageId = -1;
+      throw new IllegalArgumentException("Could not store image");
     }
-
-    return imageId;
   }
 
   /**

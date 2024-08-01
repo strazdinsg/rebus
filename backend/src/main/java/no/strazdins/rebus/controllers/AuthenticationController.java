@@ -1,16 +1,21 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.AuthenticationResponse;
+import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.model.User;
 import no.strazdins.rebus.security.JwtUtil;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller responsible for authentication.
  */
-@CrossOrigin
 @RestController
 public class AuthenticationController {
   private final AuthenticationManager authenticationManager;
@@ -29,8 +33,8 @@ public class AuthenticationController {
    * Initialize the controller. Called by Spring framework.
    *
    * @param authenticationManager AuthenticationManager instance
-   * @param userService UserService instance
-   * @param jwtUtil JwtUtil instance
+   * @param userService           UserService instance
+   * @param jwtUtil               JwtUtil instance
    */
   public AuthenticationController(AuthenticationManager authenticationManager,
                                   UserService userService, JwtUtil jwtUtil) {
@@ -45,20 +49,41 @@ public class AuthenticationController {
    * @param authenticationRequest The request JSON object containing username and password
    * @return OK + JWT token; Or UNAUTHORIZED
    */
+  @Tag(name = "Public endpoints")
   @PostMapping("/authenticate")
-  public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+  @Operation(
+      summary = "Log in",
+      description = "Log in with a PIN code. The PIN code is unique for each team."
+  )
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, Authentication response as data"
+      ),
+      @ApiResponse(
+          responseCode = "401", description = "Unauthorized, invalid PIN, null data",
+          // Content has no data, status: ERROR and error message
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Invalid PIN\", \"data\":null}"
+              )
+          )
+      )
+  })
+  public ResponseEntity<HttpResponseDto<AuthenticationResponse>> authenticate(
+      @RequestBody AuthenticationRequest authenticationRequest
+  ) {
     try {
       sleepToAvoidBruteForce();
       // We don't have username and password, we simply have a PIN, which is unique
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
           authenticationRequest.pin(),
           authenticationRequest.pin()));
-    } catch (BadCredentialsException e) {
-      return new ResponseEntity<>("Invalid PIN", HttpStatus.UNAUTHORIZED);
+      final User user = userService.findByPin(authenticationRequest.pin());
+      final String jwt = jwtUtil.generateToken(user);
+      return HttpResponseDto.okResponse(new AuthenticationResponse(jwt));
+    } catch (Exception e) {
+      return HttpResponseDto.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid PIN");
     }
-    final User user = userService.findByPin(authenticationRequest.pin());
-    final String jwt = jwtUtil.generateToken(user);
-    return ResponseEntity.ok(new AuthenticationResponse(jwt));
   }
 
   private void sleepToAvoidBruteForce() {

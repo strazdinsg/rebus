@@ -1,10 +1,9 @@
 import express from "express";
-import db from "./db/dbConfig.js";
 import cors from "cors";
 import { corsOptions } from "./corsOptions.js";
 import { loadEnvironmentVariables } from "./environment.js";
-import { ChallengeDto } from "schemas/src/challenge";
-import { RowDataPacket } from "mysql2";
+import challengeRoutes from "./routes/challenges.js";
+import setupSwaggerDocs from "./swagger.js";
 
 loadEnvironmentVariables();
 
@@ -13,28 +12,19 @@ const port = process.env.SERVER_PORT || DEFAULT_PORT;
 
 const server = express();
 server.use(cors(corsOptions));
+// Middleware to parse JSON request bodies
+server.use(express.json());
+
+server.use("/", challengeRoutes);
+
+export const SUCCESS = "SUCCESS";
+export const ERROR = "ERROR";
 
 server.get("/", (req, res) => {
   res.send("Rebus backend, v2");
 });
 
-server.get("/challenges", (req, res) => {
-  db.query("SELECT * FROM challenge", (err, results: RowDataPacket[]) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Internal server error");
-    } else {
-      const challenges: ChallengeDto[] = results.map((row) => {
-        return {
-          id: row.id,
-          question: row.question,
-          maxScore: row.max_score,
-        };
-      });
-      res.send(challenges);
-    }
-  });
-});
+setupSwaggerDocs(server);
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
