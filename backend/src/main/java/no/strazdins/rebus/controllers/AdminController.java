@@ -1,6 +1,12 @@
 package no.strazdins.rebus.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamDto;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * REST API controller for admin endpoints.
@@ -41,9 +48,24 @@ public class AdminController {
    *
    * @return List of all teams
    */
+  @Operation(summary = "Get all teams")
+  @ApiResponses(value = {
+      @ApiResponse(
+          responseCode = "200", description = "OK, list of all teams"
+      ),
+      @ApiResponse(
+          responseCode = "403", description = "Forbidden, no access to team listing",
+          content = @Content(
+              schema = @Schema(
+                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in\", \"data\":\"\"}"
+              )
+          )
+      )
+  })
+
   @GetMapping("/teams")
-  public Iterable<TeamDto> getAllTeams() {
-    return userService.getAllTeams();
+  public HttpResponseDto<List<TeamDto>> getAllTeams() {
+    return HttpResponseDto.withData(userService.getAllTeams());
   }
 
   /**

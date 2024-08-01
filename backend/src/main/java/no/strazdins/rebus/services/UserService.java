@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
    *
    * @return An iterable collection of users
    */
-  public Iterable<TeamDto> getAllTeams() {
+  public List<TeamDto> getAllTeams() {
     List<TeamDto> teams = new LinkedList<>();
     Iterable<User> users = userRepository.findAll();
     for (User user : users) {
