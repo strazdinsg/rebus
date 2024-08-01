@@ -80,8 +80,14 @@ export async function asyncApiPost<T>(
 export async function asyncApiPostFile<T>(
   url: string,
   fileContent: File
-): Promise<string> {
-  return await asyncApiRequest<string>("POST", url, z.string(), fileContent);
+): Promise<number> {
+  return await asyncApiRequest<number>(
+    "POST",
+    url,
+    z.number(),
+    null,
+    fileContent
+  );
 }
 
 /**

@@ -67,7 +67,7 @@ export async function apiUploadPicture(
   challengeId: number,
   userId: number,
   pictureContent: File
-): Promise<string> {
+): Promise<number> {
   return await asyncApiPostFile(
     `/pictures/${challengeId}/${userId}`,
     pictureContent
