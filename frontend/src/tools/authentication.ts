@@ -8,7 +8,7 @@ import {
 } from "./cookies";
 import { asyncApiPost } from "./requests";
 import { UserSession } from "../context/UserContext";
-import { JwtDto } from "schemas/src/jwt";
+import { AuthenticationResponseBody } from "schemas/src/responses";
 
 /**
  * Basic JWT token structure.
@@ -65,9 +65,13 @@ export function sendAuthenticationRequest(
   const postData = {
     pin: pin,
   };
-  asyncApiPost<JwtDto>("/authenticate", JwtDto, postData)
+  asyncApiPost<AuthenticationResponseBody>(
+    "/authenticate",
+    AuthenticationResponseBody,
+    postData
+  )
     .then((jwtResponse) => {
-      onAuthSuccess(jwtResponse.jwt, successCallback);
+      onAuthSuccess(jwtResponse.data.jwt, successCallback);
     })
     .catch((error) => {
       const code =
