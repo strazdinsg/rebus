@@ -30,4 +30,4 @@ TypeScript code and start the server.
 
 The Swagger UI for API documentation is available at `/swagger-ui/index.html`.
 
-The OpenAPI specification is available at `/openapi-docs.json`.
+The OpenAPI specification is available at `/openapi-docs`.

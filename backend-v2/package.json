@@ -1,6 +1,6 @@
 {
   "name": "rebus-backend",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Backend for the Rebus application, in Node.js",
   "main": "dist/server.js",
   "scripts": {

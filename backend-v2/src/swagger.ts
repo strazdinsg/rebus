@@ -28,7 +28,7 @@ const setupSwaggerDocs = (app: Application) => {
     res.redirect("/swagger-ui/index.html");
   });
 
-  app.use("/openapi-docs.json", (req, res) => {
+  app.use("/openapi-docs", (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.send(swaggerSpec);
   });
