@@ -2,10 +2,6 @@
   "name": "schemas",
   "version": "2.3.0",
   "main": "src/schemas.js",
-  "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Girts Strazdins",
   "license": "MIT",
   "description": "Common schemas for the backend and frontend",
