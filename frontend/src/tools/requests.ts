@@ -4,6 +4,9 @@ import { getCookie } from "./cookies";
 import { HttpResponseError } from "./HttpResponseError";
 import { z, ZodError, ZodSchema } from "zod";
 import { isError, ResponseBody } from "schemas/src/responses";
+import { loadEnvironmentVariables } from "./environment";
+
+loadEnvironmentVariables();
 
 interface HttpHeaders {
   [key: string]: string;
@@ -12,9 +15,9 @@ interface HttpHeaders {
 // Import REST API BASE URL from the environment variable, see .env file
 // Note: all environment variables must start with VITE_, otherwise Vite will not handle them!
 // @ts-ignore - TypeScript does not know about the environment variable
-export const API_V1_BASE_URL = import.meta.env.VITE_API_V1_BASE_URL;
+export const API_V1_BASE_URL = process.env.VITE_API_V1_BASE_URL;
 // @ts-ignore - TypeScript does not know about the environment variable
-export const API_V2_BASE_URL = import.meta.env.VITE_API_V2_BASE_URL;
+export const API_V2_BASE_URL = process.env.VITE_API_V2_BASE_URL;
 
 /**
  * Send an asynchronous HTTP GET request to the remote API (backend)

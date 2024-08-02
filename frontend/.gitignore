@@ -3,3 +3,7 @@ node_modules
 build
 .env
 dist
+src/api-v1/endpoints
+src/api-v1/models
+src/api-v2/endpoints
+src/api-v2/models

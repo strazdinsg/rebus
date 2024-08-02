@@ -6,9 +6,10 @@ import {
   getCookieOrDefault,
   setCookie,
 } from "./cookies";
-import { asyncApiPost } from "./requests";
 import { UserSession } from "../context/UserContext";
 import { JwtDto } from "schemas/src/jwt";
+import { getPublicEndpoints } from "../api-v1/endpoints/public-endpoints/public-endpoints";
+import { AuthenticationRequest } from "../api-v1/models";
 
 /**
  * Basic JWT token structure.
@@ -62,12 +63,16 @@ export function sendAuthenticationRequest(
   successCallback: (user: UserSession) => void,
   errorCallback: (errorCode: number, errorText: string) => void
 ) {
-  const postData = {
+  const postData: AuthenticationRequest = {
     pin: pin,
   };
-  asyncApiPost<JwtDto>("/authenticate", JwtDto, postData)
+  getPublicEndpoints()
+    .authenticate(postData)
+    .then(({ data }) => data)
     .then((jwtResponse) => {
-      onAuthSuccess(jwtResponse.jwt, successCallback);
+      if (jwtResponse.data?.jwt) {
+        onAuthSuccess(jwtResponse.data.jwt, successCallback);
+      }
     })
     .catch((error) => {
       const code =
