@@ -38,18 +38,6 @@ public class SecurityConfiguration {
 
   /**
    * This method will be called automatically by the framework to find out what authentication
-   * to use. Here we tell that we want to load users from a database.
-   *
-   * @param auth Authentication builder
-   * @throws Exception When authentication config fails.
-   */
-  @Autowired
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService);
-  }
-
-  /**
-   * This method will be called automatically by the framework to find out what authentication
    * to use.
    *
    * @param http HttpSecurity setting builder
