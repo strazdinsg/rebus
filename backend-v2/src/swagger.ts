@@ -1,13 +1,14 @@
 import swaggerJSDoc, { Options } from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { Application } from "express";
+import { version } from "./version.js";
 
 const options: Options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "Backend API documentation",
-      version: "1.0.0",
+      version: version,
       description: "Rebus backend API documentation",
     },
   },
