@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
-import { apiGetImage, apiUploadPicture } from "../tools/api";
 import { dataURItoFile } from "../tools/imageTools";
+import { getUserEndpoints } from "../api-v1/endpoints/user-endpoints/user-endpoints";
 
 /**
  * Query for getting the image for a challenge.
@@ -12,7 +12,7 @@ export function useImage(challengeId: number, userId: number) {
   return useQuery(
     {
       queryKey: [`images/${challengeId}/${userId}`],
-      queryFn: () => apiGetImage(challengeId, userId),
+      queryFn: () => getUserEndpoints().getPicture(challengeId, userId),
       retry: false,
     },
     queryClient
@@ -36,7 +36,9 @@ export function useUploadImage(
     {
       mutationFn: async (imageData: string) => {
         const picture = dataURItoFile(imageData, "image.jpeg");
-        await apiUploadPicture(challengeId, userId, picture);
+        await getUserEndpoints().uploadPicture(challengeId, userId, {
+          fileContent: picture,
+        });
       },
       onSuccess: onSuccess,
       onError: onError,

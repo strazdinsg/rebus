@@ -5,8 +5,6 @@ import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
 import "./UserDashboard.css";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useMyAnswers } from "../../../queries/answerQueries";
-import { TeamAnswersDto } from "schemas/src/answer";
-import { UseQueryResult } from "@tanstack/react-query";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
@@ -15,7 +13,7 @@ export function UserDashboard() {
   const userContext = useContext(UserContext);
   const user = userContext.user;
   const challenges = useChallenges();
-  const myAnswers: UseQueryResult<TeamAnswersDto> = useMyAnswers();
+  const myAnswers = useMyAnswers();
 
   if (!user || challenges.isPending || myAnswers.isPending) {
     return <main>Loading...</main>;
@@ -29,6 +27,9 @@ export function UserDashboard() {
     return <main>No challenges found</main>;
   }
 
+  const challengeList = challenges.data?.data || [];
+  const myAnswerList = myAnswers.data?.data.data?.answers || [];
+
   return (
     <>
       <AppBar position="static">
@@ -39,7 +40,7 @@ export function UserDashboard() {
       <main>
         <h2>Choose a challenge</h2>
         <div id="challenge-container">
-          {challenges.data.map((challenge, index) => (
+          {challengeList.map((challenge, index) => (
             <ChallengeChoiceButton
               challenge={challenge}
               submitted={isAnswered(challenge.id)}
@@ -55,8 +56,8 @@ export function UserDashboard() {
     let answerFound = false;
     if (myAnswers.data) {
       let i = 0;
-      while (!answerFound && i < myAnswers.data.answers.length) {
-        answerFound = myAnswers.data.answers[i].challengeId === challengeId;
+      while (!answerFound && i < myAnswerList.length) {
+        answerFound = myAnswerList[i].challengeId === challengeId;
         i++;
       }
     }

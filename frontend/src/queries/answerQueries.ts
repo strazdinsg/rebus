@@ -1,12 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  apiGetAllAnswers,
-  apiGetMyAnswers,
-  apiPostAnswer,
-  apiPostScore,
-} from "../tools/api";
 import { queryClient } from "./queryClient";
 import { getAuthenticatedUser } from "../tools/authentication";
+import { getAdminEndpoints } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
+import { getUserEndpoints } from "../api-v1/endpoints/user-endpoints/user-endpoints";
 
 /**
  * React Query hook for getting all answers from the backend.
@@ -15,7 +11,7 @@ export function useAllAnswers() {
   return useQuery(
     {
       queryKey: ["allAnswers"],
-      queryFn: async () => await apiGetAllAnswers(),
+      queryFn: async () => await getAdminEndpoints().getAllAnswers(),
     },
     queryClient
   );
@@ -35,7 +31,10 @@ export function useUpdateScore() {
         challengeId: number;
         userId: number;
         score: number | null;
-      }) => await apiPostScore(args.challengeId, args.userId, args.score),
+      }) =>
+        await getAdminEndpoints().setScore(args.challengeId, args.userId, {
+          score: args.score || undefined,
+        }),
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["allAnswers"] });
       },
@@ -51,7 +50,7 @@ export function useMyAnswers() {
   return useQuery(
     {
       queryKey: ["myAnswers"],
-      queryFn: async () => await apiGetMyAnswers(),
+      queryFn: async () => await getUserEndpoints().getMyAnswers(),
     },
     queryClient
   );
@@ -72,7 +71,10 @@ export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
       mutationFn: async (args: { challengeId: number; answer: string }) => {
         const user = getAuthenticatedUser();
         if (user) {
-          await apiPostAnswer(args.challengeId, user.id, args.answer);
+          await getUserEndpoints().postAnswer(args.challengeId, user.id, {
+            answer: args.answer,
+            challengeId: args.challengeId,
+          });
         }
       },
       onSuccess: async () => {

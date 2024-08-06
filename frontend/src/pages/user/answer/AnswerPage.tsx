@@ -8,14 +8,13 @@ import { ImageUploader } from "./ImageUploader";
 import { UserContext } from "../../../context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ChallengeDto } from "schemas/src/challenge";
-import { AnswerDto } from "schemas/src/answer";
 import { useChallenges } from "../../../queries/challengeQueries";
 import {
   useMyAnswers,
   useUpdateMyAnswer,
 } from "../../../queries/answerQueries";
 import { useImage, useUploadImage } from "../../../queries/imageQueries";
+import { AnswerDto, ChallengeDto } from "../../../api-v1/models";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
