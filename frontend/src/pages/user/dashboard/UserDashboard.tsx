@@ -28,7 +28,7 @@ export function UserDashboard() {
   }
 
   const challengeList = challenges.data?.data || [];
-  const myAnswerList = myAnswers.data?.data.data?.answers || [];
+  const myAnswerList = myAnswers.data?.data?.answers || [];
 
   return (
     <>

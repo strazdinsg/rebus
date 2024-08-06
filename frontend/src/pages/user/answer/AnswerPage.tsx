@@ -168,7 +168,7 @@ export function AnswerPage() {
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
     if (myAnswers.data && myAnswers.data && challengeIdNum > 0) {
-      const myAnswerList = myAnswers.data.data.data?.answers || [];
+      const myAnswerList = myAnswers.data.data?.answers || [];
       answer =
         myAnswerList.find((a) => a.challengeId === challengeIdNum) || null;
     }

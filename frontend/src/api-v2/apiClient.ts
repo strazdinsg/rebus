@@ -9,13 +9,12 @@ const apiClient = axios.create({
   baseURL: API_V2_BASE_URL,
 });
 
-// TODO - add interceptors for JWT tokens etc.
-
-// TODO - what is this?
 export const customAxiosClient = async <T>(
   config: AxiosRequestConfig
 ): Promise<T> => {
-  const source = axios.CancelToken.source();
-  const response = await apiClient({ ...config, cancelToken: source.token });
+  const response = await apiClient(config);
   return response.data;
 };
+
+export type ErrorType<Error> = AxiosError<Error>;
+export type BodyType<BodyData> = BodyData;

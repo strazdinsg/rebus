@@ -18,7 +18,7 @@ export function GradingPage() {
   if (isPending) {
     content = showMessage("Loading teams...");
   } else if (teams) {
-    const teamList = teams.data.data || [];
+    const teamList = teams.data || [];
     content = teamList.map((team, index) => (
       <GradingTableRow team={team} key={index} />
     ));

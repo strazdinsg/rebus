@@ -11,10 +11,11 @@ const apiClient = axios.create({
 
 // TODO - add interceptors for JWT tokens etc.
 
-export const customAxiosClient = <T>(
+export const customAxiosClient = async <T>(
   config: AxiosRequestConfig
-): Promise<AxiosResponse<T>> => {
-  return apiClient(config);
+): Promise<T> => {
+  const response = await apiClient(config);
+  return response.data;
 };
 
 // TODO - what is this?
