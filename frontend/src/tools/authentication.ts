@@ -70,8 +70,8 @@ export function sendAuthenticationRequest(
     .authenticate(postData)
     .then(({ data }) => data)
     .then((jwtResponse) => {
-      if (jwtResponse.data?.jwt) {
-        onAuthSuccess(jwtResponse.data.jwt, successCallback);
+      if (jwtResponse?.jwt) {
+        onAuthSuccess(jwtResponse.jwt, successCallback);
       }
     })
     .catch((error) => {
