@@ -1,6 +1,6 @@
 {
   "openapi": "3.0.1",
-  "info": { "title": "API Documentation", "version": "1.0" },
+  "info": { "title": "Rebus backend", "version": "2.0.0" },
   "servers": [
     { "url": "http://localhost:8080", "description": "Generated server url" }
   ],
@@ -85,19 +85,29 @@
           "200": {
             "description": "OK, image content in the body",
             "content": {
-              "*/*": { "schema": { "type": "string", "format": "byte" } }
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "byte" }
+              }
             }
           },
           "403": {
             "description": "Forbidden, not allowed to access images of other teams",
             "content": {
-              "*/*": { "schema": { "type": "string", "format": "byte" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoString"
+                }
+              }
             }
           },
           "404": {
             "description": "Not found, image not found",
             "content": {
-              "*/*": { "schema": { "type": "string", "format": "byte" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoString"
+                }
+              }
             }
           }
         }
@@ -200,21 +210,6 @@
           }
         ],
         "responses": {
-          "403": {
-            "description": "Forbidden, not allowed to access images of other teams",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "ERROR",
-                    "message": "Not allowed to access images of other teams",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
           "404": {
             "description": "Not found, Image not found",
             "content": {
@@ -237,6 +232,21 @@
                 "schema": {
                   "type": "string",
                   "example": { "status": "SUCCESS", "message": "", "data": "" }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, not allowed to access images of other teams",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "ERROR",
+                    "message": "Not allowed to access images of other teams",
+                    "data": ""
+                  }
                 }
               }
             }
@@ -315,21 +325,6 @@
           "required": true
         },
         "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "ERROR",
-                    "message": "Error message",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK, answer posted",
             "content": {
@@ -339,6 +334,21 @@
                   "example": {
                     "status": "SUCCESS",
                     "message": "Answer posted",
+                    "data": ""
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "ERROR",
+                    "message": "Error message",
                     "data": ""
                   }
                 }
@@ -407,16 +417,6 @@
         "summary": "Get all answers",
         "operationId": "getAllAnswers",
         "responses": {
-          "200": {
-            "description": "OK, list of all answers",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoListShortTeamAnswerDto"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden, no access to answer listing",
             "content": {
@@ -431,6 +431,16 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "OK, list of all answers",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoListShortTeamAnswerDto"
+                }
+              }
+            }
           }
         }
       }
@@ -441,6 +451,16 @@
         "summary": "Get answers of the currently logged-in user",
         "operationId": "getMyAnswers",
         "responses": {
+          "200": {
+            "description": "OK, answers of the currently logged-in user",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoTeamAnswerDto"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized, must log in",
             "content": {
@@ -452,16 +472,6 @@
                     "message": "Must log in",
                     "data": ""
                   }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK, answers of the currently logged-in user",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoTeamAnswerDto"
                 }
               }
             }

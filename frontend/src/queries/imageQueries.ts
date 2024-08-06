@@ -12,10 +12,7 @@ export function useImage(challengeId: number, userId: number) {
   return useQuery(
     {
       queryKey: [`images/${challengeId}/${userId}`],
-      queryFn: () =>
-        getUserEndpoints()
-          .getPicture(challengeId, userId)
-          .then((r) => r.data as any as Blob),
+      queryFn: () => getUserEndpoints().getPicture(challengeId, userId),
       retry: false,
     },
     queryClient
@@ -39,9 +36,7 @@ export function useUploadImage(
     {
       mutationFn: async (imageData: string) => {
         const picture = dataURItoFile(imageData, "image.jpeg");
-        await getUserEndpoints().uploadPicture(challengeId, userId, {
-          fileContent: picture,
-        });
+        await getUserEndpoints().uploadPicture(challengeId, userId, picture);
       },
       onSuccess: onSuccess,
       onError: onError,
