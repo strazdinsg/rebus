@@ -17,6 +17,8 @@ export function GradingTableHeader() {
     return renderMessage("No challenges found");
   }
 
+  const challengeList = challenges.data || [];
+
   return (
     <thead>
       <tr>
@@ -24,7 +26,7 @@ export function GradingTableHeader() {
           Team <br />
           (total score)
         </th>
-        {challenges.map((c) => (
+        {challengeList.map((c) => (
           <th key={c.id}>Challenge {c.id}</th>
         ))}
       </tr>

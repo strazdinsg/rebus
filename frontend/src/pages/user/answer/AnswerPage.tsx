@@ -39,7 +39,7 @@ export function AnswerPage() {
   );
 
   const challenge = challenges.data
-    ? getSelectedChallenge(challenges.data, challengeIdNum)
+    ? getSelectedChallenge(challenges.data.data, challengeIdNum)
     : null;
 
   const submittedAnswer = findChallengeAnswer();
@@ -167,10 +167,10 @@ export function AnswerPage() {
    */
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
-    if (myAnswers.data && myAnswers.data.answers && challengeIdNum > 0) {
+    if (myAnswers.data && myAnswers.data && challengeIdNum > 0) {
+      const myAnswerList = myAnswers.data.data.data?.answers || [];
       answer =
-        myAnswers.data.answers.find((a) => a.challengeId === challengeIdNum) ||
-        null;
+        myAnswerList.find((a) => a.challengeId === challengeIdNum) || null;
     }
     return answer;
   }

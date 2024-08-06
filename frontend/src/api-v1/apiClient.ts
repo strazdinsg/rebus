@@ -12,7 +12,7 @@ const apiClient = axios.create({
 // TODO - add interceptors for JWT tokens etc.
 
 export const customAxiosClient = <T>(
-  config: AxiosRequestConfig<T>
+  config: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   return apiClient(config);
 };

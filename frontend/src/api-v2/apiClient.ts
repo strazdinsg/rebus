@@ -13,7 +13,7 @@ const apiClient = axios.create({
 
 // TODO - what is this?
 export const customAxiosClient = async <T>(
-  config: AxiosRequestConfig<T>
+  config: AxiosRequestConfig
 ): Promise<T> => {
   const source = axios.CancelToken.source();
   const response = await apiClient({ ...config, cancelToken: source.token });

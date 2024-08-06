@@ -12,7 +12,10 @@ export function useImage(challengeId: number, userId: number) {
   return useQuery(
     {
       queryKey: [`images/${challengeId}/${userId}`],
-      queryFn: () => getUserEndpoints().getPicture(challengeId, userId),
+      queryFn: () =>
+        getUserEndpoints()
+          .getPicture(challengeId, userId)
+          .then((r) => r.data as any as Blob),
       retry: false,
     },
     queryClient
