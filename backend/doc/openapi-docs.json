@@ -1,26 +1,14 @@
 {
   "openapi": "3.0.1",
-  "info": {
-    "title": "API Documentation",
-    "version": "1.0"
-  },
+  "info": { "title": "API Documentation", "version": "1.0" },
   "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "Generated server url"
-    }
+    { "url": "http://localhost:8080", "description": "Generated server url" }
   ],
-  "security": [
-    {
-      "bearer-key": []
-    }
-  ],
+  "security": [{ "bearer-key": [] }],
   "paths": {
     "/score/{challengeId}/{userId}": {
       "post": {
-        "tags": [
-          "Admin endpoints"
-        ],
+        "tags": ["Admin endpoints"],
         "summary": "Set score for a specific team, specific challenge",
         "operationId": "setScore",
         "parameters": [
@@ -28,27 +16,19 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SingleScoreDto"
-              }
+              "schema": { "$ref": "#/components/schemas/SingleScoreDto" }
             }
           },
           "required": true
@@ -84,127 +64,76 @@
     },
     "/pictures/{challengeId}/{userId}": {
       "get": {
-        "tags": [
-          "User endpoints"
-        ],
+        "tags": ["User endpoints"],
         "summary": "Get image submitted as an answer to a challenge by a team",
-        "operationId": "get",
+        "operationId": "getPicture",
         "parameters": [
           {
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK, image content in the body",
             "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "byte"
-                }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           },
           "403": {
             "description": "Forbidden, not allowed to access images of other teams",
             "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "byte"
-                }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           },
           "404": {
             "description": "Not found, image not found",
             "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "byte"
-                }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           }
         }
       },
       "post": {
-        "tags": [
-          "User endpoints"
-        ],
+        "tags": ["User endpoints"],
         "summary": "Upload an image to the server",
-        "operationId": "upload",
+        "operationId": "uploadPicture",
         "parameters": [
           {
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "required": [
-                  "fileContent"
-                ],
+                "required": ["fileContent"],
                 "type": "object",
                 "properties": {
-                  "fileContent": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "fileContent": { "type": "string", "format": "binary" }
                 }
               }
             }
           }
         },
         "responses": {
-          "403": {
-            "description": "Forbidden, not allowed to upload images for other teams",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "ERROR",
-                    "message": "Not allowed to upload images for other teams",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK, Image ID in the body",
             "content": {
@@ -215,6 +144,21 @@
                     "status": "SUCCESS",
                     "message": "",
                     "data": "123"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, not allowed to upload images for other teams",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "ERROR",
+                    "message": "Not allowed to upload images for other teams",
+                    "data": ""
                   }
                 }
               }
@@ -238,29 +182,21 @@
         }
       },
       "delete": {
-        "tags": [
-          "User endpoints"
-        ],
+        "tags": ["User endpoints"],
         "summary": "Delete an image submitted as an answer to a challenge by a team",
-        "operationId": "delete",
+        "operationId": "deletePicture",
         "parameters": [
           {
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "responses": {
@@ -273,21 +209,6 @@
                   "example": {
                     "status": "ERROR",
                     "message": "Not allowed to access images of other teams",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK, image deleted",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "SUCCESS",
-                    "message": "",
                     "data": ""
                   }
                 }
@@ -308,24 +229,31 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "OK, image deleted",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": { "status": "SUCCESS", "message": "", "data": "" }
+                }
+              }
+            }
           }
         }
       }
     },
     "/authenticate": {
       "post": {
-        "tags": [
-          "Public endpoints"
-        ],
+        "tags": ["Public endpoints"],
         "summary": "Log in",
         "description": "Log in with a PIN code. The PIN code is unique for each team.",
         "operationId": "authenticate",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthenticationRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/AuthenticationRequest" }
             }
           },
           "required": true
@@ -361,9 +289,7 @@
     },
     "/answers/{challengeId}/{userId}": {
       "post": {
-        "tags": [
-          "User endpoints"
-        ],
+        "tags": ["User endpoints"],
         "summary": "Post an answer to a challenge",
         "operationId": "postAnswer",
         "parameters": [
@@ -371,47 +297,24 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MyAnswerDto"
-              }
+              "schema": { "$ref": "#/components/schemas/MyAnswerDto" }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK, answer posted",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "SUCCESS",
-                    "message": "Answer posted",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -426,18 +329,41 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "OK, answer posted",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "SUCCESS",
+                    "message": "Answer posted",
+                    "data": ""
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/teams": {
       "get": {
-        "tags": [
-          "Admin endpoints"
-        ],
+        "tags": ["Admin endpoints"],
         "summary": "Get all teams",
         "operationId": "getAllTeams",
         "responses": {
+          "200": {
+            "description": "OK, list of all teams",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoListTeamDto"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden, no access to team listing",
             "content": {
@@ -452,27 +378,15 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "OK, list of all teams",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoListTeamDto"
-                }
-              }
-            }
           }
         }
       }
     },
     "/challenges": {
       "get": {
-        "tags": [
-          "Public endpoints"
-        ],
+        "tags": ["Public endpoints"],
         "summary": "Get all challenges",
-        "operationId": "getAll",
+        "operationId": "getAllChallenges",
         "responses": {
           "200": {
             "description": "OK",
@@ -489,9 +403,7 @@
     },
     "/answers": {
       "get": {
-        "tags": [
-          "Admin endpoints"
-        ],
+        "tags": ["Admin endpoints"],
         "summary": "Get all answers",
         "operationId": "getAllAnswers",
         "responses": {
@@ -525,9 +437,7 @@
     },
     "/answers/my": {
       "get": {
-        "tags": [
-          "User endpoints"
-        ],
+        "tags": ["User endpoints"],
         "summary": "Get answers of the currently logged-in user",
         "operationId": "getMyAnswers",
         "responses": {
@@ -564,12 +474,7 @@
     "schemas": {
       "SingleScoreDto": {
         "type": "object",
-        "properties": {
-          "score": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
+        "properties": { "score": { "type": "integer", "format": "int32" } }
       },
       "HttpResponseDtoString": {
         "type": "object",
@@ -577,10 +482,7 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
           "data": {
             "type": "string",
@@ -606,10 +508,7 @@
       "AuthenticationResponse": {
         "type": "object",
         "properties": {
-          "jwt": {
-            "type": "string",
-            "description": "JWT token"
-          }
+          "jwt": { "type": "string", "description": "JWT token" }
         },
         "description": "Response of a successful authentication"
       },
@@ -619,14 +518,9 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
-          "data": {
-            "$ref": "#/components/schemas/AuthenticationResponse"
-          },
+          "data": { "$ref": "#/components/schemas/AuthenticationResponse" },
           "message": {
             "type": "string",
             "description": "A message explaining the response, in case of errors"
@@ -657,17 +551,12 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": {
-              "$ref": "#/components/schemas/TeamDto"
-            }
+            "items": { "$ref": "#/components/schemas/TeamDto" }
           },
           "message": {
             "type": "string",
@@ -679,13 +568,8 @@
       "TeamDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          }
+          "id": { "type": "integer", "format": "int32" },
+          "name": { "type": "string" }
         },
         "description": "The data that the server will send in the response, can be null"
       },
@@ -718,17 +602,12 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": {
-              "$ref": "#/components/schemas/ChallengeDto"
-            }
+            "items": { "$ref": "#/components/schemas/ChallengeDto" }
           },
           "message": {
             "type": "string",
@@ -743,17 +622,12 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": {
-              "$ref": "#/components/schemas/ShortTeamAnswerDto"
-            }
+            "items": { "$ref": "#/components/schemas/ShortTeamAnswerDto" }
           },
           "message": {
             "type": "string",
@@ -765,22 +639,11 @@
       "ShortTeamAnswerDto": {
         "type": "object",
         "properties": {
-          "teamId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "answers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
+          "teamId": { "type": "integer", "format": "int32" },
+          "answers": { "type": "array", "items": { "type": "string" } },
           "scores": {
             "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "items": { "type": "integer", "format": "int32" }
           }
         },
         "description": "The data that the server will send in the response, can be null"
@@ -814,14 +677,9 @@
           "status": {
             "type": "string",
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ]
+            "enum": ["SUCCESS", "ERROR"]
           },
-          "data": {
-            "$ref": "#/components/schemas/TeamAnswerDto"
-          },
+          "data": { "$ref": "#/components/schemas/TeamAnswerDto" },
           "message": {
             "type": "string",
             "description": "A message explaining the response, in case of errors"
@@ -841,9 +699,7 @@
           "answers": {
             "type": "array",
             "description": "List of answers to all challenges for the team",
-            "items": {
-              "$ref": "#/components/schemas/AnswerDto"
-            }
+            "items": { "$ref": "#/components/schemas/AnswerDto" }
           }
         },
         "description": "Answers to all challenges for a particular team"

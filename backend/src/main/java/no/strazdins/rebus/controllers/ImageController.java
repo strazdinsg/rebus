@@ -82,7 +82,7 @@ public class ImageController {
       )
   })
   @PostMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<HttpResponseDto<Integer>> upload(
+  public ResponseEntity<HttpResponseDto<Integer>> uploadPicture(
       @RequestParam("fileContent") MultipartFile multipartFile,
       @PathVariable int challengeId,
       @PathVariable Integer userId
@@ -116,8 +116,8 @@ public class ImageController {
       )
   })
   @GetMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
-                                    @PathVariable Integer userId) {
+  public ResponseEntity<byte[]> getPicture(@PathVariable Integer challengeId,
+                                           @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
       throw new AccessDeniedException("Not allowed to access images of other teams");
     }
@@ -170,8 +170,8 @@ public class ImageController {
       )
   })
   @DeleteMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<HttpResponseDto<String>> delete(@PathVariable Integer challengeId,
-                                                        @PathVariable Integer userId) {
+  public ResponseEntity<HttpResponseDto<String>> deletePicture(@PathVariable Integer challengeId,
+                                                               @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
       throw new AccessDeniedException("Not allowed to access images of other teams");
     }

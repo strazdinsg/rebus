@@ -30,7 +30,7 @@ public class PublicController {
    */
   @Operation(summary = "Get all challenges")
   @GetMapping("/challenges")
-  public HttpResponseDto<List<ChallengeDto>> getAll() {
+  public HttpResponseDto<List<ChallengeDto>> getAllChallenges() {
     Iterable<Challenge> challenges = challengeService.getAll();
     List<ChallengeDto> challengeDtoList = StreamSupport.stream(challenges.spliterator(), false)
         .map(ChallengeDto::new).toList();
