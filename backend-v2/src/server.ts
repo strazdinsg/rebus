@@ -25,7 +25,9 @@ server.get("/", (req, res) => {
   res.send("Rebus backend, v2");
 });
 server.get("/openapi-docs.json", (req, res) => {
-  const filePath = path.join(__dirname, "/swagger.json");
+  const docsDir = path.join(__dirname, "..", "doc");
+  console.log(`Serving OpenAPI docs from ${docsDir}`);
+  const filePath = path.join(docsDir, "/swagger.json");
   res.sendFile(filePath);
 });
 

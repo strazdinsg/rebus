@@ -18,13 +18,14 @@ First you need to ensure the following requirements are met:
     - SERVER_PORT - port number to run the server on
     - ALLOWED_ORIGINS - comma-separated list of allowed origins for CORS
 
-Then you need to link this project to the [schemas](../schemas) project. This can be done by
-running `pnpm link --global` in the schemas project directory, then running `pnpm link schemas` in
-this project directory. The reason for this is that this project needs to access the schemas package
-because it needs the Data Transfer Objects (DTOs) defined in the schemas package.
-
 You can start the backend by executing `npm run restart` in the terminal. This will compile the
 TypeScript code and start the server.
+
+# TSOA
+
+TSOA library is used to generate the client code for the APIs. This means you need to write your
+controller code in a bit specific way. Then run `pnpm build` to generate the necessary router 
+code and OpenAPI specification.
 
 # API documentation
 
