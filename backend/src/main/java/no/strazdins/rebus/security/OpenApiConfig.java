@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class OpenApiConfig {
+  @Value("${api.version}")
+  private String apiVersion;
 
   /**
    * Create a custom OpenAPI object with security requirements. This will enable authentication
@@ -24,7 +27,7 @@ public class OpenApiConfig {
   @Bean
   public OpenAPI customOpenApi() {
     return new OpenAPI()
-        .info(new Info().title("API Documentation").version("1.0"))
+        .info(new Info().title("Rebus backend").version(apiVersion))
         .components(new Components()
             .addSecuritySchemes("bearer-key",
                 new SecurityScheme()
