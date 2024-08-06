@@ -4,10 +4,9 @@
   "description": "Backend for the Rebus application, in Node.js",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsoa spec-and-routes && tsc",
     "start": "node dist/server.js",
     "restart": "pnpm run build && pnpm run start",
-    "swagger": "tsc && node ./dist/auto-swagger.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,22 +20,18 @@
   },
   "homepage": "https://github.com/strazdinsg/rebus#readme",
   "dependencies": {
+    "@tsoa/runtime": "^6.4.0",
     "@types/dotenv": "^6.1.1",
-    "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-express": "^4.1.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mysql2": "^3.10.3",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "tsoa": "^6.4.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.13",
-    "swagger-autogen": "^2.23.7",
     "typescript": "^5.5.4"
-  },
-  "type": "module"
+  }
 }

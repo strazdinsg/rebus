@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": [
-      "esnext"
-    ],
+    "target": "esnext",
+    "module": "commonjs",
     "strict": true,
-    "module": "esnext",
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src"

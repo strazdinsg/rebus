@@ -7,19 +7,10 @@ const apiClient = axios.create({
 
 // TODO - add interceptors for JWT tokens etc.
 
-// TODO - what is this?
 export const customAxiosClient = <T>(
   config: AxiosRequestConfig<T>
 ): Promise<AxiosResponse<T>> => {
-  const source = axios.CancelToken.source();
-  const promise = apiClient({ ...config, cancelToken: source.token });
-
-  // @ts-ignore
-  promise.cancel = () => {
-    source.cancel("Operation canceled by the user.");
-  };
-
-  return promise;
+  return apiClient(config);
 };
 
 // TODO - what is this?
