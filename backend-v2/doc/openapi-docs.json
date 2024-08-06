@@ -91,7 +91,7 @@
 	},
 	"info": {
 		"title": "rebus-backend",
-		"version": "2.2.0",
+		"version": "2.3.0",
 		"description": "Backend for the Rebus application, in Node.js",
 		"license": {
 			"name": "MIT"
