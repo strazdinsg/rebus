@@ -98,9 +98,11 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   function renderMessage(message: string) {
+    const cl = challenges.data?.data || [];
+    const columnCount = cl ? cl.length + 1 : 2;
     return (
       <tr>
-        <td>{message}</td>
+        <td colSpan={columnCount}>{message}</td>
       </tr>
     );
   }
