@@ -19,13 +19,14 @@ export function GradingPage() {
     content = showMessage("Loading teams...");
   } else if (teams) {
     const teamList = teams.data || [];
-    const rows = teamList.map((team, index) => (
-      <GradingTableRow team={team} key={index} />
-    ));
     content = (
       <table cellSpacing="0">
         <GradingTableHeader />
-        <tbody>{rows}</tbody>
+        <tbody>
+          {teamList.map((team, index) => (
+            <GradingTableRow team={team} key={index} />
+          ))}
+        </tbody>
       </table>
     );
   } else {
