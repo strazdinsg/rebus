@@ -34,6 +34,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK, score set",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoString"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden, no access",
             "content": {
@@ -45,16 +55,6 @@
                     "message": "Must log in as admin",
                     "data": ""
                   }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK, score set",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoString"
                 }
               }
             }
@@ -90,8 +90,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden, not allowed to access images of other teams",
+          "404": {
+            "description": "Not found, image not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -100,8 +100,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not found, image not found",
+          "403": {
+            "description": "Forbidden, not allowed to access images of other teams",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,6 +144,21 @@
           }
         },
         "responses": {
+          "400": {
+            "description": "Bad request, something went wrong with storing the image",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "ERROR",
+                    "message": "Could not store image",
+                    "data": ""
+                  }
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK, Image ID in the body",
             "content": {
@@ -173,21 +188,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad request, something went wrong with storing the image",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "ERROR",
-                    "message": "Could not store image",
-                    "data": ""
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -210,6 +210,21 @@
           }
         ],
         "responses": {
+          "403": {
+            "description": "Forbidden, not allowed to access images of other teams",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "ERROR",
+                    "message": "Not allowed to access images of other teams",
+                    "data": ""
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not found, Image not found",
             "content": {
@@ -232,21 +247,6 @@
                 "schema": {
                   "type": "string",
                   "example": { "status": "SUCCESS", "message": "", "data": "" }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden, not allowed to access images of other teams",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "ERROR",
-                    "message": "Not allowed to access images of other teams",
-                    "data": ""
-                  }
                 }
               }
             }
@@ -417,6 +417,16 @@
         "summary": "Get all answers",
         "operationId": "getAllAnswers",
         "responses": {
+          "200": {
+            "description": "OK, list of all answers",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoListShortTeamAnswerDto"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden, no access to answer listing",
             "content": {
@@ -431,16 +441,6 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "OK, list of all answers",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoListShortTeamAnswerDto"
-                }
-              }
-            }
           }
         }
       }
@@ -451,16 +451,6 @@
         "summary": "Get answers of the currently logged-in user",
         "operationId": "getMyAnswers",
         "responses": {
-          "200": {
-            "description": "OK, answers of the currently logged-in user",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoTeamAnswerDto"
-                }
-              }
-            }
-          },
           "401": {
             "description": "Unauthorized, must log in",
             "content": {
@@ -472,6 +462,16 @@
                     "message": "Must log in",
                     "data": ""
                   }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK, answers of the currently logged-in user",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoTeamAnswerDto"
                 }
               }
             }
@@ -576,10 +576,15 @@
         "description": "Response from the server"
       },
       "TeamDto": {
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "format": "int32" },
-          "name": { "type": "string" }
+          "id": {
+            "type": "integer",
+            "description": "ID of the team",
+            "format": "int32"
+          },
+          "name": { "type": "string", "description": "Name of the team" }
         },
         "description": "The data that the server will send in the response, can be null"
       },
