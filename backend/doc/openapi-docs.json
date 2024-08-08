@@ -1,10 +1,20 @@
 {
   "openapi": "3.0.1",
-  "info": { "title": "Rebus backend", "version": "2.0.0" },
+  "info": {
+    "title": "Rebus backend",
+    "version": "2.0.0"
+  },
   "servers": [
-    { "url": "http://localhost:8080", "description": "Generated server url" }
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
   ],
-  "security": [{ "bearer-key": [] }],
+  "security": [
+    {
+      "bearer-key": []
+    }
+  ],
   "paths": {
     "/score/{challengeId}/{userId}": {
       "post": {
@@ -16,19 +26,27 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/SingleScoreDto" }
+              "schema": {
+                "$ref": "#/components/schemas/SingleScoreDto"
+              }
             }
           },
           "required": true
@@ -72,13 +90,19 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -96,7 +120,10 @@
             "description": "OK, image content in the body",
             "content": {
               "application/octet-stream": {
-                "schema": { "type": "string", "format": "byte" }
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
               }
             }
           },
@@ -121,13 +148,19 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "requestBody": {
@@ -137,7 +170,10 @@
                 "required": ["fileContent"],
                 "type": "object",
                 "properties": {
-                  "fileContent": { "type": "string", "format": "binary" }
+                  "fileContent": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 }
               }
             }
@@ -200,13 +236,19 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -216,7 +258,11 @@
               "*/*": {
                 "schema": {
                   "type": "string",
-                  "example": { "status": "SUCCESS", "message": "", "data": "" }
+                  "example": {
+                    "status": "SUCCESS",
+                    "message": "",
+                    "data": ""
+                  }
                 }
               }
             }
@@ -263,7 +309,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/AuthenticationRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticationRequest"
+              }
             }
           },
           "required": true
@@ -307,19 +355,27 @@
             "name": "challengeId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer", "format": "int32" }
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/MyAnswerDto" }
+              "schema": {
+                "$ref": "#/components/schemas/MyAnswerDto"
+              }
             }
           },
           "required": true
@@ -529,7 +585,10 @@
         "required": ["jwt"],
         "type": "object",
         "properties": {
-          "jwt": { "type": "string", "description": "JWT token" }
+          "jwt": {
+            "type": "string",
+            "description": "JWT token"
+          }
         },
         "description": "Response of a successful authentication"
       },
@@ -541,7 +600,9 @@
             "description": "Response status: success or error",
             "enum": ["SUCCESS", "ERROR"]
           },
-          "data": { "$ref": "#/components/schemas/AuthenticationResponse" },
+          "data": {
+            "$ref": "#/components/schemas/AuthenticationResponse"
+          },
           "message": {
             "type": "string",
             "description": "A message explaining the response, in case of errors"
@@ -578,7 +639,9 @@
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": { "$ref": "#/components/schemas/TeamDto" }
+            "items": {
+              "$ref": "#/components/schemas/TeamDto"
+            }
           },
           "message": {
             "type": "string",
@@ -596,7 +659,10 @@
             "description": "ID of the team",
             "format": "int32"
           },
-          "name": { "type": "string", "description": "Name of the team" }
+          "name": {
+            "type": "string",
+            "description": "Name of the team"
+          }
         },
         "description": "The data that the server will send in the response, can be null"
       },
@@ -635,7 +701,9 @@
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": { "$ref": "#/components/schemas/ChallengeDto" }
+            "items": {
+              "$ref": "#/components/schemas/ChallengeDto"
+            }
           },
           "message": {
             "type": "string",
@@ -655,7 +723,9 @@
           "data": {
             "type": "array",
             "description": "The data that the server will send in the response, can be null",
-            "items": { "$ref": "#/components/schemas/ShortTeamAnswerDto" }
+            "items": {
+              "$ref": "#/components/schemas/ShortTeamAnswerDto"
+            }
           },
           "message": {
             "type": "string",
@@ -726,7 +796,9 @@
             "description": "Response status: success or error",
             "enum": ["SUCCESS", "ERROR"]
           },
-          "data": { "$ref": "#/components/schemas/TeamAnswerDto" },
+          "data": {
+            "$ref": "#/components/schemas/TeamAnswerDto"
+          },
           "message": {
             "type": "string",
             "description": "A message explaining the response, in case of errors"
@@ -747,7 +819,9 @@
           "answers": {
             "type": "array",
             "description": "List of answers to all challenges for the team",
-            "items": { "$ref": "#/components/schemas/AnswerDto" }
+            "items": {
+              "$ref": "#/components/schemas/AnswerDto"
+            }
           }
         },
         "description": "Answers to all challenges for a particular team"
