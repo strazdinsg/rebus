@@ -27,8 +27,8 @@ export function UserDashboard() {
     return <main>No challenges found</main>;
   }
 
-  const challengeList = challenges.data?.data || [];
-  const myAnswerList = myAnswers.data?.data?.answers || [];
+  const challengeList = challenges.data.data || [];
+  const myAnswerList = myAnswers.data.data?.answers || [];
 
   return (
     <>

@@ -28,9 +28,9 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
-  const answerList = allAnswers.data?.data || [];
+  const answerList = allAnswers.data.data || [];
   const teamAnswers = getTeamAnswers(answerList);
-  const challengeList = challenges.data?.data || [];
+  const challengeList = challenges.data.data || [];
 
   return (
     <tr>
