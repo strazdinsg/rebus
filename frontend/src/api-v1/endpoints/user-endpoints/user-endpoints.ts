@@ -15,31 +15,25 @@ export const getUserEndpoints = () => {
   /**
    * @summary Get image submitted as an answer to a challenge by a team
    */
-  // TODO - this is manually corrected! Find out how to auto-generate this correctly!
   const getPicture = (challengeId: number, userId: number) => {
-    return apiV1AxiosClient<Blob>({
+    return apiV1AxiosClient<string>({
       url: `/pictures/${challengeId}/${userId}`,
       method: "GET",
-      responseType: "blob",
     });
   };
   /**
    * @summary Upload an image to the server
    */
-  // TODO - this function was modified manually. Find out how to auto-generate it correctly!
   const uploadPicture = (
     challengeId: number,
     userId: number,
-    uploadPictureBody: Blob
+    uploadPictureBody: UploadPictureBody
   ) => {
-    const formData = new FormData();
-    formData.append("fileContent", uploadPictureBody);
-
     return apiV1AxiosClient<string>({
       url: `/pictures/${challengeId}/${userId}`,
       method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
-      data: formData,
+      headers: { "Content-Type": "application/json" },
+      data: uploadPictureBody,
     });
   };
   /**
