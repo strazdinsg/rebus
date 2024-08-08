@@ -2,6 +2,8 @@ import ScoreSelectBox from "./ScoreSelectBox";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 import { ShortTeamAnswerDto, TeamDto } from "../../../api-v1/models";
+import { apiV1AxiosClient } from "../../../api-v1/apiClient";
+import { useEffect } from "react";
 
 /**
  * One row in the grading table - for one team
@@ -11,6 +13,9 @@ export function GradingTableRow(props: { team: TeamDto }) {
   const allAnswers = useAllAnswers();
   const updateScore = useUpdateScore();
   const userId: number = props.team.id;
+  useEffect(() => {
+    loadImages();
+  }, [challenges, allAnswers]);
 
   if (challenges.isPending || allAnswers.isPending) {
     return renderMessage("Loading...");
@@ -46,6 +51,11 @@ export function GradingTableRow(props: { team: TeamDto }) {
             saveScore={(score: number | null) => saveScore(score, challenge.id)}
           />
           {getAnswerForChallenge(challenge.id)}
+          <img
+            className="team-photo"
+            alt="User-submitted"
+            id={getImageId(userId, challenge.id)}
+          />
         </td>
       ))}
     </tr>
@@ -104,5 +114,51 @@ export function GradingTableRow(props: { team: TeamDto }) {
         <td colSpan={columnCount}>{message}</td>
       </tr>
     );
+  }
+
+  function getImageId(teamId: number, challengeId: number) {
+    return `answer-img-${challengeId}-${teamId}`;
+  }
+
+  async function sleep(milliseconds: number) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
+
+  async function loadImages() {
+    console.log("Loading images...");
+    const cl = challenges.data?.data || [];
+    for (let challengeIndex in cl) {
+      const challengeId = cl[challengeIndex].id;
+      try {
+        const imageBlob = await getImageFromBackend(challengeId);
+        await sleep(500);
+        showImage(imageBlob, challengeId);
+      } catch (e) {
+        console.log(
+          `Image for challenge user ${userId}, ${challengeId} not found.`
+        );
+      }
+    }
+  }
+
+  function showImage(imageBlob: Blob, challengeId: number) {
+    const imageElement = document.getElementById(
+      getImageId(props.team.id, challengeId)
+    ) as HTMLImageElement;
+    if (imageElement && imageBlob) {
+      imageElement.src = URL.createObjectURL(imageBlob);
+      imageElement.style.display = "block";
+    } else {
+      imageElement.style.display = "none";
+    }
+  }
+
+  function getImageFromBackend(challengeId: number): Promise<Blob> {
+    console.log(`getImageFromBackend ${challengeId}`);
+    return apiV1AxiosClient<Blob>({
+      url: `/pictures/${challengeId}/${userId}`,
+      method: "GET",
+      responseType: "blob",
+    });
   }
 }
