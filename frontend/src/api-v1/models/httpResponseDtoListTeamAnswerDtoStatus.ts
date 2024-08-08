@@ -8,11 +8,11 @@
 /**
  * Response status: success or error
  */
-export type HttpResponseDtoListTeamDtoStatus =
-  (typeof HttpResponseDtoListTeamDtoStatus)[keyof typeof HttpResponseDtoListTeamDtoStatus];
+export type HttpResponseDtoListTeamAnswerDtoStatus =
+  (typeof HttpResponseDtoListTeamAnswerDtoStatus)[keyof typeof HttpResponseDtoListTeamAnswerDtoStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const HttpResponseDtoListTeamDtoStatus = {
+export const HttpResponseDtoListTeamAnswerDtoStatus = {
   SUCCESS: "SUCCESS",
   ERROR: "ERROR",
 } as const;

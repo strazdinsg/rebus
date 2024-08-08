@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "A single score")
 public record SingleScoreDto(
-    @Schema(description = "The score for the answer", example = "10", required = true)
+    @Schema(description = "The score for the answer, can be null", example = "10", required = false)
     Integer score
 ) {
 }

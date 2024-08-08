@@ -15,6 +15,11 @@
             "format": "int32",
             "type": "integer"
           },
+          "imageUrl": {
+            "description": "URL of the image submitted as an answer to a challenge by a team",
+            "nullable": true,
+            "type": "string"
+          },
           "score": {
             "description": "Score given by the grader",
             "example": 10,
@@ -244,13 +249,12 @@
         "description": "A single score",
         "properties": {
           "score": {
-            "description": "The score for the answer",
+            "description": "The score for the answer, can be null",
             "example": 10,
             "format": "int32",
             "type": "integer"
           }
         },
-        "required": ["score"],
         "type": "object"
       },
       "TeamAnswerDto": {
@@ -300,13 +304,13 @@
   },
   "info": {
     "title": "Rebus backend",
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "openapi": "3.0.1",
   "paths": {
     "/answers": {
       "get": {
-        "operationId": "getAllAnswers",
+        "operationId": "getAllAnswersShortened",
         "responses": {
           "200": {
             "content": {

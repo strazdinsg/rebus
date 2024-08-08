@@ -88,8 +88,8 @@ public class AdminController {
       )
   })
   @GetMapping("/answers")
-  public HttpResponseDto<List<ShortTeamAnswerDto>> getAllAnswers() {
-    return HttpResponseDto.withData(answerService.getAll());
+  public HttpResponseDto<List<ShortTeamAnswerDto>> getAllAnswersShortened() {
+    return HttpResponseDto.withData(answerService.getAllShortened());
   }
 
   /**

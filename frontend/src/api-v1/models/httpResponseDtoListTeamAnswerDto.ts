@@ -4,17 +4,17 @@
  * Rebus backend
  * OpenAPI spec version: 2.1.0
  */
-import type { TeamDto } from "./teamDto";
-import type { HttpResponseDtoListTeamDtoStatus } from "./httpResponseDtoListTeamDtoStatus";
+import type { TeamAnswerDto } from "./teamAnswerDto";
+import type { HttpResponseDtoListTeamAnswerDtoStatus } from "./httpResponseDtoListTeamAnswerDtoStatus";
 
 /**
  * Response from the server
  */
-export interface HttpResponseDtoListTeamDto {
+export interface HttpResponseDtoListTeamAnswerDto {
   /** The data that the server will send in the response, can be null */
-  data?: TeamDto[];
+  data?: TeamAnswerDto[];
   /** A message explaining the response, in case of errors */
   message?: string;
   /** Response status: success or error */
-  status?: HttpResponseDtoListTeamDtoStatus;
+  status?: HttpResponseDtoListTeamAnswerDtoStatus;
 }

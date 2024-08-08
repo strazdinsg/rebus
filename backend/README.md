@@ -29,3 +29,15 @@ The OpenAPI specification is available at `/openapi-docs`.
 
 To auto-generate the client code for the frontend, you need to store the OpenAPI specification in a
 file named `openapi-docs.json` in the `doc` directory.
+
+## OpenAPI file refresh
+
+Currently the refreshing of the OpenAPI file is done manually. To do this, you need to:
+
+1. Start the backend
+2. Open the OpenAPI docs at `/openapi-docs`
+3. Copy the response content
+4. Paste the content into `doc/openapi-docs.json`
+5. Format the file:
+   1. Auto-format it (Cmd+Alt+L)
+   2. Sort the JSON keys - use the `JSON Sorter` plugin

@@ -48,7 +48,8 @@ public class AnswerService {
     for (Answer answer : answerRepository.findByUserId(teamId)) {
       if (answer.getAnswer() != null) {
         challengeAnswers.add(
-            new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), null)
+            new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(),
+                null, answer.getImageUrl())
         );
       }
     }
@@ -73,21 +74,32 @@ public class AnswerService {
    *
    * @return All answers, sorted per team
    */
-  public List<ShortTeamAnswerDto> getAll() {
+  public List<ShortTeamAnswerDto> getAllShortened() {
+    Map<Integer, TeamAnswerDto> answers = getAll();
+    int challengeCount = (int) challengeRepository.count();
+    List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
+    for (TeamAnswerDto longDto : answers.values()) {
+      shortenedList.add(new ShortTeamAnswerDto(longDto, challengeCount));
+    }
+    return shortenedList;
+  }
+
+  /**
+   * Get all answers, for all teams, in a long format.
+   *
+   * @return All answers, sorted per team
+   */
+  public Map<Integer, TeamAnswerDto> getAll() {
     Iterable<Answer> allAnswers = answerRepository.findAll();
     Map<Integer, TeamAnswerDto> formattedAnswers = new TreeMap<>();
     for (Answer answer : allAnswers) {
       TeamAnswerDto teamAnswers = findOrCreateTeamAnswerDto(formattedAnswers, answer);
-      teamAnswers.answers().add(
-          new AnswerDto(answer.getChallenge().getId(), answer.getAnswer(), answer.getScore())
+      teamAnswers.answers().add(new AnswerDto(
+          answer.getChallenge().getId(), answer.getAnswer(),
+          answer.getScore(), answer.getImageUrl())
       );
     }
-    int challengeCount = (int) challengeRepository.count();
-    List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
-    for (TeamAnswerDto longDto : formattedAnswers.values()) {
-      shortenedList.add(new ShortTeamAnswerDto(longDto, challengeCount));
-    }
-    return shortenedList;
+    return formattedAnswers;
   }
 
   private static TeamAnswerDto findOrCreateTeamAnswerDto(Map<Integer, TeamAnswerDto> answers,
