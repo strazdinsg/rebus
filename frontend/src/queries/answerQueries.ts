@@ -11,7 +11,7 @@ export function useAllAnswers() {
   return useQuery(
     {
       queryKey: ["allAnswers"],
-      queryFn: async () => await getAdminEndpoints().getAllAnswers(),
+      queryFn: async () => await getAdminEndpoints().getAllAnswersShortened(),
     },
     queryClient
   );
