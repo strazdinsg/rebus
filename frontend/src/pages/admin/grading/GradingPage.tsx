@@ -19,25 +19,26 @@ export function GradingPage() {
     content = showMessage("Loading teams...");
   } else if (teams) {
     const teamList = teams.data || [];
-    content = teamList.map((team, index) => (
+    const rows = teamList.map((team, index) => (
       <GradingTableRow team={team} key={index} />
     ));
+    content = (
+      <table cellSpacing="0">
+        <GradingTableHeader />
+        <tbody>{rows}</tbody>
+      </table>
+    );
   } else {
-    content = <main>No teams found</main>;
+    content = showMessage("No teams found");
   }
 
-  return (
-    <table cellSpacing="0">
-      <GradingTableHeader />
-      <tbody>{content}</tbody>
-    </table>
-  );
+  return content;
 
   function showMessage(message: string) {
     return (
-      <tr>
-        <td>{message}</td>
-      </tr>
+      <main>
+        <p>{message}</p>
+      </main>
     );
   }
 }
