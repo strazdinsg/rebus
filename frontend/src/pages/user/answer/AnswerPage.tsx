@@ -8,14 +8,13 @@ import { ImageUploader } from "./ImageUploader";
 import { UserContext } from "../../../context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ChallengeDto } from "schemas/src/challenge";
-import { AnswerDto } from "schemas/src/answer";
 import { useChallenges } from "../../../queries/challengeQueries";
 import {
   useMyAnswers,
   useUpdateMyAnswer,
 } from "../../../queries/answerQueries";
 import { useImage, useUploadImage } from "../../../queries/imageQueries";
+import { AnswerDto, ChallengeDto } from "../../../api-v1/models";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -40,7 +39,7 @@ export function AnswerPage() {
   );
 
   const challenge = challenges.data
-    ? getSelectedChallenge(challenges.data, challengeIdNum)
+    ? getSelectedChallenge(challenges.data.data, challengeIdNum)
     : null;
 
   const submittedAnswer = findChallengeAnswer();
@@ -168,10 +167,10 @@ export function AnswerPage() {
    */
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
-    if (myAnswers.data && myAnswers.data.answers && challengeIdNum > 0) {
+    if (myAnswers.data && myAnswers.data && challengeIdNum > 0) {
+      const myAnswerList = myAnswers.data.data?.answers || [];
       answer =
-        myAnswers.data.answers.find((a) => a.challengeId === challengeIdNum) ||
-        null;
+        myAnswerList.find((a) => a.challengeId === challengeIdNum) || null;
     }
     return answer;
   }

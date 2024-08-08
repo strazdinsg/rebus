@@ -4,3 +4,7 @@
 .idea/
 
 frontend/src/api-v1/models/
+
+backend-v2/src/routes/routes.ts
+
+backend-v2/doc/swagger.json

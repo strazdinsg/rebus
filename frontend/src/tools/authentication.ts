@@ -7,9 +7,9 @@ import {
   setCookie,
 } from "./cookies";
 import { UserSession } from "../context/UserContext";
-import { JwtDto } from "schemas/src/jwt";
 import { getPublicEndpoints } from "../api-v1/endpoints/public-endpoints/public-endpoints";
 import { AuthenticationRequest } from "../api-v1/models";
+import { AxiosError } from "axios";
 
 /**
  * Basic JWT token structure.
@@ -70,13 +70,17 @@ export function sendAuthenticationRequest(
     .authenticate(postData)
     .then(({ data }) => data)
     .then((jwtResponse) => {
-      if (jwtResponse.data?.jwt) {
-        onAuthSuccess(jwtResponse.data.jwt, successCallback);
+      if (jwtResponse?.jwt) {
+        onAuthSuccess(jwtResponse.jwt, successCallback);
       }
     })
     .catch((error) => {
-      const code =
-        error.getErrorCode !== undefined ? error.getErrorCode() : 500;
+      let code;
+      if (error instanceof AxiosError) {
+        code = error.response?.status || 500;
+      } else {
+        code = 500;
+      }
       errorCallback(code, error.message);
     });
 }

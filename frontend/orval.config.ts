@@ -12,7 +12,7 @@ export default defineConfig({
       override: {
         mutator: {
           path: "src/api-v1/apiClient.ts",
-          name: "customAxiosClient",
+          name: "apiV1AxiosClient",
         },
       },
     },
@@ -28,7 +28,7 @@ export default defineConfig({
       override: {
         mutator: {
           path: "src/api-v2/apiClient.ts",
-          name: "customAxiosClient",
+          name: "apiV2AxiosClient",
         },
       },
     },

@@ -1,9 +1,10 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import cors from "cors";
-import { corsOptions } from "./corsOptions.js";
-import { loadEnvironmentVariables } from "./environment.js";
-import challengeRoutes from "./routes/challenges.js";
-import setupSwaggerDocs from "./swagger.js";
+import { corsOptions } from "./corsOptions";
+import { loadEnvironmentVariables } from "./environment";
+import { RegisterRoutes } from "./routes/routes";
+import path from "path";
+import { errorHandler } from "./errorHandler";
 
 loadEnvironmentVariables();
 
@@ -13,18 +14,22 @@ const port = process.env.SERVER_PORT || DEFAULT_PORT;
 const server = express();
 server.use(cors(corsOptions));
 // Middleware to parse JSON request bodies
+server.use(urlencoded({ extended: true }));
 server.use(express.json());
 
-server.use("/", challengeRoutes);
+RegisterRoutes(server);
 
-export const SUCCESS = "SUCCESS";
-export const ERROR = "ERROR";
+server.use(errorHandler);
 
 server.get("/", (req, res) => {
   res.send("Rebus backend, v2");
 });
-
-setupSwaggerDocs(server);
+server.get("/openapi-docs.json", (req, res) => {
+  const docsDir = path.join(__dirname, "..", "doc");
+  console.log(`Serving OpenAPI docs from ${docsDir}`);
+  const filePath = path.join(docsDir, "/swagger.json");
+  res.sendFile(filePath);
+});
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);

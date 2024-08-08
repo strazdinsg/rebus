@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
-import { apiGetImage, apiUploadPicture } from "../tools/api";
 import { dataURItoFile } from "../tools/imageTools";
+import { apiV1AxiosClient } from "../api-v1/apiClient";
 
 /**
  * Query for getting the image for a challenge.
@@ -12,7 +12,14 @@ export function useImage(challengeId: number, userId: number) {
   return useQuery(
     {
       queryKey: [`images/${challengeId}/${userId}`],
-      queryFn: () => apiGetImage(challengeId, userId),
+      queryFn: () => {
+        // Here we can't use orval directly, because it handles the response type incorrectly
+        return apiV1AxiosClient<Blob>({
+          url: `/pictures/${challengeId}/${userId}`,
+          method: "GET",
+          responseType: "blob",
+        });
+      },
       retry: false,
     },
     queryClient
@@ -36,7 +43,16 @@ export function useUploadImage(
     {
       mutationFn: async (imageData: string) => {
         const picture = dataURItoFile(imageData, "image.jpeg");
-        await apiUploadPicture(challengeId, userId, picture);
+        // Here we can't use orval directly, because it does not support multipart/form-data
+        const formData = new FormData();
+        formData.append("fileContent", picture);
+
+        return apiV1AxiosClient<string>({
+          url: `/pictures/${challengeId}/${userId}`,
+          method: "POST",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData,
+        });
       },
       onSuccess: onSuccess,
       onError: onError,

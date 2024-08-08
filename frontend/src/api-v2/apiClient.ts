@@ -1,17 +1,16 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { API_V2_BASE_URL } from "../tools/requests.js";
+import { AxiosRequestConfig } from "axios";
+import { createApiClient } from "../tools/genericApiClient";
 
-const apiClient = axios.create({
-  baseURL: API_V2_BASE_URL,
-});
+// Import REST API BASE URL from the environment variable, see .env file
+// Note: all environment variables must start with VITE_, otherwise Vite will not handle them!
+// @ts-ignore - TypeScript does not know about the environment variable
+export const API_V2_BASE_URL = import.meta.env.VITE_API_V2_BASE_URL;
 
-// TODO - add interceptors for JWT tokens etc.
+const apiClient = createApiClient(API_V2_BASE_URL);
 
-// TODO - what is this?
-export const customAxiosClient = async <T>(
-  config: AxiosRequestConfig<T>
+export const apiV2AxiosClient = async <T>(
+  config: AxiosRequestConfig
 ): Promise<T> => {
-  const source = axios.CancelToken.source();
-  const response = await apiClient({ ...config, cancelToken: source.token });
+  const response = await apiClient(config);
   return response.data;
 };

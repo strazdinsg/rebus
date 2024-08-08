@@ -12,6 +12,7 @@ import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,7 +83,7 @@ public class ImageController {
       )
   })
   @PostMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<HttpResponseDto<Integer>> upload(
+  public ResponseEntity<HttpResponseDto<Integer>> uploadPicture(
       @RequestParam("fileContent") MultipartFile multipartFile,
       @PathVariable int challengeId,
       @PathVariable Integer userId
@@ -109,15 +110,31 @@ public class ImageController {
       ),
       @ApiResponse(
           responseCode = "403",
-          description = "Forbidden, not allowed to access images of other teams"
+          description = "Forbidden, not allowed to access images of other teams",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(
+                  ref = "#/components/schemas/HttpResponseDtoString"
+              )
+          )
       ),
       @ApiResponse(
-          responseCode = "404", description = "Not found, image not found"
+          responseCode = "404",
+          description = "Not found, image not found",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(
+                  ref = "#/components/schemas/HttpResponseDtoString"
+              )
+          )
       )
   })
-  @GetMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<byte[]> get(@PathVariable Integer challengeId,
-                                    @PathVariable Integer userId) {
+  @GetMapping(
+      path = "/pictures/{challengeId}/{userId}",
+      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+  )
+  public ResponseEntity<byte[]> getPicture(@PathVariable Integer challengeId,
+                                           @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
       throw new AccessDeniedException("Not allowed to access images of other teams");
     }
@@ -170,8 +187,8 @@ public class ImageController {
       )
   })
   @DeleteMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<HttpResponseDto<String>> delete(@PathVariable Integer challengeId,
-                                                        @PathVariable Integer userId) {
+  public ResponseEntity<HttpResponseDto<String>> deletePicture(@PathVariable Integer challengeId,
+                                                               @PathVariable Integer userId) {
     if (userService.isForbiddenToAccessUser(userId)) {
       throw new AccessDeniedException("Not allowed to access images of other teams");
     }

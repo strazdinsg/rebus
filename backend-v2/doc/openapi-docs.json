@@ -1,64 +1,145 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Backend API documentation",
-    "version": "2.2.0",
-    "description": "Rebus backend API documentation"
-  },
-  "paths": {
-    "/challenges": {
-      "get": {
-        "description": "Get all challenges",
-        "responses": {
-          "200": {
-            "description": "Successfully fetched all challenges",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "SUCCESS",
-                        "ERROR"
-                      ]
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ChallengeDto"
-                      }
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "ChallengeDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "question": {
-            "type": "string"
-          },
-          "maxScore": {
-            "type": "integer"
-          }
-        }
-      }
-    }
-  },
-  "tags": []
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"ChallengeDto": {
+				"properties": {
+					"maxScore": {
+						"type": "number",
+						"format": "double"
+					},
+					"question": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"maxScore",
+					"question",
+					"id"
+				],
+				"type": "object",
+				"description": "Challenge DTO."
+			},
+			"HttpResponseDto_ChallengeDto-Array_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/ChallengeDto"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"SUCCESS",
+							"ERROR"
+						]
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"status"
+				],
+				"type": "object",
+				"description": "Generic HTTP response body."
+			},
+			"ChallengeResponseDto": {
+				"$ref": "#/components/schemas/HttpResponseDto_ChallengeDto-Array_"
+			},
+			"ErrorResponseDto": {
+				"properties": {
+					"data": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"ERROR"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"data",
+					"message",
+					"status"
+				],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "rebus-backend",
+		"version": "2.3.0",
+		"description": "Backend for the Rebus application, in Node.js",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Girts Strazdins"
+		}
+	},
+	"paths": {
+		"/challenges": {
+			"get": {
+				"operationId": "GetChallenges",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ChallengeResponseDto"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDto"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Public endpoints"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
 }

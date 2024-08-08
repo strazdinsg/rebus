@@ -1,8 +1,7 @@
 import ScoreSelectBox from "./ScoreSelectBox";
-import { TeamDto } from "schemas/src/team";
-import { ShortTeamAnswersDto } from "schemas/src/answer";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
+import { ShortTeamAnswerDto, TeamDto } from "../../../api-v1/models";
 
 /**
  * One row in the grading table - for one team
@@ -11,6 +10,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
   const challenges = useChallenges();
   const allAnswers = useAllAnswers();
   const updateScore = useUpdateScore();
+  const userId: number = props.team.id!;
 
   if (challenges.isPending || allAnswers.isPending) {
     return renderMessage("Loading...");
@@ -28,7 +28,10 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
-  const teamAnswers = getTeamAnswers(allAnswers.data);
+  const answerList = allAnswers.data?.data || [];
+  const teamAnswers = getTeamAnswers(answerList);
+
+  const challengeList = challenges.data?.data || [];
 
   return (
     <tr>
@@ -36,7 +39,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
         {props.team.name}
         <br />({getTotalScore()})
       </td>
-      {challenges.data.map((challenge, index) => (
+      {challengeList.map((challenge, index) => (
         <td key={index}>
           <ScoreSelectBox
             score={getScoreForChallenge(challenge.id)}
@@ -49,7 +52,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
     </tr>
   );
 
-  function getTeamAnswers(allAnswers: ShortTeamAnswersDto[]) {
+  function getTeamAnswers(allAnswers: ShortTeamAnswerDto[]) {
     if (allAnswers == null) return null;
     const teamAnswers = allAnswers.find(
       (answer) => answer.teamId === props.team.id
@@ -61,7 +64,9 @@ export function GradingTableRow(props: { team: TeamDto }) {
     if (teamAnswers === null) {
       return null;
     }
-    const answer = teamAnswers.answers[challengeId - 1];
+    const answer = teamAnswers.answers
+      ? teamAnswers.answers[challengeId - 1]
+      : null;
     if (answer === null) return null;
 
     return <p>{answer}</p>;
@@ -71,19 +76,21 @@ export function GradingTableRow(props: { team: TeamDto }) {
     if (teamAnswers === null) {
       return null;
     }
-    return teamAnswers.scores[challengeId - 1];
+    return teamAnswers.scores ? teamAnswers.scores[challengeId - 1] : null;
   }
 
   function saveScore(score: number | null, challengeId: number) {
     updateScore.mutate({
       challengeId: challengeId,
-      userId: props.team.id,
+      userId: userId,
       score: score,
     });
   }
 
   function getTotalScore() {
-    if (!teamAnswers) return 0;
+    if (!teamAnswers || !teamAnswers.scores) {
+      return 0;
+    }
 
     return teamAnswers.scores.reduce(
       (total, current) => (total || 0) + (current || 0)

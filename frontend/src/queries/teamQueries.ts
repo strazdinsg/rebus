@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiGetTeams } from "../tools/api";
 import { queryClient } from "./queryClient";
+import { getAdminEndpoints } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
 
 // Define a React Query hook for fetching teams
 export function useTeams() {
   return useQuery(
     {
       queryKey: ["teams"],
-      queryFn: async () => await apiGetTeams(),
+      queryFn: async () => await getAdminEndpoints().getAllTeams(),
     },
     queryClient
   );
