@@ -34,16 +34,6 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK, score set",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoString"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden, no access",
             "content": {
@@ -55,6 +45,16 @@
                     "message": "Must log in as admin",
                     "data": ""
                   }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK, score set",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoString"
                 }
               }
             }
@@ -82,6 +82,16 @@
           }
         ],
         "responses": {
+          "403": {
+            "description": "Forbidden, not allowed to access images of other teams",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpResponseDtoString"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK, image content in the body",
             "content": {
@@ -92,16 +102,6 @@
           },
           "404": {
             "description": "Not found, image not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoString"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden, not allowed to access images of other teams",
             "content": {
               "application/json": {
                 "schema": {
@@ -210,6 +210,17 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK, image deleted",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": { "status": "SUCCESS", "message": "", "data": "" }
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden, not allowed to access images of other teams",
             "content": {
@@ -236,17 +247,6 @@
                     "message": "Image not found",
                     "data": ""
                   }
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK, image deleted",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": { "status": "SUCCESS", "message": "", "data": "" }
                 }
               }
             }
@@ -325,21 +325,6 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK, answer posted",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "example": {
-                    "status": "SUCCESS",
-                    "message": "Answer posted",
-                    "data": ""
-                  }
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -349,6 +334,21 @@
                   "example": {
                     "status": "ERROR",
                     "message": "Error message",
+                    "data": ""
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK, answer posted",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "status": "SUCCESS",
+                    "message": "Answer posted",
                     "data": ""
                   }
                 }
@@ -483,8 +483,17 @@
   "components": {
     "schemas": {
       "SingleScoreDto": {
+        "required": ["score"],
         "type": "object",
-        "properties": { "score": { "type": "integer", "format": "int32" } }
+        "properties": {
+          "score": {
+            "type": "integer",
+            "description": "The score for the answer",
+            "format": "int32",
+            "example": 10
+          }
+        },
+        "description": "A single score"
       },
       "HttpResponseDtoString": {
         "type": "object",
@@ -506,6 +515,7 @@
         "description": "Response from the server"
       },
       "AuthenticationRequest": {
+        "required": ["pin"],
         "type": "object",
         "properties": {
           "pin": {
@@ -516,6 +526,7 @@
         "description": "Data that the user sends in the login request"
       },
       "AuthenticationResponse": {
+        "required": ["jwt"],
         "type": "object",
         "properties": {
           "jwt": { "type": "string", "description": "JWT token" }
@@ -539,6 +550,7 @@
         "description": "Response from the server"
       },
       "MyAnswerDto": {
+        "required": ["challengeId"],
         "type": "object",
         "properties": {
           "challengeId": {
@@ -589,6 +601,7 @@
         "description": "The data that the server will send in the response, can be null"
       },
       "ChallengeDto": {
+        "required": ["id", "question"],
         "type": "object",
         "properties": {
           "id": {
@@ -652,18 +665,37 @@
         "description": "Response from the server"
       },
       "ShortTeamAnswerDto": {
+        "required": ["answers", "scores", "teamId"],
         "type": "object",
         "properties": {
-          "teamId": { "type": "integer", "format": "int32" },
-          "answers": { "type": "array", "items": { "type": "string" } },
+          "teamId": {
+            "type": "integer",
+            "description": "ID of the team",
+            "format": "int32",
+            "example": 1
+          },
+          "answers": {
+            "type": "array",
+            "description": "List of answers to all challenges for the team",
+            "items": {
+              "type": "string",
+              "description": "List of answers to all challenges for the team"
+            }
+          },
           "scores": {
             "type": "array",
-            "items": { "type": "integer", "format": "int32" }
+            "description": "Scores for each answer",
+            "items": {
+              "type": "integer",
+              "description": "Scores for each answer",
+              "format": "int32"
+            }
           }
         },
-        "description": "The data that the server will send in the response, can be null"
+        "description": "Team answers, in a short form"
       },
       "AnswerDto": {
+        "required": ["challengeId"],
         "type": "object",
         "properties": {
           "challengeId": {
@@ -703,6 +735,7 @@
         "description": "Response from the server"
       },
       "TeamAnswerDto": {
+        "required": ["answers", "teamId"],
         "type": "object",
         "properties": {
           "teamId": {

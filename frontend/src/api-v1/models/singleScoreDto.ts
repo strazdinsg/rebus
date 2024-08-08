@@ -5,6 +5,10 @@
  * OpenAPI spec version: 2.0.0
  */
 
+/**
+ * A single score
+ */
 export interface SingleScoreDto {
-  score?: number;
+  /** The score for the answer */
+  score: number;
 }

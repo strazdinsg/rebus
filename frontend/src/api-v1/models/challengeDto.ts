@@ -10,9 +10,9 @@
  */
 export interface ChallengeDto {
   /** ID of the challenge */
-  id?: number;
+  id: number;
   /** Max score for this challenge */
   maxScore?: number;
   /** The question of the challenge */
-  question?: string;
+  question: string;
 }

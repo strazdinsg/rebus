@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "Answer for one specific challenge (one specific team)")
 public record AnswerDto(
-    @Schema(description = "ID of the challenge", example = "123")
+    @Schema(description = "ID of the challenge", example = "123", required = true)
     int challengeId,
     @Schema(description = "The answer text", example = "Hello World")
     String answer,

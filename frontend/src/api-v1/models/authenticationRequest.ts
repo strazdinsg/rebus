@@ -10,5 +10,5 @@
  */
 export interface AuthenticationRequest {
   /** The PIN code of the user (team) */
-  pin?: string;
+  pin: string;
 }

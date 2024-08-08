@@ -6,10 +6,13 @@
  */
 
 /**
- * The data that the server will send in the response, can be null
+ * Team answers, in a short form
  */
 export interface ShortTeamAnswerDto {
-  answers?: string[];
-  scores?: number[];
-  teamId?: number;
+  /** List of answers to all challenges for the team */
+  answers: string[];
+  /** Scores for each answer */
+  scores: number[];
+  /** ID of the team */
+  teamId: number;
 }

@@ -11,7 +11,7 @@ import type { AnswerDto } from "./answerDto";
  */
 export interface TeamAnswerDto {
   /** List of answers to all challenges for the team */
-  answers?: AnswerDto[];
+  answers: AnswerDto[];
   /** ID of the team */
-  teamId?: number;
+  teamId: number;
 }

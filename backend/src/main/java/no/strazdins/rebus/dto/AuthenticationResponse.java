@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "Response of a successful authentication")
 public record AuthenticationResponse(
-    @Schema(description = "JWT token")
+    @Schema(description = "JWT token", required = true)
     String jwt
 ) {
 }

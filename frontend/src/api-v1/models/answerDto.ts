@@ -12,7 +12,7 @@ export interface AnswerDto {
   /** The answer text */
   answer?: string;
   /** ID of the challenge */
-  challengeId?: number;
+  challengeId: number;
   /** Score given by the grader */
   score?: number;
 }

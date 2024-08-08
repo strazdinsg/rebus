@@ -10,7 +10,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
   const challenges = useChallenges();
   const allAnswers = useAllAnswers();
   const updateScore = useUpdateScore();
-  const userId: number = props.team.id!;
+  const userId: number = props.team.id;
 
   if (challenges.isPending || allAnswers.isPending) {
     return renderMessage("Loading...");
@@ -30,7 +30,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
 
   const answerList = allAnswers.data?.data || [];
   const teamAnswers = getTeamAnswers(answerList);
-
   const challengeList = challenges.data?.data || [];
 
   return (

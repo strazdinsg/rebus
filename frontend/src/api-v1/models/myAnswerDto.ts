@@ -12,5 +12,5 @@ export interface MyAnswerDto {
   /** The answer text */
   answer?: string;
   /** ID of the challenge */
-  challengeId?: number;
+  challengeId: number;
 }

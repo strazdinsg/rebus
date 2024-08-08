@@ -10,5 +10,5 @@
  */
 export interface AuthenticationResponse {
   /** JWT token */
-  jwt?: string;
+  jwt: string;
 }
