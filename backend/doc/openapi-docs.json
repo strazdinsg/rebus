@@ -326,7 +326,7 @@
   },
   "info": {
     "title": "Rebus backend",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "openapi": "3.0.1",
   "paths": {
@@ -739,7 +739,7 @@
               "*/*": {
                 "schema": {
                   "example": {
-                    "data": "123",
+                    "data": "https://example.com/pictures/123/456",
                     "message": "",
                     "status": "SUCCESS"
                   },
@@ -747,7 +747,7 @@
                 }
               }
             },
-            "description": "OK, Image ID in the body"
+            "description": "OK, Image URL in the body"
           },
           "400": {
             "content": {

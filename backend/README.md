@@ -16,6 +16,8 @@ First you need to ensure the following requirements are met:
     - DB_PORT - TCP port number for the database
     - JWT_SECRET_KEY - secret key used to sign JWT tokens
     - ALLOWED_ORIGINS - comma-separated list of allowed origins for CORS
+    - BACKEND_BASE_URL - Base URL where this backend will be reachable by the frontend, used for
+      image URL generation
 
 You can start the backend by executing `mvn spring-boot:run` in the terminal.
 
@@ -39,5 +41,5 @@ Currently the refreshing of the OpenAPI file is done manually. To do this, you n
 3. Copy the response content
 4. Paste the content into `doc/openapi-docs.json`
 5. Format the file:
-   1. Auto-format it (Cmd+Alt+L)
-   2. Sort the JSON keys - use the `JSON Sorter` plugin
+    1. Auto-format it (Cmd+Alt+L)
+    2. Sort the JSON keys - use the `JSON Sorter` plugin

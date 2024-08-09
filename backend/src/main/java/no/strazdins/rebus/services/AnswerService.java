@@ -70,6 +70,19 @@ public class AnswerService {
   }
 
   /**
+   * Set image URL for an answer - create new or update an existing answer.
+   *
+   * @param challengeId ID of the challenge for which the answer is submitted
+   * @param userId      ID of the team (user)
+   * @param imageUrl    The image URL
+   */
+  public void updateImageUrl(int challengeId, int userId, String imageUrl) {
+    Answer newAnswer = findOrCreateAnswer(challengeId, userId);
+    newAnswer.setImageUrl(imageUrl);
+    answerRepository.save(newAnswer);
+  }
+
+  /**
    * Get all answers, for all teams, in a shortened format.
    *
    * @return All answers, sorted per team

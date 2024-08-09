@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.model.Image;
+import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,10 +36,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class ImageController {
   private final ImageService imageService;
   private final UserService userService;
+  private final AnswerService answerService;
+  @Value("${backend_base_url}")
+  private String backendBaseUrl;
 
-  public ImageController(ImageService imageService, UserService userService) {
+  public ImageController(ImageService imageService, UserService userService,
+                         AnswerService answerService) {
     this.imageService = imageService;
     this.userService = userService;
+    this.answerService = answerService;
   }
 
   /**
@@ -53,10 +60,11 @@ public class ImageController {
   @Operation(summary = "Upload an image to the server")
   @ApiResponses(value = {
       @ApiResponse(
-          responseCode = "200", description = "OK, Image ID in the body",
+          responseCode = "200", description = "OK, Image URL in the body",
           content = @Content(
               schema = @Schema(
-                  example = "{\"status\":\"SUCCESS\",\"message\":\"\", \"data\":\"123\"}"
+                  example = "{\"status\":\"SUCCESS\",\"message\":\"\", " +
+                      "\"data\":\"https://example.com/pictures/123/456\"}"
               )
           )
       ),
@@ -83,7 +91,7 @@ public class ImageController {
       )
   })
   @PostMapping("/pictures/{challengeId}/{userId}")
-  public ResponseEntity<HttpResponseDto<Integer>> uploadPicture(
+  public ResponseEntity<HttpResponseDto<String>> uploadPicture(
       @RequestParam("fileContent") MultipartFile multipartFile,
       @PathVariable int challengeId,
       @PathVariable Integer userId
@@ -92,8 +100,10 @@ public class ImageController {
       throw new AccessDeniedException("Not allowed to upload images for other teams");
     }
 
-    int imageId = imageService.replace(multipartFile, userId, challengeId);
-    return HttpResponseDto.okResponse(imageId);
+    imageService.replace(multipartFile, userId, challengeId);
+    final String imageUrl = getImageUrl(userId, challengeId);
+    answerService.updateImageUrl(challengeId, userId, imageUrl);
+    return HttpResponseDto.okResponse(imageUrl);
   }
 
   /**
@@ -200,5 +210,9 @@ public class ImageController {
       response = HttpResponseDto.errorResponse(HttpStatus.NOT_FOUND, "Image not found");
     }
     return response;
+  }
+
+  private String getImageUrl(int userId, int challengeId) {
+    return backendBaseUrl + "/pictures/" + challengeId + "/" + userId;
   }
 }
