@@ -13,11 +13,9 @@ export function useImage(imageUrl: string | null) {
       queryKey: ["image", imageUrl],
       queryFn: () => {
         if (imageUrl == null) {
-          console.log(`null image, no query`);
-          return Promise.reject("No image URL");
+          return null;
         }
 
-        console.log(`querying image: ${imageUrl}`);
         // Here we can't use orval directly, because it handles the response type incorrectly
         return apiV1AxiosClient<Blob>({
           url: imageUrl,
