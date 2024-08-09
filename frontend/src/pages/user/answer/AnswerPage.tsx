@@ -62,7 +62,7 @@ export function AnswerPage() {
   if (
     challenges.isPending ||
     myAnswers.isPending ||
-    (existingImage && existingImage.isPending)
+    (imageUrl && existingImage && existingImage.isPending)
   ) {
     return <main>Loading...</main>;
   }
