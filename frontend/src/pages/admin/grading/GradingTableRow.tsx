@@ -18,6 +18,10 @@ export function GradingTableRow(props: { team: TeamDto }) {
     loadImages();
   }, [challenges, allAnswers]);
 
+  const answerList = allAnswers.data?.data || [];
+  const teamAnswers = getTeamAnswers(answerList);
+  const challengeList = challenges.data?.data || [];
+
   if (challenges.isPending || allAnswers.isPending) {
     return renderMessage("Loading...");
   }
@@ -33,10 +37,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
   if (!challenges || !challenges.data) {
     return renderMessage("No challenges found");
   }
-
-  const answerList = allAnswers.data.data || [];
-  const teamAnswers = getTeamAnswers(answerList);
-  const challengeList = challenges.data.data || [];
 
   return (
     <tr>
@@ -123,13 +123,15 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   async function loadImages() {
-    const cl = challenges.data?.data || [];
-    for (let challengeIndex in cl) {
-      const challengeId = cl[challengeIndex].id;
+    if (!teamAnswers) return;
+
+    for (let answer of teamAnswers.answers) {
       try {
-        const imageBlob = await getImageFromBackend(challengeId);
-        await sleep(500);
-        showImage(imageBlob, challengeId);
+        if (answer.imageUrl) {
+          const imageBlob = await getImageFromBackend(answer.imageUrl);
+          await sleep(500);
+          showImage(imageBlob, answer.challengeId);
+        }
       } catch (e) {}
     }
   }
@@ -146,9 +148,9 @@ export function GradingTableRow(props: { team: TeamDto }) {
     }
   }
 
-  function getImageFromBackend(challengeId: number): Promise<Blob> {
+  function getImageFromBackend(imageUrl: string): Promise<Blob> {
     return apiV1AxiosClient<Blob>({
-      url: `/pictures/${challengeId}/${userId}`,
+      url: imageUrl,
       method: "GET",
       responseType: "blob",
     });
