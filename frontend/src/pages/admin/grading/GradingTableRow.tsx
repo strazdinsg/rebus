@@ -5,6 +5,7 @@ import { TeamDto } from "../../../api-v1/models";
 import { apiV1AxiosClient } from "../../../api-v1/apiClient";
 import { useEffect } from "react";
 import { AnswerDto, TeamAnswerDto } from "../../../api-v2/models";
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 /**
  * One row in the grading table - for one team
@@ -38,27 +39,33 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
+  const challengeCells: ReactJSXElement[] = [];
+  challengeList.forEach((challenge, index) => {
+    const answer = getAnswerForChallenge(challenge.id);
+    const imageUrl = answer?.imageUrl || null;
+    const imageElement = imageUrl ? (
+      <img src={imageUrl} alt="User-submitted" className="team-photo" />
+    ) : null;
+    challengeCells.push(
+      <td key={index}>
+        <ScoreSelectBox
+          score={answer?.score || null}
+          maxScore={challenge.maxScore}
+          saveScore={(score: number | null) => saveScore(score, challenge.id)}
+        />
+        <p>{answer?.answer || ""}</p>
+        {imageElement}
+      </td>
+    );
+  });
+
   return (
     <tr>
       <td>
         {props.team.name}
         <br />({getTotalScore()})
       </td>
-      {challengeList.map((challenge, index) => (
-        <td key={index}>
-          <ScoreSelectBox
-            score={getScoreForChallenge(challenge.id)}
-            maxScore={challenge.maxScore}
-            saveScore={(score: number | null) => saveScore(score, challenge.id)}
-          />
-          <p>{getAnswerForChallenge(challenge.id)?.answer || ""}</p>
-          <img
-            className="team-photo"
-            alt="User-submitted"
-            id={getImageId(userId, challenge.id)}
-          />
-        </td>
-      ))}
+      {challengeCells}
     </tr>
   );
 
