@@ -1,10 +1,10 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
-import { corsOptions } from "./corsOptions";
-import { loadEnvironmentVariables } from "./environment";
-import { RegisterRoutes } from "./routes/routes";
+import { corsOptions } from "./common/middleware/corsOptions";
+import { loadEnvironmentVariables } from "./common/utils/environment";
+import { RegisterRoutes } from "./tsoa/routes";
 import path from "path";
-import { errorHandler } from "./errorHandler";
+import { errorHandler } from "./common/middleware/errorHandler";
 
 loadEnvironmentVariables();
 
@@ -26,7 +26,6 @@ server.get("/", (req, res) => {
 });
 server.get("/openapi-docs.json", (req, res) => {
   const docsDir = path.join(__dirname, "..", "doc");
-  console.log(`Serving OpenAPI docs from ${docsDir}`);
   const filePath = path.join(docsDir, "/swagger.json");
   res.sendFile(filePath);
 });

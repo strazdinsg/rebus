@@ -1,8 +1,8 @@
 import { Get, Route, SuccessResponse, Response, Tags } from "tsoa";
-import { ChallengeResponseDto } from "../dto/challenge";
+import { ChallengeResponseDto } from "../../common/types/dto/challenge";
 import { challengeRepository } from "./challengeRepository";
-import { HttpError } from "../httpError";
-import { ErrorResponseDto } from "../dto/httpResponse";
+import { HttpError } from "../../common/types/httpError";
+import { ErrorResponseDto } from "../../common/types/dto/httpResponse";
 
 /**
  * REST API controller for the challenges.

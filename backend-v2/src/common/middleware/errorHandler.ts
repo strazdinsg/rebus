@@ -4,8 +4,8 @@ import {
   Response as ExResponse,
 } from "express";
 import { ValidateError } from "@tsoa/runtime";
-import { HttpError } from "./httpError";
-import { ERROR } from "./dto/httpResponse";
+import { HttpError } from "../types/httpError.js";
+import { ERROR } from "../types/dto/httpResponse.js";
 
 /**
  * Generic error handler for handling of all exceptions thrown by the server.

@@ -1,7 +1,5 @@
-// CORS configuration for the Express server
-
 import { CorsOptions } from "cors";
-import { loadEnvironmentVariables } from "./environment.js";
+import { loadEnvironmentVariables } from "../utils/environment.js";
 
 loadEnvironmentVariables();
 

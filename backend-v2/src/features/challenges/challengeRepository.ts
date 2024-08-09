@@ -1,5 +1,5 @@
-import { ChallengeDto } from "../dto/challenge";
-import { select } from "../db/select";
+import { ChallengeDto } from "../../common/types/dto/challenge";
+import { select } from "../../database/select";
 
 /**
  * Database repository for the challenges.
