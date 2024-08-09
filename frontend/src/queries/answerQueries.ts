@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { getAuthenticatedUser } from "../tools/authentication";
-import { getAdminEndpoints } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
+import { getAdminEndpoints as adminEndpointsV1 } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
+import { getAdminEndpoints as adminEndpointsV2 } from "../api-v2/endpoints/admin-endpoints/admin-endpoints";
 import { getUserEndpoints } from "../api-v1/endpoints/user-endpoints/user-endpoints";
 
 /**
@@ -11,7 +12,8 @@ export function useAllAnswers() {
   return useQuery(
     {
       queryKey: ["allAnswers"],
-      queryFn: async () => await getAdminEndpoints().getAllAnswersShortened(),
+      queryFn: async () => await adminEndpointsV2().getAllAnswers(),
+      // queryFn: async () => await getAdminEndpoints().getAllAnswersShortened(),
     },
     queryClient
   );
@@ -32,7 +34,7 @@ export function useUpdateScore() {
         userId: number;
         score: number | null;
       }) =>
-        await getAdminEndpoints().setScore(args.challengeId, args.userId, {
+        await adminEndpointsV1().setScore(args.challengeId, args.userId, {
           score: args.score || undefined,
         }),
       onSuccess: async () => {
