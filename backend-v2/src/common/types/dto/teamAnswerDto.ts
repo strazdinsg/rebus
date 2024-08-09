@@ -1,6 +1,5 @@
 import { AnswerDto } from "./answerDto";
 import { HttpResponseDto } from "./httpResponse";
-import { ChallengeDto } from "./challengeDto";
 
 /**
  * Team answer DTO.
