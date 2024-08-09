@@ -23,7 +23,7 @@ export class ChallengeController {
       };
     } catch (error) {
       const errorMessage = (error as Error).message || "Something went wrong";
-      throw new HttpError(404, errorMessage);
+      throw new HttpError(500, errorMessage);
     }
   }
 }
