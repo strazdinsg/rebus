@@ -13,3 +13,8 @@ export * from "./errorResponseDtoData";
 export * from "./errorResponseDtoStatus";
 export * from "./httpResponseDtoChallengeDtoArray";
 export * from "./httpResponseDtoChallengeDtoArrayStatus";
+export * from "./answerDto";
+export * from "./httpResponseDtoTeamAnswerDtoArray";
+export * from "./httpResponseDtoTeamAnswerDtoArrayStatus";
+export * from "./teamAnswerDto";
+export * from "./teamAnswerResponseDto";

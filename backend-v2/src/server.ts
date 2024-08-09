@@ -1,36 +1,71 @@
-import express, { urlencoded } from "express";
+import express, { Express, urlencoded } from "express";
 import cors from "cors";
-import { corsOptions } from "./corsOptions";
-import { loadEnvironmentVariables } from "./environment";
-import { RegisterRoutes } from "./routes/routes";
+import { corsOptions } from "./common/middleware/corsOptions";
+import { RegisterRoutes } from "./tsoa/routes";
 import path from "path";
-import { errorHandler } from "./errorHandler";
+import { errorHandler } from "./common/middleware/errorHandler";
 
-loadEnvironmentVariables();
-
-const DEFAULT_PORT = 3000;
-const port = process.env.SERVER_PORT || DEFAULT_PORT;
-
-const server = express();
-server.use(cors(corsOptions));
-// Middleware to parse JSON request bodies
-server.use(urlencoded({ extended: true }));
-server.use(express.json());
-
+export const server = express();
+initializePreMiddleware(server);
+initializeCommonRoutes(server);
 RegisterRoutes(server);
+initializePostMiddleware(server);
 
-server.use(errorHandler);
+// Print all registered routes and middleware, for debugging purposes
+debugPrintRequestHandlers(server);
 
-server.get("/", (req, res) => {
-  res.send("Rebus backend, v2");
-});
-server.get("/openapi-docs.json", (req, res) => {
-  const docsDir = path.join(__dirname, "..", "doc");
-  console.log(`Serving OpenAPI docs from ${docsDir}`);
-  const filePath = path.join(docsDir, "/swagger.json");
-  res.sendFile(filePath);
-});
+/**
+ * Initialize middleware that needs to be executed before routes handlers.
+ * @param server Express server
+ */
+function initializePreMiddleware(server: Express) {
+  // CORS
+  server.use(cors(corsOptions));
+  // JSON parser
+  server.use(urlencoded({ extended: true }));
+  server.use(express.json());
+}
 
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+/**
+ * Initializes middleware that needs to be executed after routes handlers.
+ *
+ * @param server Express server
+ */
+function initializePostMiddleware(server: Express) {
+  // Common error handler
+  server.use(errorHandler);
+}
+
+/**
+ * Initializes common routes for the server.
+ *
+ * @param server Express server
+ */
+function initializeCommonRoutes(server: Express) {
+  server.get("/", (req, res) => {
+    res.send("Rebus backend, v2");
+  });
+  server.get("/openapi-docs.json", (req, res) => {
+    const docsDir = path.join(__dirname, "..", "doc");
+    const filePath = path.join(docsDir, "/swagger.json");
+    res.sendFile(filePath);
+  });
+}
+
+function debugPrintRequestHandlers(app: express.Application) {
+  const router = app._router; // Access the router object
+  console.log("Registered Request Handlers:");
+  router.stack.forEach((middleware: any) => {
+    let methods: string[] = [];
+    let route = "";
+    if (middleware.route) {
+      methods = Object.keys(middleware.route.methods).map((method) =>
+        method.toUpperCase()
+      );
+      route = middleware.route.path || "";
+      console.log(`${methods.join(", ")} ${route}`);
+    } else {
+      console.log(`  MIDDLEWARE ${middleware.name}`);
+    }
+  });
+}

@@ -24,7 +24,7 @@ TypeScript code and start the server.
 # TSOA
 
 TSOA library is used to generate the client code for the APIs. This means you need to write your
-controller code in a bit specific way. Then run `pnpm build` to generate the necessary router 
+controller code in a bit specific way. Then run `pnpm build` to generate the necessary router
 code and OpenAPI specification.
 
 # API documentation
@@ -32,3 +32,11 @@ code and OpenAPI specification.
 The Swagger UI for API documentation is available at `/swagger-ui/index.html`.
 
 The OpenAPI specification is available at `/openapi-docs`.
+
+# Authentication
+
+Authentication is done using JWT tokens. This backend does the JWT validation and checks the roles
+(scopes). However, there are no authentication endpoints. One has to authenticate using the
+authentication endpoints for the backend v1. The same token should be used for both backends.
+For this to work it is critical that the same token signing key is used for both
+backends (`JWT_SECRET_KEY` environment variable).

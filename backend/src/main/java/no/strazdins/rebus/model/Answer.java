@@ -23,4 +23,5 @@ public class Answer {
   @ManyToOne
   private Challenge challenge;
   private Integer score;
+  private String imageUrl;
 }

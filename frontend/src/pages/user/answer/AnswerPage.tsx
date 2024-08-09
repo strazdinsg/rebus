@@ -25,12 +25,15 @@ export function AnswerPage() {
   const challenges = useChallenges();
   const updateMyAnswer = useUpdateMyAnswer(onAnswerSaved, onAnswerSaveFailed);
   const myAnswers = useMyAnswers();
+  const submittedAnswer = findChallengeAnswer();
+  const imageUrl = submittedAnswer?.imageUrl || null;
+  const existingImage = useImage(imageUrl);
+
   const user = useContext(UserContext).user;
   const userId = user !== null ? user.id : -1;
 
   // Image stuff
   const [updatedImageData, setUpdatedImageData] = useState<string | null>(null);
-  const existingImage = useImage(challengeIdNum, userId);
   const uploadImage = useUploadImage(
     challengeIdNum,
     userId,
@@ -42,7 +45,6 @@ export function AnswerPage() {
     ? getSelectedChallenge(challenges.data.data, challengeIdNum)
     : null;
 
-  const submittedAnswer = findChallengeAnswer();
   let submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
   if (!submittedAnswerText) {
@@ -57,7 +59,11 @@ export function AnswerPage() {
   const hasError = !!errorText;
   const navigate = useNavigate();
 
-  if (challenges.isPending || myAnswers.isPending || existingImage.isPending) {
+  if (
+    challenges.isPending ||
+    myAnswers.isPending ||
+    (imageUrl && existingImage && existingImage.isPending)
+  ) {
     return <main>Loading...</main>;
   }
 
@@ -108,7 +114,7 @@ export function AnswerPage() {
           <ImageUploader
             challengeId={challengeIdNum}
             userId={userId}
-            existingImage={existingImage.data || null}
+            existingImage={existingImage?.data || null}
             setImageToUpload={setUpdatedImageData}
           />
           <Button
@@ -167,7 +173,7 @@ export function AnswerPage() {
    */
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
-    if (myAnswers.data && myAnswers.data && challengeIdNum > 0) {
+    if (myAnswers.data && challengeIdNum > 0) {
       const myAnswerList = myAnswers.data.data?.answers || [];
       answer =
         myAnswerList.find((a) => a.challengeId === challengeIdNum) || null;

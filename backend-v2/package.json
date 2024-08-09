@@ -2,10 +2,12 @@
   "name": "rebus-backend",
   "version": "2.3.0",
   "description": "Backend for the Rebus application, in Node.js",
-  "main": "dist/server.js",
+  "main": "dist/main.js",
   "scripts": {
-    "build": "tsoa spec-and-routes && tsc && node dist/copy-file.js doc/swagger.json doc/openapi-docs.json",
-    "start": "node dist/server.js",
+    "tsoa-gen": "tsoa -c src/tsoa/tsoa.json spec-and-routes",
+    "copy-swagger-file": "node dist/commands/copy-file.js doc/swagger.json doc/openapi-docs.json",
+    "build": "pnpm run tsoa-gen && tsc && pnpm run copy-swagger-file",
+    "start": "node dist/main.js",
     "restart": "pnpm run build && pnpm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,12 +27,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
     "tsoa": "^6.4.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.13",
     "typescript": "^5.5.4"
   }

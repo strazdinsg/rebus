@@ -5,22 +5,26 @@ import { apiV1AxiosClient } from "../api-v1/apiClient";
 
 /**
  * Query for getting the image for a challenge.
- * @param challengeId ID of the challenge
- * @param userId ID of the user
+ * @param imageUrl URL of the image
  */
-export function useImage(challengeId: number, userId: number) {
+export function useImage(imageUrl: string | null) {
   return useQuery(
     {
-      queryKey: [`images/${challengeId}/${userId}`],
+      queryKey: ["image", imageUrl],
       queryFn: () => {
+        if (imageUrl == null) {
+          return null;
+        }
+
         // Here we can't use orval directly, because it handles the response type incorrectly
         return apiV1AxiosClient<Blob>({
-          url: `/pictures/${challengeId}/${userId}`,
+          url: imageUrl,
           method: "GET",
           responseType: "blob",
         });
       },
       retry: false,
+      enabled: imageUrl != null,
     },
     queryClient
   );

@@ -1,5 +1,6 @@
 package no.strazdins.rebus.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,9 +10,13 @@ import lombok.Data;
  * in the array.
  */
 @Data
+@Schema(description = "Team answers, in a short form")
 public class ShortTeamAnswerDto {
+  @Schema(description = "ID of the team", example = "1", required = true)
   private int teamId;
+  @Schema(description = "List of answers to all challenges for the team", required = true)
   private String[] answers;
+  @Schema(description = "Scores for each answer", required = true)
   private Integer[] scores;
 
   /**

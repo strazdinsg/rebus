@@ -1,8 +1,8 @@
 import { Get, Route, SuccessResponse, Response, Tags } from "tsoa";
-import { ChallengeResponseDto } from "../dto/challenge";
+import { ChallengeResponseDto } from "../../common/types/dto/challengeDto";
 import { challengeRepository } from "./challengeRepository";
-import { HttpError } from "../httpError";
-import { ErrorResponseDto } from "../dto/httpResponse";
+import { HttpError } from "../../common/types/httpError";
+import { ErrorResponseDto } from "../../common/types/dto/httpResponse";
 
 /**
  * REST API controller for the challenges.
@@ -23,7 +23,7 @@ export class ChallengeController {
       };
     } catch (error) {
       const errorMessage = (error as Error).message || "Something went wrong";
-      throw new HttpError(404, errorMessage);
+      throw new HttpError(500, errorMessage);
     }
   }
 }

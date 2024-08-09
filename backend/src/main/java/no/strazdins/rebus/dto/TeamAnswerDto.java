@@ -8,9 +8,9 @@ import java.util.List;
  */
 @Schema(description = "Answers to all challenges for a particular team")
 public record TeamAnswerDto(
-    @Schema(description = "ID of the team", example = "1")
+    @Schema(description = "ID of the team", example = "1", required = true)
     int teamId,
-    @Schema(description = "List of answers to all challenges for the team")
+    @Schema(description = "List of answers to all challenges for the team", required = true)
     List<AnswerDto> answers
 ) {
 }

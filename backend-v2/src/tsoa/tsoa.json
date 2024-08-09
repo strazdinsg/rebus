@@ -1,0 +1,20 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "doc",
+    "specVersion": 3,
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "jwt",
+        "in": "header"
+      }
+    }
+  },
+  "routes": {
+    "routesDir": "src/tsoa",
+    "authenticationModule": "src/common/middleware/authentication.ts"
+  }
+}

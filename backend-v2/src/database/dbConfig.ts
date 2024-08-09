@@ -1,10 +1,8 @@
-// Database configuration
-
 import { QueryError } from "mysql2";
 import mysql from "mysql2";
-import dotenv from "dotenv";
+import { loadEnvironmentVariables } from "../common/utils/environment.js";
 
-dotenv.config();
+loadEnvironmentVariables();
 
 const DEFAULT_PORT = 3306;
 

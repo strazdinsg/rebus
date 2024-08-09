@@ -14,13 +14,15 @@ import no.strazdins.rebus.model.Challenge;
 public record ChallengeDto(
     @Schema(
         description = "ID of the challenge",
-        example = "1"
+        example = "1",
+        required = true
     )
     int id,
 
     @Schema(
         description = "The question of the challenge",
-        example = "What is the capital of France?"
+        example = "What is the capital of France?",
+        required = true
     )
     String question,
 
