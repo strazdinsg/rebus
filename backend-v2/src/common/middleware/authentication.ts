@@ -33,7 +33,7 @@ export function expressAuthentication(
       } else {
         jwt.verify(token, secretKey, (err, decoded) => {
           if (err) {
-            reject(err);
+            reject(new HttpError(UNAUTHORIZED, "Invalid token"));
           } else if (scopes) {
             // Check if JWT contains all required scopes
             const decodedJwt: JwtPayload = decoded as JwtPayload;
@@ -62,7 +62,6 @@ function getTokenFromRequest(request: express.Request): string | null {
   if (authHeader) {
     if (authHeader.startsWith("Bearer ")) {
       token = authHeader.substring("Bearer ".length);
-      console.log("Bearer token: " + token);
     }
   }
   return token;
