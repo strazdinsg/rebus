@@ -125,7 +125,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   async function loadImages() {
-    console.log("Loading images...");
     const cl = challenges.data?.data || [];
     for (let challengeIndex in cl) {
       const challengeId = cl[challengeIndex].id;
@@ -133,11 +132,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
         const imageBlob = await getImageFromBackend(challengeId);
         await sleep(500);
         showImage(imageBlob, challengeId);
-      } catch (e) {
-        console.log(
-          `Image for challenge user ${userId}, ${challengeId} not found.`
-        );
-      }
+      } catch (e) {}
     }
   }
 
@@ -154,7 +149,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
   }
 
   function getImageFromBackend(challengeId: number): Promise<Blob> {
-    console.log(`getImageFromBackend ${challengeId}`);
     return apiV1AxiosClient<Blob>({
       url: `/pictures/${challengeId}/${userId}`,
       method: "GET",
