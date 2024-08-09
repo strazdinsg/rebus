@@ -12,6 +12,7 @@ import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import java.time.Duration;
 
 /**
  * Controller for image handling endpoints.
@@ -156,6 +158,7 @@ public class ImageController {
 
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_TYPE, image.getContentType())
+        .cacheControl(CacheControl.maxAge(Duration.ofHours(1)))
         .body(image.getData());
   }
 
