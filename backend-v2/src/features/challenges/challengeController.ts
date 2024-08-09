@@ -1,5 +1,5 @@
 import { Get, Route, SuccessResponse, Response, Tags } from "tsoa";
-import { ChallengeResponseDto } from "../../common/types/dto/challenge";
+import { ChallengeResponseDto } from "../../common/types/dto/challengeDto";
 import { challengeRepository } from "./challengeRepository";
 import { HttpError } from "../../common/types/httpError";
 import { ErrorResponseDto } from "../../common/types/dto/httpResponse";

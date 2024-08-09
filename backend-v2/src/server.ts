@@ -6,9 +6,14 @@ import path from "path";
 import { errorHandler } from "./common/middleware/errorHandler";
 
 export const server = express();
-initializeMiddleware(server);
 initializeCommonRoutes(server);
 RegisterRoutes(server);
+// Middleware must be initialized after routes are registered
+// Otherwise the error handler will not work properly
+initializeMiddleware(server);
+
+// Print all registered routes and middleware, for debugging purposes
+debugPrintRequestHandlers(server);
 
 /**
  * Initializes common middlewares for the server.
@@ -38,5 +43,23 @@ function initializeCommonRoutes(server: Express) {
     const docsDir = path.join(__dirname, "..", "doc");
     const filePath = path.join(docsDir, "/swagger.json");
     res.sendFile(filePath);
+  });
+}
+
+function debugPrintRequestHandlers(app: express.Application) {
+  const router = app._router; // Access the router object
+  console.log("Registered Request Handlers:");
+  router.stack.forEach((middleware: any) => {
+    let methods: string[] = [];
+    let route = "";
+    if (middleware.route) {
+      methods = Object.keys(middleware.route.methods).map((method) =>
+        method.toUpperCase()
+      );
+      route = middleware.route.path || "";
+      console.log(`${methods.join(", ")} ${route}`);
+    } else {
+      console.log(`  MIDDLEWARE ${middleware.name}`);
+    }
   });
 }

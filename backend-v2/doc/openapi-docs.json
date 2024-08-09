@@ -85,9 +85,94 @@
 					"status"
 				],
 				"type": "object"
+			},
+			"AnswerDto": {
+				"properties": {
+					"imageUrl": {
+						"type": "string",
+						"nullable": true
+					},
+					"score": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"answer": {
+						"type": "string",
+						"nullable": true
+					},
+					"challengeId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"imageUrl",
+					"score",
+					"answer",
+					"challengeId"
+				],
+				"type": "object",
+				"description": "Answer DTO."
+			},
+			"TeamAnswerDto": {
+				"properties": {
+					"answers": {
+						"items": {
+							"$ref": "#/components/schemas/AnswerDto"
+						},
+						"type": "array"
+					},
+					"teamId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"answers",
+					"teamId"
+				],
+				"type": "object",
+				"description": "Team answer DTO."
+			},
+			"HttpResponseDto_TeamAnswerDto-Array_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/TeamAnswerDto"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"SUCCESS",
+							"ERROR"
+						]
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"status"
+				],
+				"type": "object",
+				"description": "Generic HTTP response body."
+			},
+			"TeamAnswerResponseDto": {
+				"$ref": "#/components/schemas/HttpResponseDto_TeamAnswerDto-Array_"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"name": "jwt",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "rebus-backend",
@@ -133,6 +218,48 @@
 					"Public endpoints"
 				],
 				"security": [],
+				"parameters": []
+			}
+		},
+		"/answers/long": {
+			"get": {
+				"operationId": "GetAllAnswers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TeamAnswerResponseDto"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized (only accessible by admins)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDto"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all answers for all teams, long version. Accessible by admins only.",
+				"tags": [
+					"Admin endpoints"
+				],
+				"security": [
+					{
+						"jwt": [
+							"ROLE_ADMIN"
+						]
+					}
+				],
 				"parameters": []
 			}
 		}

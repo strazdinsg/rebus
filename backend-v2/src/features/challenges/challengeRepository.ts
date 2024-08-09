@@ -1,4 +1,4 @@
-import { ChallengeDto } from "../../common/types/dto/challenge";
+import { ChallengeDto } from "../../common/types/dto/challengeDto";
 import { select } from "../../database/select";
 
 /**
