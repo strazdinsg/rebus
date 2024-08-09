@@ -13,7 +13,6 @@ export function useAllAnswers() {
     {
       queryKey: ["allAnswers"],
       queryFn: async () => await adminEndpointsV2().getAllAnswers(),
-      // queryFn: async () => await getAdminEndpoints().getAllAnswersShortened(),
     },
     queryClient
   );
