@@ -4,7 +4,7 @@
   "description": "Backend for the Rebus application, in Node.js",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsoa spec-and-routes && tsc && node dist/copy-file.js doc/swagger.json doc/openapi-docs.json",
+    "build": "tsoa spec-and-routes && tsc && node dist/commands/copy-file.js doc/swagger.json doc/openapi-docs.json",
     "start": "node dist/server.js",
     "restart": "pnpm run build && pnpm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
