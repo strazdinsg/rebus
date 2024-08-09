@@ -6,26 +6,32 @@ import path from "path";
 import { errorHandler } from "./common/middleware/errorHandler";
 
 export const server = express();
+initializePreMiddleware(server);
 initializeCommonRoutes(server);
 RegisterRoutes(server);
-// Middleware must be initialized after routes are registered
-// Otherwise the error handler will not work properly
-initializeMiddleware(server);
+initializePostMiddleware(server);
 
 // Print all registered routes and middleware, for debugging purposes
 debugPrintRequestHandlers(server);
 
 /**
- * Initializes common middlewares for the server.
- *
+ * Initialize middleware that needs to be executed before routes handlers.
  * @param server Express server
  */
-function initializeMiddleware(server: Express) {
+function initializePreMiddleware(server: Express) {
   // CORS
   server.use(cors(corsOptions));
   // JSON parser
   server.use(urlencoded({ extended: true }));
   server.use(express.json());
+}
+
+/**
+ * Initializes middleware that needs to be executed after routes handlers.
+ *
+ * @param server Express server
+ */
+function initializePostMiddleware(server: Express) {
   // Common error handler
   server.use(errorHandler);
 }
