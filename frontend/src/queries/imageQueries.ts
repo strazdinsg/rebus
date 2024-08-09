@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { dataURItoFile } from "../tools/imageTools";
 import { apiV1AxiosClient } from "../api-v1/apiClient";
-import { hashString } from "../tools/hash";
 
 /**
  * Query for getting the image for a challenge.
@@ -11,7 +10,7 @@ import { hashString } from "../tools/hash";
 export function useImage(imageUrl: string | null) {
   return useQuery(
     {
-      queryKey: ["image_", hashString(imageUrl)],
+      queryKey: ["image", imageUrl],
       queryFn: () => {
         if (imageUrl == null) {
           console.log(`null image, no query`);
