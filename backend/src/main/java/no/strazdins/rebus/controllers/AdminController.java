@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
 import no.strazdins.rebus.dto.HttpResponseDto;
-import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.SingleScoreDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.dto.TeamDto;
@@ -69,30 +68,6 @@ public class AdminController {
     return HttpResponseDto.withData(userService.getAllTeams());
   }
 
-  /**
-   * Get answers of all teams, to all challenges. Includes scores.
-   *
-   * @return A collection of answers, per team
-   */
-  @Operation(summary = "Get all answers")
-  @ApiResponses(value = {
-      @ApiResponse(
-          responseCode = "200", description = "OK, list of all answers"
-      ),
-      @ApiResponse(
-          responseCode = "403", description = "Forbidden, no access to answer listing",
-          content = @Content(
-              schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
-                      + " \"data\":\"\"}"
-              )
-          )
-      )
-  })
-  @GetMapping("/answers")
-  public HttpResponseDto<List<ShortTeamAnswerDto>> getAllAnswersShortened() {
-    return HttpResponseDto.withData(answerService.getAllShortened());
-  }
 
   @Schema(description = "Get all answers, in the long format")
   @ApiResponses(value = {

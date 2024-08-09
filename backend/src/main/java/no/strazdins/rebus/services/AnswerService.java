@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import no.strazdins.rebus.dto.AnswerDto;
-import no.strazdins.rebus.dto.ShortTeamAnswerDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.model.Answer;
 import no.strazdins.rebus.repositories.AnswerRepository;
@@ -80,21 +79,6 @@ public class AnswerService {
     Answer newAnswer = findOrCreateAnswer(challengeId, userId);
     newAnswer.setImageUrl(imageUrl);
     answerRepository.save(newAnswer);
-  }
-
-  /**
-   * Get all answers, for all teams, in a shortened format.
-   *
-   * @return All answers, sorted per team
-   */
-  public List<ShortTeamAnswerDto> getAllShortened() {
-    Map<Integer, TeamAnswerDto> answers = getAll();
-    int challengeCount = (int) challengeRepository.count();
-    List<ShortTeamAnswerDto> shortenedList = new LinkedList<>();
-    for (TeamAnswerDto longDto : answers.values()) {
-      shortenedList.add(new ShortTeamAnswerDto(longDto, challengeCount));
-    }
-    return shortenedList;
   }
 
   /**

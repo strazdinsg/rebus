@@ -11,7 +11,7 @@
     </parent>
     <groupId>no.strazdins</groupId>
     <artifactId>rebus</artifactId>
-    <version>1.4.0</version>
+    <version>2.0.0</version>
     <name>rebus</name>
     <description>Rebus backend</description>
     <properties>

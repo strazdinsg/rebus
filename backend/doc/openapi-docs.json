@@ -116,28 +116,6 @@
         },
         "type": "object"
       },
-      "HttpResponseDtoListShortTeamAnswerDto": {
-        "description": "Response from the server",
-        "properties": {
-          "data": {
-            "description": "The data that the server will send in the response, can be null",
-            "items": {
-              "$ref": "#/components/schemas/ShortTeamAnswerDto"
-            },
-            "type": "array"
-          },
-          "message": {
-            "description": "A message explaining the response, in case of errors",
-            "type": "string"
-          },
-          "status": {
-            "description": "Response status: success or error",
-            "enum": ["SUCCESS", "ERROR"],
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
       "HttpResponseDtoListTeamAnswerDto": {
         "description": "Response from the server",
         "properties": {
@@ -237,36 +215,6 @@
         "required": ["challengeId"],
         "type": "object"
       },
-      "ShortTeamAnswerDto": {
-        "description": "Team answers, in a short form",
-        "properties": {
-          "answers": {
-            "description": "List of answers to all challenges for the team",
-            "items": {
-              "description": "List of answers to all challenges for the team",
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "scores": {
-            "description": "Scores for each answer",
-            "items": {
-              "description": "Scores for each answer",
-              "format": "int32",
-              "type": "integer"
-            },
-            "type": "array"
-          },
-          "teamId": {
-            "description": "ID of the team",
-            "example": 1,
-            "format": "int32",
-            "type": "integer"
-          }
-        },
-        "required": ["answers", "scores", "teamId"],
-        "type": "object"
-      },
       "SingleScoreDto": {
         "description": "A single score",
         "properties": {
@@ -326,44 +274,10 @@
   },
   "info": {
     "title": "Rebus backend",
-    "version": "2.3.0"
+    "version": "3.0.0"
   },
   "openapi": "3.0.1",
   "paths": {
-    "/answers": {
-      "get": {
-        "operationId": "getAllAnswersShortened",
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoListShortTeamAnswerDto"
-                }
-              }
-            },
-            "description": "OK, list of all answers"
-          },
-          "403": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "example": {
-                    "data": "",
-                    "message": "Must log in as admin",
-                    "status": "ERROR"
-                  },
-                  "type": "string"
-                }
-              }
-            },
-            "description": "Forbidden, no access to answer listing"
-          }
-        },
-        "summary": "Get all answers",
-        "tags": ["Admin endpoints"]
-      }
-    },
     "/answers/long": {
       "get": {
         "operationId": "getAllAnswers",
