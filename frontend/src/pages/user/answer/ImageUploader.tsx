@@ -6,26 +6,13 @@ import "./ImageUploader.css";
 const MAX_IMAGE_WIDTH = 1800;
 const MAX_IMAGE_HEIGHT = 1800;
 
-type ImageUploaderProps = {
-  challengeId: number;
-  userId: number;
-  setImageToUpload: (picture: string | null) => void;
-  existingImage: Blob | null;
-};
-
 /**
  * A component for uploading images, with a preview of the image.
  * @constructor
  */
-export function ImageUploader(props: ImageUploaderProps) {
-  const [preview, setPreview] = useState<string>("");
-
-  useEffect(() => {
-    if (props.existingImage) {
-      setPreview(URL.createObjectURL(props.existingImage));
-    }
-  }, [props.existingImage]);
-
+export function ImageUploader(props: {
+  onImagePicked: (picture: string | null) => void;
+}) {
   return (
     <>
       <label htmlFor="image-upload-input">
@@ -39,12 +26,6 @@ export function ImageUploader(props: ImageUploaderProps) {
           Add photo
         </Button>
       </label>
-      <img
-        id="image-preview"
-        src={preview}
-        style={{ display: preview ? "block" : "none" }}
-        alt="Preview of the user-selected file"
-      />
     </>
   );
 
@@ -69,7 +50,7 @@ export function ImageUploader(props: ImageUploaderProps) {
           );
           imageElement.src = resizedDataUriImage;
           imageElement.style.display = "block";
-          props.setImageToUpload(resizedDataUriImage);
+          props.onImagePicked(resizedDataUriImage);
         };
         if (readerEvent.target) {
           image.src = readerEvent.target.result as string;
@@ -78,7 +59,7 @@ export function ImageUploader(props: ImageUploaderProps) {
 
       reader.readAsDataURL(file);
     } else {
-      props.setImageToUpload(null);
+      props.onImagePicked(null);
       imageElement.style.display = "none";
     }
   }

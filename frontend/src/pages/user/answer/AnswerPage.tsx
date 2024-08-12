@@ -1,6 +1,6 @@
 import "./AnswerPage.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
@@ -15,6 +15,7 @@ import {
 } from "../../../queries/answerQueries";
 import { useImage, useUploadImage } from "../../../queries/imageQueries";
 import { AnswerDto, ChallengeDto } from "../../../api-v1/models";
+import { ImagePreview } from "./ImagePreview";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -40,6 +41,13 @@ export function AnswerPage() {
     onImageUploaded,
     onImageUploadFailed
   );
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const existingImageData = existingImage?.data || null;
+  useEffect(() => {
+    if (existingImageData) {
+      setImagePreview(URL.createObjectURL(existingImageData));
+    }
+  }, [existingImageData]);
 
   const challenge = challenges.data
     ? getSelectedChallenge(challenges.data.data, challengeIdNum)
@@ -111,12 +119,9 @@ export function AnswerPage() {
             onChange={(event) => setUpdatedAnswer(event.target.value)}
             value={updatedAnswer || ""}
           />
-          <ImageUploader
-            challengeId={challengeIdNum}
-            userId={userId}
-            existingImage={existingImage?.data || null}
-            setImageToUpload={setUpdatedImageData}
-          />
+          <ImageUploader onImagePicked={setUpdatedImageData} />
+          <ImagePreview imageSource={imagePreview} />
+
           <Button
             variant="contained"
             onClick={submitAnswer}
