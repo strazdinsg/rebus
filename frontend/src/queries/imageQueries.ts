@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "./queryClient";
 import { dataURItoFile } from "../tools/imageTools";
-import { apiV1AxiosClient } from "../api-v1/apiClient";
+import { apiV1AxiosClient, azureBlobClient } from "../api-v1/apiClient";
 
 /**
  * Query for getting the image for a challenge.
@@ -11,17 +11,12 @@ export function useImage(imageUrl: string | null) {
   return useQuery(
     {
       queryKey: ["image", imageUrl],
-      queryFn: () => {
+      queryFn: async () => {
         if (imageUrl == null) {
           return null;
         }
 
-        // Here we can't use orval directly, because it handles the response type incorrectly
-        return apiV1AxiosClient<Blob>({
-          url: imageUrl,
-          method: "GET",
-          responseType: "blob",
-        });
+        return azureBlobClient(imageUrl);
       },
       retry: false,
       enabled: imageUrl != null,

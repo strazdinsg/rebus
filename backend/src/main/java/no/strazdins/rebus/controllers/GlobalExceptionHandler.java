@@ -32,6 +32,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return HttpResponseDto.errorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
   }
 
+  @ExceptionHandler(InternalServerErrorException.class)
+  public ResponseEntity<HttpResponseDto<String>> handleIllegalArgument(
+      InternalServerErrorException ex) {
+    return HttpResponseDto.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+  }
+
   /**
    * Handles all exceptions of type ResponseStatusException thrown by the controllers.
    *

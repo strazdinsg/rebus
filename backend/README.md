@@ -2,6 +2,15 @@
 
 The backend for the [Rebus system](..). A Spring Boot application.
 
+# Requirements
+
+To run the backend, you need the following:
+
+- Java 21 JDK or higher
+- Maven
+- MySQL database
+- Azure Blob Storage
+
 # Getting started
 
 First you need to ensure the following requirements are met:
@@ -16,8 +25,14 @@ First you need to ensure the following requirements are met:
     - DB_PORT - TCP port number for the database
     - JWT_SECRET_KEY - secret key used to sign JWT tokens
     - ALLOWED_ORIGINS - comma-separated list of allowed origins for CORS
-    - BACKEND_BASE_URL - Base URL where this backend will be reachable by the frontend, used for
-      image URL generation
+    - AZURE_STORAGE_ACCOUNT_NAME - name of the account in Azure Blob Storage
+    - AZURE_STORAGE_CONNECTION_STRING - connection string for Azure Blob Storage
+    - AZURE_STORAGE_CONTAINER_NAME - name of the container in Azure Blob Storage where images will
+      be stored
+- Configure your Azure Blob Storage account to allow CORS requests from the backend. You can do
+  it in Azure Portal > your storage account > Settings > CORS. See also
+  [this](https://learn.microsoft.com/en-us/rest/api/storageservices/cross-origin-resource-sharing--cors--support-for-the-azure-storage-services#enabling-cors-for-azure-storage)
+  for more information.
 
 You can start the backend by executing `mvn spring-boot:run` in the terminal.
 

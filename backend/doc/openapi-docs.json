@@ -274,7 +274,7 @@
   },
   "info": {
     "title": "Rebus backend",
-    "version": "3.0.0"
+    "version": "4.0.0"
   },
   "openapi": "3.0.1",
   "paths": {
@@ -479,136 +479,6 @@
       }
     },
     "/pictures/{challengeId}/{userId}": {
-      "delete": {
-        "operationId": "deletePicture",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "challengeId",
-            "required": true,
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "example": {
-                    "data": "",
-                    "message": "",
-                    "status": "SUCCESS"
-                  },
-                  "type": "string"
-                }
-              }
-            },
-            "description": "OK, image deleted"
-          },
-          "403": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "example": {
-                    "data": "",
-                    "message": "Not allowed to access images of other teams",
-                    "status": "ERROR"
-                  },
-                  "type": "string"
-                }
-              }
-            },
-            "description": "Forbidden, not allowed to access images of other teams"
-          },
-          "404": {
-            "content": {
-              "*/*": {
-                "schema": {
-                  "example": {
-                    "data": "",
-                    "message": "Image not found",
-                    "status": "ERROR"
-                  },
-                  "type": "string"
-                }
-              }
-            },
-            "description": "Not found, Image not found"
-          }
-        },
-        "summary": "Delete an image submitted as an answer to a challenge by a team",
-        "tags": ["User endpoints"]
-      },
-      "get": {
-        "operationId": "getPicture",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "challengeId",
-            "required": true,
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "schema": {
-              "format": "int32",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "format": "byte",
-                  "type": "string"
-                }
-              }
-            },
-            "description": "OK, image content in the body"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoString"
-                }
-              }
-            },
-            "description": "Forbidden, not allowed to access images of other teams"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpResponseDtoString"
-                }
-              }
-            },
-            "description": "Not found, image not found"
-          }
-        },
-        "summary": "Get image submitted as an answer to a challenge by a team",
-        "tags": ["User endpoints"]
-      },
       "post": {
         "operationId": "uploadPicture",
         "parameters": [

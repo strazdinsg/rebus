@@ -72,6 +72,15 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
+
+        <!-- For image upload to Azure Blob Storage -->
+        <dependency>
+            <groupId>com.azure.spring</groupId>
+            <artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
+            <version>5.15.0</version>
+            <type>pom</type>
+        </dependency>
+
     </dependencies>
 
     <build>
