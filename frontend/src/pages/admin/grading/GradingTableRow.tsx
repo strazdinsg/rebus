@@ -15,9 +15,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
   const allAnswers = useAllAnswers();
   const updateScore = useUpdateScore();
   const userId: number = props.team.id;
-  useEffect(() => {
-    loadImages();
-  }, [challenges, allAnswers]);
 
   const answerList = allAnswers.data?.data || [];
   const teamAnswers = getTeamAnswers(answerList);
@@ -119,47 +116,5 @@ export function GradingTableRow(props: { team: TeamDto }) {
         <td colSpan={columnCount}>{message}</td>
       </tr>
     );
-  }
-
-  function getImageId(teamId: number, challengeId: number) {
-    return `answer-img-${challengeId}-${teamId}`;
-  }
-
-  async function sleep(milliseconds: number) {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  }
-
-  async function loadImages() {
-    if (!teamAnswers) return;
-
-    for (let answer of teamAnswers.answers) {
-      try {
-        if (answer.imageUrl) {
-          const imageBlob = await getImageFromBackend(answer.imageUrl);
-          await sleep(500);
-          showImage(imageBlob, answer.challengeId);
-        }
-      } catch (e) {}
-    }
-  }
-
-  function showImage(imageBlob: Blob, challengeId: number) {
-    const imageElement = document.getElementById(
-      getImageId(props.team.id, challengeId)
-    ) as HTMLImageElement;
-    if (imageElement && imageBlob) {
-      imageElement.src = URL.createObjectURL(imageBlob);
-      imageElement.style.display = "block";
-    } else {
-      imageElement.style.display = "none";
-    }
-  }
-
-  function getImageFromBackend(imageUrl: string): Promise<Blob> {
-    return apiV1AxiosClient<Blob>({
-      url: imageUrl,
-      method: "GET",
-      responseType: "blob",
-    });
   }
 }
