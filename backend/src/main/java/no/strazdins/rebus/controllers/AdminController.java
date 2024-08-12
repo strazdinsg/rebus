@@ -69,6 +69,11 @@ public class AdminController {
   }
 
 
+  /**
+   * Get all answers, in the long format.
+   *
+   * @return List of all answers
+   */
   @Schema(description = "Get all answers, in the long format")
   @ApiResponses(value = {
       @ApiResponse(

@@ -42,7 +42,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         jwt = authorizationHeader.substring(7);
       } else {
         // extract JWT from cookie
-        Optional<Cookie> jwtCookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("jwt")).findFirst();
+        Optional<Cookie> jwtCookie = Arrays.stream(request.getCookies()).filter(
+            c -> c.getName().equals("jwt")).findFirst();
         if (jwtCookie.isPresent()) {
           jwt = jwtCookie.get().getValue();
         }
