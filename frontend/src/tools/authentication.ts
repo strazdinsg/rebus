@@ -174,6 +174,10 @@ function decodeJwtPart(jwtPart: string): string | null {
   return decoded;
 }
 
+function containsUserRole(roles: string[]) {
+  return roles && roles.includes("ROLE_USER");
+}
+
 /**
  * Parse JWT string, extract a User object
  * @param jwtString
@@ -182,7 +186,12 @@ function decodeJwtPart(jwtPart: string): string | null {
 function parseJwtUser(jwtString: string): UserSession | null {
   let user: UserSession | null = null;
   const jwtObject = parseJwt(jwtString);
-  if (jwtObject) {
+  if (
+    jwtObject &&
+    jwtObject.jti &&
+    jwtObject.sub &&
+    containsUserRole(jwtObject.roles)
+  ) {
     user = {
       id: parseInt(jwtObject.jti),
       name: jwtObject.sub,
@@ -269,5 +278,37 @@ if (import.meta.vitest) {
       roles: ["ROLE_USER", "ROLE_ADMIN"],
       isAdmin: true,
     });
+  });
+
+  test("parseJwtUser returns null if jwt does not contain User ID", () => {
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2huIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTcyMzYzMjk3MywiZXhwIjoxNzIzNzE5MzczfQ.oGLni0i1sSUYlK-OPftrc_SEk9OdCB6gm8W6RkUoZ6g"
+      )
+    ).toBeNull();
+  });
+
+  test("parseJwtUser returns null if jwt does not contain User Name", () => {
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0Iiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTcyMzYzMjk3MywiZXhwIjoxNzIzNzE5MzczfQ.YrjURDBDVa48kyjH1e-JuTE7C5cPms5rDclpzm8luSw"
+      )
+    ).toBeNull();
+  });
+
+  test("parseJwtUser returns null if jwt does not contain Roles", () => {
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2huIiwianRpIjoiNCIsImlhdCI6MTcyMzYzMjk3MywiZXhwIjoxNzIzNzE5MzczfQ.I5p1bzR2hU3D25ad2Avju-uSbPpisXIiqc65-_pmPEU"
+      )
+    ).toBeNull();
+  });
+
+  test("parseJwtUser returns null if jwt does not contain USER role", () => {
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2huIiwianRpIjoiNCIsInJvbGVzIjpbIlJPTEVfV0laQVJEIl0sImlhdCI6MTcyMzYzMjk3MywiZXhwIjoxNzIzNzE5MzczfQ.1qQOSyuc6oYKQ1d5DK-HAF6TE54jZZOSg5JzsVviKfg"
+      )
+    ).toBeNull();
   });
 }
