@@ -105,23 +105,73 @@ function onAuthSuccess(jwt: string, callback: (user: UserSession) => void) {
 
 /**
  * Parse JWT string, extract information from it
- * Code copied from https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
+ * Code adapted from https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
  * @param token JWT token string
- * @returns {any} Decoded JWT object
+ * @returns Decoded JWT object, null if JWT is malformed
  */
-function parseJwt(token: string): BasicJwt {
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  const jsonPayload = decodeURIComponent(
-    atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
+function parseJwt(token: string): BasicJwt | null {
+  let jwt: BasicJwt | null = null;
+  try {
+    const parts = token.split(".");
+    if (!isValidJwtFormat(parts)) {
+      return null;
+    }
+    const jsonPayload = decodeJwtPart(parts[1]);
+    jwt = jsonPayload ? JSON.parse(jsonPayload) : null;
+  } catch (e) {}
+  return jwt;
+}
 
-  return JSON.parse(jsonPayload);
+function isValidJwtFormat(parts: string[]): boolean {
+  if (parts.length !== 3) {
+    return false;
+  }
+  const [header, payload, signature] = parts;
+  return isValidJwtHeaderFormat(header) && isBase64UrlFormat(signature);
+}
+
+function isBase64UrlFormat(value: string): boolean {
+  const base64UrlRegex = /^[A-Za-z0-9-_]+$/;
+  return base64UrlRegex.test(value);
+}
+
+function isValidJwtHeaderFormat(header: string): boolean {
+  if (!isBase64UrlFormat(header)) {
+    return false;
+  }
+
+  let valid: boolean;
+  try {
+    const decodedHeader = atob(header.replace(/-/g, "+").replace(/_/g, "/"));
+    const parsedHeader = JSON.parse(decodedHeader);
+    valid = typeof parsedHeader === "object" && "alg" in parsedHeader;
+  } catch (e) {
+    valid = false;
+  }
+  return valid;
+}
+
+/**
+ * Decode a JWT token part
+ * @param jwtPart JWT token part
+ * @returns Decoded JWT part as a string, null if JWT part is malformed
+ */
+function decodeJwtPart(jwtPart: string): string | null {
+  let decoded: string | null;
+  try {
+    const base64 = jwtPart.replace(/-/g, "+").replace(/_/g, "/");
+    decoded = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+  } catch (e) {
+    decoded = null;
+  }
+  return decoded;
 }
 
 /**
@@ -152,4 +202,72 @@ export function deleteAuthorizationCookies() {
   deleteCookie("current_user_id");
   deleteCookie("current_user_name");
   deleteCookie("current_user_roles");
+}
+
+///////////////////////////////////
+// In-source Vitest tests
+///////////////////////////////////
+// @ts-ignore
+if (import.meta.vitest) {
+  // @ts-ignore
+  const { test, expect } = import.meta.vitest;
+
+  test("parseJwtUser returns null if jwt is malformed", () => {
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.zzz.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      )
+    ).toBeNull();
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      )
+    ).toBeNull();
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      )
+    ).toBeNull();
+    expect(
+      parseJwtUser("SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
+    ).toBeNull();
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
+      )
+    ).toBeNull();
+    expect(
+      parseJwtUser(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ."
+      )
+    ).toBeNull();
+  });
+
+  test("parseJwtUser returns null if jwt is missing", () => {
+    expect(parseJwtUser("")).toBeNull();
+  });
+
+  test("parseJwtUser returns valid user", () => {
+    const user = parseJwtUser(
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIb2ZmIiwianRpIjoiNCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3MjM2MzI5NzMsImV4cCI6MTcyMzcxOTM3M30.qjDl3es-MzR6N-CXHA1z0U6BNV-jwPh_mOKIjGCX9qQ"
+    );
+    expect(user).toEqual({
+      name: "Hoff",
+      id: 4,
+      roles: ["ROLE_USER"],
+      isAdmin: false,
+    });
+  });
+
+  test("parseJwtUser returns valid admin user", () => {
+    const user = parseJwtUser(
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdHJhemRpxYZpIiwianRpIjoiMTMiLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX0FETUlOIl0sImlhdCI6MTcyMzY0MjAwOCwiZXhwIjoxNzIzNzI4NDA4fQ.cfjSfq_Dm9T_Vr1uejpMlaemMmD6aMujrS6e7Nvg0Ak"
+    );
+    expect(user).toEqual({
+      name: "Strazdiņi",
+      id: 13,
+      roles: ["ROLE_USER", "ROLE_ADMIN"],
+      isAdmin: true,
+    });
+  });
 }
