@@ -1,5 +1,6 @@
+import React from "react";
 import { Button } from "@mui/material";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { resizeImage } from "../../../tools/imageTools";
 import "./ImageUploader.css";
 

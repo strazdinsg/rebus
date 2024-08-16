@@ -11,7 +11,6 @@
 export type ErrorResponseDtoStatus =
   (typeof ErrorResponseDtoStatus)[keyof typeof ErrorResponseDtoStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ErrorResponseDtoStatus = {
   ERROR: "ERROR",
 } as const;

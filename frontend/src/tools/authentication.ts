@@ -110,7 +110,7 @@ function onAuthSuccess(jwt: string, callback: (user: UserSession) => void) {
  * @returns Decoded JWT object, null if JWT is malformed
  */
 function parseJwt(token: string): BasicJwt | null {
-  let jwt: BasicJwt | null = null;
+  let jwt: BasicJwt | null;
   try {
     const parts = token.split(".");
     if (!isValidJwtFormat(parts)) {
@@ -118,7 +118,9 @@ function parseJwt(token: string): BasicJwt | null {
     }
     const jsonPayload = decodeJwtPart(parts[1]);
     jwt = jsonPayload ? JSON.parse(jsonPayload) : null;
-  } catch (e) {}
+  } catch {
+    jwt = null;
+  }
   return jwt;
 }
 
@@ -126,7 +128,7 @@ function isValidJwtFormat(parts: string[]): boolean {
   if (parts.length !== 3) {
     return false;
   }
-  const [header, payload, signature] = parts;
+  const [header, , signature] = parts;
   return isValidJwtHeaderFormat(header) && isBase64UrlFormat(signature);
 }
 
@@ -145,7 +147,7 @@ function isValidJwtHeaderFormat(header: string): boolean {
     const decodedHeader = atob(header.replace(/-/g, "+").replace(/_/g, "/"));
     const parsedHeader = JSON.parse(decodedHeader);
     valid = typeof parsedHeader === "object" && "alg" in parsedHeader;
-  } catch (e) {
+  } catch {
     valid = false;
   }
   return valid;
@@ -168,7 +170,7 @@ function decodeJwtPart(jwtPart: string): string | null {
         })
         .join("")
     );
-  } catch (e) {
+  } catch {
     decoded = null;
   }
   return decoded;
@@ -216,9 +218,7 @@ export function deleteAuthorizationCookies() {
 ///////////////////////////////////
 // In-source Vitest tests
 ///////////////////////////////////
-// @ts-ignore
 if (import.meta.vitest) {
-  // @ts-ignore
   const { test, expect } = import.meta.vitest;
 
   test("parseJwtUser returns null if jwt is malformed", () => {

@@ -2,7 +2,7 @@ import { LoginPage } from "./pages/login/LoginPage";
 import { ThemeProvider } from "@mui/material";
 import { muiTheme } from "./MuiTheme";
 import { UserContext } from "./context/UserContext";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AdminPage } from "./pages/admin/AdminPage";
 import { BrowserRouter as Router } from "react-router-dom";
 import { getAuthenticatedUser } from "./tools/authentication";

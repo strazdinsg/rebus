@@ -1,3 +1,4 @@
+import React from "react";
 import { GradingTableHeader } from "./GradingTableHeader";
 import { GradingTableRow } from "./GradingTableRow";
 import "./GradingPage.css";

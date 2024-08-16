@@ -2,8 +2,7 @@ import ScoreSelectBox from "./ScoreSelectBox";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 import { TeamDto } from "../../../api-v1/models";
-import { apiV1AxiosClient } from "../../../api-v1/apiClient";
-import { useEffect } from "react";
+import React from "react";
 import { AnswerDto, TeamAnswerDto } from "../../../api-v2/models";
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
@@ -82,11 +81,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
       (answer) => answer.challengeId === challengeId
     );
     return answer || null;
-  }
-
-  function getScoreForChallenge(challengeId: number): number | null {
-    const answer = getAnswerForChallenge(challengeId);
-    return answer?.score || null;
   }
 
   function saveScore(score: number | null, challengeId: number) {

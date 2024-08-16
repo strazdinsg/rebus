@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * A component for displaying an image preview.
  *
