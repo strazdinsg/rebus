@@ -32,5 +32,6 @@ export default defineConfig({
   },
   test: {
     includeSource: ["src/**/*.{js,ts}"],
+    exclude: ["src/jest-tests", "node_modules"],
   },
 });
