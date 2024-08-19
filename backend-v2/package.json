@@ -9,7 +9,7 @@
     "build": "pnpm run tsoa-gen && tsc && pnpm run copy-swagger-file",
     "start": "node dist/main.js",
     "restart": "pnpm run build && pnpm run start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -32,10 +32,13 @@
     "tsoa": "^6.4.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.13",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.4",
     "typescript": "^5.5.4"
   }
 }
