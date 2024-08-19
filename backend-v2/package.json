@@ -9,7 +9,7 @@
     "build": "pnpm run tsoa-gen && tsc && pnpm run copy-swagger-file",
     "start": "node dist/main.js",
     "restart": "pnpm run build && pnpm run start",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",

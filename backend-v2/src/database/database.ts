@@ -40,3 +40,26 @@ export function getConnection(): Promise<Connection> {
     });
   });
 }
+
+/**
+ * Closes the MySQL database connection.
+ */
+export function closeConnection(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if (!connection) {
+      resolve();
+      return;
+    }
+
+    connection.end((err: QueryError | null) => {
+      if (err) {
+        console.error("Error closing the MySQL connection:", err);
+        reject(err);
+      } else {
+        console.log("MySQL connection closed");
+        connection = null;
+        resolve();
+      }
+    });
+  });
+}
