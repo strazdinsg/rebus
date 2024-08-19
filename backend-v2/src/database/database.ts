@@ -1,4 +1,4 @@
-import { Connection, QueryError } from "mysql2";
+import { Connection, QueryError, RowDataPacket } from "mysql2";
 import mysql from "mysql2";
 import { loadEnvironmentVariables } from "../common/utils/environment";
 
@@ -60,6 +60,28 @@ export function closeConnection(): Promise<void> {
         connection = null;
         resolve();
       }
+    });
+  });
+}
+
+/**
+ * Executes a MySQL query and returns the results as an array of RowDataPacket objects.
+ *
+ * @param query The SQL query to execute.
+ * @returns A promise that resolves with an array of RowDataPacket objects.
+ */
+export async function executeQuery(query: string): Promise<RowDataPacket[]> {
+  const db = await getConnection();
+  if (!db) {
+    throw new Error("Database connection error, contact the developer.");
+  }
+
+  return new Promise<RowDataPacket[]>((resolve, reject) => {
+    db.query(query, (err, results: RowDataPacket[]) => {
+      if (err) {
+        return reject(new Error("Can't read database, contact the developer."));
+      }
+      resolve(results);
     });
   });
 }

@@ -1,4 +1,3 @@
-// Test the database connection
 import { expect, test } from "@jest/globals";
 import { closeConnection, getConnection } from "./database";
 
