@@ -10,7 +10,7 @@ import { setupServer } from "msw/node";
 // declare which API requests to mock
 const server = setupServer(
   // capture "GET /greeting" requests
-  rest.get("/greeting", (req, res, ctx) => {
+  rest.get("/greeting", (_req, res, ctx) => {
     // respond using a mocked JSON body
     return res(ctx.json({ greeting: "hello there" }));
   })
