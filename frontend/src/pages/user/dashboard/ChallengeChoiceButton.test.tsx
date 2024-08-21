@@ -15,6 +15,10 @@ vi.mock("react-router-dom", async (importOriginal) => {
 });
 
 describe("ChallengeChoiceButton tests", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   const challenge = {
     id: 1,
     question: "What is the answer to life, the universe, and everything?",
