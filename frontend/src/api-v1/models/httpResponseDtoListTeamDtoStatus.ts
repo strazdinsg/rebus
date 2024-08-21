@@ -11,6 +11,7 @@
 export type HttpResponseDtoListTeamDtoStatus =
   (typeof HttpResponseDtoListTeamDtoStatus)[keyof typeof HttpResponseDtoListTeamDtoStatus];
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HttpResponseDtoListTeamDtoStatus = {
   SUCCESS: "SUCCESS",
   ERROR: "ERROR",
