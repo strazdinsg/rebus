@@ -33,5 +33,8 @@ export default defineConfig({
   test: {
     includeSource: ["src/**/*.{js,ts}"],
     exclude: ["src/jest-tests", "node_modules"],
+    environment: "jsdom",
+    globals: true,
+    setupFiles: "./src/tests/setup.js",
   },
 });
