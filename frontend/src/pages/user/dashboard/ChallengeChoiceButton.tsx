@@ -18,10 +18,21 @@ export function ChallengeChoiceButton(props: ChallengeChoiceButtonProps) {
   const buttonVariant = props.submitted ? "contained" : "outlined";
   return (
     <Button
+      data-testid={getButtonId(props.challenge.id)}
       variant={buttonVariant}
       onClick={() => navigate("/answer/" + props.challenge.id)}
     >
       {props.challenge.id + " " + checkmark}
     </Button>
   );
+}
+
+/**
+ * Returns the id of the button for the given challenge.
+ * Can be used to identify the button in tests.
+ *
+ * @param challengeId The id of the challenge
+ */
+export function getButtonId(challengeId: number) {
+  return "challenge-" + challengeId;
 }
