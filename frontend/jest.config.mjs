@@ -22,11 +22,6 @@ const config = {
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
-  // To fix the error of not finding module msw/node
-  // See https://mswjs.io/docs/migrations/1.x-to-2.x#cannot-find-module-mswnode-jsdom
-  // testEnvironmentOptions: {
-  //   customExportConditions: [""],
-  // },
 };
 
 export default config;
