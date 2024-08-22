@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import "./LoginPage.css";
-import React, { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { UserContext, UserSession } from "../../context/UserContext";
 import { sendAuthenticationRequest } from "../../tools/authentication";
 

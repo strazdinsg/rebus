@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../context/UserContext";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useMyAnswers } from "../../../queries/answerQueries";

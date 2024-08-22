@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import { ChallengeChoiceButton, getButtonId } from "./ChallengeChoiceButton";
-import React from "react";
 import { vi } from "vitest";
 import { userEvent } from "@testing-library/user-event";
 

@@ -1,6 +1,5 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import { ChallengeChoiceButton } from "../pages/user/dashboard/ChallengeChoiceButton";
-import React from "react";
 import "./ChallengePicker.css";
 import { UserSession } from "../context/UserContext";
 import { ChallengeDto, TeamAnswerDto } from "../api-v2/models";

@@ -4,7 +4,6 @@ import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 import { TeamDto } from "../../../api-v1/models";
 import React from "react";
 import { AnswerDto, TeamAnswerDto } from "../../../api-v2/models";
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 /**
  * One row in the grading table - for one team
@@ -35,7 +34,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
-  const challengeCells: ReactJSXElement[] = [];
+  const challengeCells: React.JSX.Element[] = [];
   challengeList.forEach((challenge, index) => {
     const answer = getAnswerForChallenge(challenge.id);
     const imageUrl = answer?.imageUrl || null;

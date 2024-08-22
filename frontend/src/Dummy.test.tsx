@@ -4,7 +4,6 @@ import "@testing-library/jest-dom";
 import Dummy from "./Dummy";
 import { userEvent } from "@testing-library/user-event";
 import axios from "axios";
-import React from "react";
 
 // Mock all axios HTTP requests
 vi.mock("axios");
