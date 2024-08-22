@@ -6,7 +6,9 @@ import {
   expectAppBarText,
   expectLoginPage,
   regularUser,
+  testQueryClient,
 } from "./tests/testTools";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 /**
  * Component tests for the AppRouter component.
@@ -30,7 +32,9 @@ describe("AppRouter", () => {
   function renderAppRouterFor(user: UserSession | null) {
     render(
       <UserContext.Provider value={{ user: user, setUser: vi.fn() }}>
-        <AppRouter />
+        <QueryClientProvider client={testQueryClient}>
+          <AppRouter />
+        </QueryClientProvider>
       </UserContext.Provider>
     );
   }

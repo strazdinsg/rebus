@@ -35,16 +35,19 @@ export async function waitForQueryToSettle(queryCreator: () => UseQueryResult) {
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
 }
 
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
+export const testQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
     },
-  });
+  },
+});
+
+const createWrapper = () => {
   return ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={testQueryClient}>
+      {children}
+    </QueryClientProvider>
   );
 };
 

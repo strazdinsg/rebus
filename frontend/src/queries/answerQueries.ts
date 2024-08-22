@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "./queryClient";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuthenticatedUser } from "../tools/authentication";
 import { getAdminEndpoints as adminEndpointsV1 } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
 import { getAdminEndpoints as adminEndpointsV2 } from "../api-v2/endpoints/admin-endpoints/admin-endpoints";
@@ -9,13 +8,10 @@ import { getUserEndpoints } from "../api-v1/endpoints/user-endpoints/user-endpoi
  * React Query hook for getting all answers from the backend.
  */
 export function useAllAnswers() {
-  return useQuery(
-    {
-      queryKey: ["allAnswers"],
-      queryFn: async () => await adminEndpointsV2().getAllAnswers(),
-    },
-    queryClient
-  );
+  return useQuery({
+    queryKey: ["allAnswers"],
+    queryFn: async () => await adminEndpointsV2().getAllAnswers(),
+  });
 }
 
 /**
@@ -26,35 +22,31 @@ export function useAllAnswers() {
  *   - score: The score. Null when score is deleted
  */
 export function useUpdateScore() {
-  return useMutation(
-    {
-      mutationFn: async (args: {
-        challengeId: number;
-        userId: number;
-        score: number | null;
-      }) =>
-        await adminEndpointsV1().setScore(args.challengeId, args.userId, {
-          score: args.score || undefined,
-        }),
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["allAnswers"] });
-      },
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (args: {
+      challengeId: number;
+      userId: number;
+      score: number | null;
+    }) =>
+      await adminEndpointsV1().setScore(args.challengeId, args.userId, {
+        score: args.score || undefined,
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["allAnswers"] });
     },
-    queryClient
-  );
+  });
 }
 
 /**
  * React Query hook for getting my answers (answers for the team).
  */
 export function useMyAnswers() {
-  return useQuery(
-    {
-      queryKey: ["myAnswers"],
-      queryFn: async () => await getUserEndpoints().getMyAnswers(),
-    },
-    queryClient
-  );
+  return useQuery({
+    queryKey: ["myAnswers"],
+    queryFn: async () => await getUserEndpoints().getMyAnswers(),
+  });
 }
 
 /**
@@ -67,23 +59,22 @@ export function useMyAnswers() {
  *   - onError: Callback to call when the answer is not saved
  */
 export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
-  return useMutation(
-    {
-      mutationFn: async (args: { challengeId: number; answer: string }) => {
-        const user = getAuthenticatedUser();
-        if (user) {
-          await getUserEndpoints().postAnswer(args.challengeId, user.id, {
-            answer: args.answer,
-            challengeId: args.challengeId,
-          });
-        }
-      },
-      onSuccess: async () => {
-        onSuccess();
-        await queryClient.invalidateQueries({ queryKey: ["myAnswers"] });
-      },
-      onError: onError,
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (args: { challengeId: number; answer: string }) => {
+      const user = getAuthenticatedUser();
+      if (user) {
+        await getUserEndpoints().postAnswer(args.challengeId, user.id, {
+          answer: args.answer,
+          challengeId: args.challengeId,
+        });
+      }
     },
-    queryClient
-  );
+    onSuccess: async () => {
+      onSuccess();
+      await queryClient.invalidateQueries({ queryKey: ["myAnswers"] });
+    },
+    onError: onError,
+  });
 }

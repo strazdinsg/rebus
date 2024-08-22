@@ -4,6 +4,9 @@ import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import { getAuthenticatedUser } from "./tools/authentication";
 import { AppRouter } from "./AppRouter";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 /**
  * The main application wrapper.
@@ -14,7 +17,9 @@ function App() {
   return (
     <ThemeProvider theme={muiTheme}>
       <UserContext.Provider value={{ user: user, setUser: setUser }}>
-        <AppRouter />
+        <QueryClientProvider client={queryClient}>
+          <AppRouter />
+        </QueryClientProvider>
       </UserContext.Provider>
     </ThemeProvider>
   );
