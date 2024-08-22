@@ -48,6 +48,20 @@ describe("AnswerSubmitForm tests", () => {
     expectSendButtonEnabled(true);
   });
 
+  it("Answer without image does not have an image", () => {
+    renderAnswerSubmitForm({
+      answer: "Answer without image",
+      challengeId: challenge.id,
+      imageUrl: null,
+    });
+    expectImageUrl(null);
+  });
+
+  it("Correct image URL", () => {
+    renderAnswerSubmitForm(answer);
+    expectImageUrl(answer.imageUrl);
+  });
+
   function renderAnswerSubmitForm(answer: AnswerDto | null = null) {
     render(
       <TestMockWrapper user={user}>
@@ -90,10 +104,21 @@ describe("AnswerSubmitForm tests", () => {
 
   function expectSendButtonEnabled(enabled: boolean) {
     const sendButton = getButtonByName("Send");
+    expect(sendButton).toBeInTheDocument();
     if (enabled) {
       expect(sendButton).toBeEnabled();
     } else {
       expect(sendButton).toBeDisabled();
+    }
+  }
+
+  function expectImageUrl(imageUrl: string | null) {
+    const imageElement = screen.getByAltText("User-submitted image preview");
+    expect(imageElement).toBeInTheDocument();
+    if (imageUrl) {
+      expect(imageElement).toHaveAttribute("src", imageUrl);
+    } else {
+      expect(imageElement).toHaveAttribute("src", "");
     }
   }
 });
