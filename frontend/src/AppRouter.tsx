@@ -4,7 +4,7 @@ import { LoginPage } from "./pages/login/LoginPage";
 import { UserContext } from "./context/UserContext";
 import { useContext } from "react";
 import { UserDashboard } from "./pages/user/dashboard/UserDashboard";
-import { AnswerPage } from "./pages/user/answer/AnswerPage";
+import { AnswerPageRouter } from "./pages/user/answer/AnswerPageRouter";
 
 /**
  * Select the correct page based on the current user's role.
@@ -21,7 +21,10 @@ export function AppRouter() {
         <Router>
           <Routes>
             <Route path={"/"} element={<UserDashboard />} />
-            <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
+            <Route
+              path={"/answer/:challengeId"}
+              element={<AnswerPageRouter />}
+            />
           </Routes>
         </Router>
       ) : (

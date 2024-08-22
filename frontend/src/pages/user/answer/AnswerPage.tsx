@@ -19,10 +19,11 @@ import { MainAppBar } from "../../../components/MainAppBar";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
+ * @param props The props for the component
+ * @param props.challengeId The ID of the challenge to display
+ * @constructor
  */
-export function AnswerPage() {
-  const { challengeId } = useParams();
-  const challengeIdNum = challengeId ? parseInt(challengeId) : 0;
+export function AnswerPage(props: { challengeId: number }) {
   const challenges = useChallenges();
   const updateMyAnswer = useUpdateMyAnswer(onAnswerSaved, onAnswerSaveFailed);
   const myAnswers = useMyAnswers();
@@ -36,7 +37,7 @@ export function AnswerPage() {
   // Image stuff
   const [updatedImageData, setUpdatedImageData] = useState<string | null>(null);
   const uploadImage = useUploadImage(
-    challengeIdNum,
+    props.challengeId,
     userId,
     onImageUploaded,
     onImageUploadFailed
@@ -50,7 +51,7 @@ export function AnswerPage() {
   }, [existingImageData]);
 
   const challenge = challenges.data
-    ? getSelectedChallenge(challenges.data.data, challengeIdNum)
+    ? getSelectedChallenge(challenges.data.data, props.challengeId)
     : null;
   const question = challenge ? challenge.question : "";
 
@@ -88,7 +89,7 @@ export function AnswerPage() {
     mainContent = "No challenges found";
   }
 
-  if (userId == null || challengeIdNum == null || challenge == null) {
+  if (userId == null || challenge == null) {
     mainContent = "Loading challenge data...";
   }
 
@@ -137,7 +138,10 @@ export function AnswerPage() {
 
   return (
     <>
-      <MainAppBar title={`Challenge ${challengeId}`} onBackClicked={goBack} />
+      <MainAppBar
+        title={`Challenge ${props.challengeId}`}
+        onBackClicked={goBack}
+      />
       <main>{mainContent}</main>
     </>
   );
@@ -158,9 +162,9 @@ export function AnswerPage() {
   }
 
   function submitAnswer() {
-    if (challengeIdNum && userId && updatedAnswer) {
+    if (userId && updatedAnswer) {
       updateMyAnswer.mutate({
-        challengeId: challengeIdNum,
+        challengeId: props.challengeId,
         answer: updatedAnswer,
       });
       uploadSelectedImage();
@@ -173,10 +177,10 @@ export function AnswerPage() {
    */
   function findChallengeAnswer(): AnswerDto | null {
     let answer = null;
-    if (myAnswers.data && challengeIdNum > 0) {
+    if (myAnswers.data && props.challengeId > 0) {
       const myAnswerList = myAnswers.data.data?.answers || [];
       answer =
-        myAnswerList.find((a) => a.challengeId === challengeIdNum) || null;
+        myAnswerList.find((a) => a.challengeId === props.challengeId) || null;
     }
     return answer;
   }
