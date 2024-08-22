@@ -27,6 +27,16 @@ export function expectLoginPage() {
 }
 
 /**
+ * Gets a reference to a MUI button with the given name.
+ * @param name The name of the button (text on the button)
+ */
+export function getButtonByName(name: string) {
+  return screen.getByRole("button", {
+    name: name,
+  });
+}
+
+/**
  * Awaits for a specific query to be resolved.
  * @param queryCreator A function that creates the query
  */

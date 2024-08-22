@@ -61,13 +61,11 @@ export const mockAnswers = {
       answer: "42",
       challengeId: 1,
       imageUrl: null,
-      score: null,
     },
     {
       answer: "Paris",
       challengeId: 2,
       imageUrl: null,
-      score: null,
     },
   ],
   teamId: 1,

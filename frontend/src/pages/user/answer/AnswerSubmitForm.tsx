@@ -51,7 +51,7 @@ export function AnswerSubmitForm(props: {
     setUpdatedAnswer(submittedAnswerText);
   }
 
-  const submissionEnabled = !updateMyAnswer.isPending && updatedAnswer != "";
+  const submissionEnabled = !updateMyAnswer.isPending && updatedAnswer;
 
   if (updateMyAnswer.error) {
     return <p>"Could not save answer, contact the developer"</p>;
