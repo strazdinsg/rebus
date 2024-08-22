@@ -14,17 +14,19 @@ export function AppRouter() {
   const { user } = useContext(UserContext);
 
   return (
-    <Router>
+    <>
       {user && user.isAdmin ? (
         <AdminPage user={user} />
       ) : user && !user.isAdmin ? (
-        <Routes>
-          <Route path={"/"} element={<UserDashboard />} />
-          <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
-        </Routes>
+        <Router>
+          <Routes>
+            <Route path={"/"} element={<UserDashboard />} />
+            <Route path={"/answer/:challengeId"} element={<AnswerPage />} />
+          </Routes>
+        </Router>
       ) : (
         <LoginPage />
       )}
-    </Router>
+    </>
   );
 }
