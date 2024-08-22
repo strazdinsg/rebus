@@ -9,9 +9,7 @@ export function AdminPage(props: { user: UserSession }) {
   if (props.user) {
     return (
       <>
-        <MainAppBar
-          title={`Admin Dashboard for ${props.user.name}`}
-        ></MainAppBar>
+        <MainAppBar title={`Admin Dashboard for ${props.user.name}`} />
         <GradingPage />
       </>
     );

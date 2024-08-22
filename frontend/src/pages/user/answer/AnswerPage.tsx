@@ -2,8 +2,7 @@ import "./AnswerPage.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import { ImageUploader } from "./ImageUploader";
 import { UserContext } from "../../../context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
@@ -16,6 +15,7 @@ import {
 import { useImage, useUploadImage } from "../../../queries/imageQueries";
 import { AnswerDto, ChallengeDto } from "../../../api-v1/models";
 import { ImagePreview } from "./ImagePreview";
+import { MainAppBar } from "../../../components/MainAppBar";
 
 /**
  * A page where the team can submit an answer for one specific challenge.
@@ -52,6 +52,7 @@ export function AnswerPage() {
   const challenge = challenges.data
     ? getSelectedChallenge(challenges.data.data, challengeIdNum)
     : null;
+  const question = challenge ? challenge.question : "";
 
   let submittedAnswerText =
     submittedAnswer != null ? submittedAnswer.answer : "";
@@ -65,80 +66,79 @@ export function AnswerPage() {
   const submissionEnabled = !updateMyAnswer.isPending && updatedAnswer != "";
   const navigate = useNavigate();
 
+  let mainContent = null;
+
   if (
     challenges.isPending ||
     myAnswers.isPending ||
     (imageUrl && existingImage && existingImage.isPending)
   ) {
-    return <main>Loading...</main>;
+    mainContent = "Loading...";
   }
 
   if (challenges.error) {
-    return <main>Could not load challenges, contact the developer</main>;
+    mainContent = "Could not load challenges, contact the developer";
   }
 
   if (updateMyAnswer.error) {
-    return <main>Could not save answer, contact the developer</main>;
+    mainContent = "Could not save answer, contact the developer";
   }
 
   if (!challenges.data) {
-    return <main>No challenges found</main>;
+    mainContent = "No challenges found";
   }
 
   if (userId == null || challengeIdNum == null || challenge == null) {
-    return <main>Loading challenge data...</main>;
+    mainContent = "Loading challenge data...";
   }
 
   if (updatedAnswer === null && submittedAnswerText !== "") {
     setUpdatedAnswer(submittedAnswerText);
   }
 
+  if (!mainContent) {
+    mainContent = (
+      <section id="answer-container">
+        <p>{question}</p>
+        <TextField
+          id="answer-input-field"
+          label="Your answer"
+          placeholder="Your answer here"
+          type="text"
+          multiline={true}
+          onChange={(event) => setUpdatedAnswer(event.target.value)}
+          value={updatedAnswer || ""}
+        />
+        <ImageUploader onImagePicked={setUpdatedImageData} />
+        <ImagePreview imageSource={imagePreview} />
+
+        <Button
+          variant="contained"
+          onClick={submitAnswer}
+          disabled={!submissionEnabled}
+        >
+          Send
+        </Button>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </section>
+    );
+  }
+
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton onClick={goBack}>
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h5">Challenge {challengeId}</Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <div id="answer-container">
-          <p>{challenge.question}</p>
-          <TextField
-            id="answer-input-field"
-            label="Your answer"
-            placeholder="Your answer here"
-            type="text"
-            multiline={true}
-            onChange={(event) => setUpdatedAnswer(event.target.value)}
-            value={updatedAnswer || ""}
-          />
-          <ImageUploader onImagePicked={setUpdatedImageData} />
-          <ImagePreview imageSource={imagePreview} />
-
-          <Button
-            variant="contained"
-            onClick={submitAnswer}
-            disabled={!submissionEnabled}
-          >
-            Send
-          </Button>
-          <ToastContainer
-            position="bottom-center"
-            autoClose={3000}
-            hideProgressBar
-            newestOnTop={true}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-        </div>
-      </main>
+      <MainAppBar title={`Challenge ${challengeId}`} onBackClicked={goBack} />
+      <main>{mainContent}</main>
     </>
   );
 
