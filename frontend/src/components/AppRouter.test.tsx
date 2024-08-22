@@ -1,11 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { AppRouter } from "./AppRouter";
 import { UserContext, UserSession } from "../context/UserContext";
-import { setupServer } from "msw/node";
-import { handlers } from "../tests/apiRequestMocks";
-
-export const server = setupServer(...handlers);
-server.listen();
 
 /**
  * Component tests for the AppRouter component.
