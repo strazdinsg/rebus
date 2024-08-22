@@ -1,34 +1,25 @@
-import { describe, it, vi, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Dummy from "./Dummy";
 import { userEvent } from "@testing-library/user-event";
-import axios from "axios";
+import { setupServer } from "msw/node";
+import { handlers } from "./tests/apiRequestMocks";
 
-// Mock all axios HTTP requests
-vi.mock("axios");
+export const server = setupServer(...handlers);
+server.listen();
 
 /**
  * Proof of concept for testing a React component.
  */
 describe("something truthy and falsy", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it("Dummy can be rendered", () => {
-    render(<Dummy url="https://www.example.com" />);
+    render(<Dummy url="https://www.example.com/greeting" />);
     expect(screen.getByText("Load Greeting")).toBeInTheDocument();
   });
 
   it("Can click Dummy", async () => {
-    vi.mocked(axios.get).mockResolvedValueOnce({
-      data: {
-        greeting: "Hello, world!",
-      },
-    });
-
-    render(<Dummy url="https://www.example.com" />);
+    render(<Dummy url="https://www.example.com/greeting" />);
     const button = screen.getByText("Load Greeting");
     await userEvent.click(button);
 
