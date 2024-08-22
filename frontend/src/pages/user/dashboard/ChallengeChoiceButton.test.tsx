@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { ChallengeChoiceButton, getButtonId } from "./ChallengeChoiceButton";
+import React from "react";
 import { vi } from "vitest";
 import { userEvent } from "@testing-library/user-event";
 
@@ -22,23 +23,19 @@ describe("ChallengeChoiceButton tests", () => {
 
   it("Call the onClick callback when clicked", async () => {
     renderButton();
-    await userEvent.click(screen.getByTestId(getButtonId(challenge.id)));
+    await clickButton();
     expect(onClick).toHaveBeenCalledWith(challenge.id);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it("Checkmark for answered challenge", () => {
     renderButton(true);
-    expect(screen.getByTestId(getButtonId(challenge.id))).toHaveTextContent(
-      "✔"
-    );
+    expectCheckmark(true);
   });
 
   it("No checkmark for unanswered challenge", () => {
     renderButton(false);
-    expect(screen.getByTestId(getButtonId(challenge.id))).not.toHaveTextContent(
-      "✔"
-    );
+    expectCheckmark(false);
   });
 
   function renderButton(submitted: boolean = false) {
@@ -49,5 +46,18 @@ describe("ChallengeChoiceButton tests", () => {
         onClick={onClick}
       />
     );
+  }
+
+  function clickButton() {
+    return userEvent.click(screen.getByTestId(getButtonId(challenge.id)));
+  }
+
+  function expectCheckmark(expected: boolean) {
+    const button = screen.getByTestId(getButtonId(challenge.id));
+    if (expected) {
+      expect(button).toHaveTextContent("✔");
+    } else {
+      expect(button).not.toHaveTextContent("✔");
+    }
   }
 });

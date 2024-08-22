@@ -11,7 +11,6 @@
 export type HttpResponseDtoAuthenticationResponseStatus =
   (typeof HttpResponseDtoAuthenticationResponseStatus)[keyof typeof HttpResponseDtoAuthenticationResponseStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HttpResponseDtoAuthenticationResponseStatus = {
   SUCCESS: "SUCCESS",
   ERROR: "ERROR",

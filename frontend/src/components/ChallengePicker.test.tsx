@@ -3,6 +3,7 @@ import { ChallengePicker } from "./ChallengePicker";
 import { UserSession } from "../context/UserContext";
 import { ChallengeDto, TeamAnswerDto } from "../api-v2/models";
 import { getButtonId } from "../pages/user/dashboard/ChallengeChoiceButton";
+import React from "react";
 
 const onPick = vi.fn();
 
