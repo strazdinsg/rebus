@@ -10,20 +10,16 @@ describe("ChallengeChoiceButton tests", () => {
     vi.restoreAllMocks();
   });
 
-  const challenge = {
-    id: 1,
-    question: "What is the answer to life, the universe, and everything?",
-    maxScore: 10,
-  };
-
   it("renders without crashing", () => {
     renderButton();
   });
 
+  const challengeId = 1;
+
   it("Call the onClick callback when clicked", async () => {
     renderButton();
     await clickButton();
-    expect(onClick).toHaveBeenCalledWith(challenge.id);
+    expect(onClick).toHaveBeenCalledWith(challengeId);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
@@ -40,19 +36,19 @@ describe("ChallengeChoiceButton tests", () => {
   function renderButton(submitted: boolean = false) {
     render(
       <ChallengeChoiceButton
-        challenge={challenge}
-        submitted={submitted}
+        challengeId={challengeId}
+        answered={submitted}
         onClick={onClick}
       />
     );
   }
 
   function clickButton() {
-    return userEvent.click(screen.getByTestId(getButtonId(challenge.id)));
+    return userEvent.click(screen.getByTestId(getButtonId(challengeId)));
   }
 
   function expectCheckmark(expected: boolean) {
-    const button = screen.getByTestId(getButtonId(challenge.id));
+    const button = screen.getByTestId(getButtonId(challengeId));
     if (expected) {
       expect(button).toHaveTextContent("✔");
     } else {

@@ -1,26 +1,30 @@
 import { Button } from "@mui/material";
-import { ChallengeDto } from "../../../api-v2/models";
 
-// Properties of the challenge button
+/**
+ * Properties of the challenge button.
+ * @param challengeId The challenge this button represents
+ * @param answered Has the user answered this challenge?
+ * @param onClick Callback when the button is clicked
+ */
 type ChallengeChoiceButtonProps = {
-  challenge: ChallengeDto; // The challenge this button represents
-  submitted: boolean; // Is the user already answered this challenge?
-  onClick: (challengeId: number) => void; // Callback when the button is clicked
+  challengeId: number;
+  answered: boolean;
+  onClick: (challengeId: number) => void;
 };
 
 /**
  * A button for choosing one specific challenge.
  */
 export function ChallengeChoiceButton(props: ChallengeChoiceButtonProps) {
-  const checkmark = props.submitted ? "✔" : "";
-  const buttonVariant = props.submitted ? "contained" : "outlined";
+  const checkmark = props.answered ? "✔" : "";
+  const buttonVariant = props.answered ? "contained" : "outlined";
   return (
     <Button
-      data-testid={getButtonId(props.challenge.id)}
+      data-testid={getButtonId(props.challengeId)}
       variant={buttonVariant}
-      onClick={() => props.onClick(props.challenge.id)}
+      onClick={() => props.onClick(props.challengeId)}
     >
-      {props.challenge.id + " " + checkmark}
+      {props.challengeId + " " + checkmark}
     </Button>
   );
 }
