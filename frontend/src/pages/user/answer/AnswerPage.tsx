@@ -1,6 +1,6 @@
 import "./AnswerPage.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { ImageUploader } from "./ImageUploader";
@@ -12,9 +12,9 @@ import {
   useMyAnswers,
   useUpdateMyAnswer,
 } from "../../../queries/answerQueries";
-import { useImage, useUploadImage } from "../../../queries/imageQueries";
+import { useUploadImage } from "../../../queries/imageQueries";
 import { AnswerDto, ChallengeDto } from "../../../api-v1/models";
-import { ImagePreview } from "./ImagePreview";
+import { ImagePreview, PREVIEW_IMG_ELEMENT_ID } from "./ImagePreview";
 import { MainAppBar } from "../../../components/MainAppBar";
 
 /**
@@ -29,12 +29,10 @@ export function AnswerPage(props: { challengeId: number }) {
   const myAnswers = useMyAnswers();
   const submittedAnswer = findChallengeAnswer();
   const imageUrl = submittedAnswer?.imageUrl || null;
-  const existingImage = useImage(imageUrl);
 
   const user = useContext(UserContext).user;
   const userId = user !== null ? user.id : -1;
 
-  // Image stuff
   const [updatedImageData, setUpdatedImageData] = useState<string | null>(null);
   const uploadImage = useUploadImage(
     props.challengeId,
@@ -42,13 +40,6 @@ export function AnswerPage(props: { challengeId: number }) {
     onImageUploaded,
     onImageUploadFailed
   );
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const existingImageData = existingImage?.data || null;
-  useEffect(() => {
-    if (existingImageData) {
-      setImagePreview(URL.createObjectURL(existingImageData));
-    }
-  }, [existingImageData]);
 
   const challenge = challenges.data
     ? getSelectedChallenge(challenges.data.data, props.challengeId)
@@ -69,11 +60,7 @@ export function AnswerPage(props: { challengeId: number }) {
 
   let mainContent = null;
 
-  if (
-    challenges.isPending ||
-    myAnswers.isPending ||
-    (imageUrl && existingImage && existingImage.isPending)
-  ) {
+  if (challenges.isPending || myAnswers.isPending) {
     mainContent = "Loading...";
   }
 
@@ -110,8 +97,11 @@ export function AnswerPage(props: { challengeId: number }) {
           onChange={(event) => setUpdatedAnswer(event.target.value)}
           value={updatedAnswer || ""}
         />
-        <ImageUploader onImagePicked={setUpdatedImageData} />
-        <ImagePreview imageSource={imagePreview} />
+        <ImageUploader
+          onImagePicked={setUpdatedImageData}
+          previewElementId={PREVIEW_IMG_ELEMENT_ID}
+        />
+        <ImagePreview imageSource={imageUrl} />
 
         <Button
           variant="contained"

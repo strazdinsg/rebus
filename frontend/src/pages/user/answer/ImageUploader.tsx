@@ -8,10 +8,14 @@ const MAX_IMAGE_HEIGHT = 1800;
 
 /**
  * A component for uploading images, with a preview of the image.
+ * @param props The props for the component
+ * @param props.onImagePicked Callback to call when the image is picked
+ * @param props.previewElementId The ID of the element to display the preview of the image
  * @constructor
  */
 export function ImageUploader(props: {
   onImagePicked: (picture: string | null) => void;
+  previewElementId: string;
 }) {
   return (
     <>
@@ -35,7 +39,7 @@ export function ImageUploader(props: {
    */
   function onImagePicked(event: ChangeEvent<HTMLInputElement>) {
     const imageElement = document.getElementById(
-      "image-preview"
+      props.previewElementId
     ) as HTMLImageElement;
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
