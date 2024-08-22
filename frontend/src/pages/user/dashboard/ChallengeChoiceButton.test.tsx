@@ -1,18 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { ChallengeChoiceButton, getButtonId } from "./ChallengeChoiceButton";
-import { BrowserRouter } from "react-router-dom";
 import { vi } from "vitest";
 import { userEvent } from "@testing-library/user-event";
 
-const fakeNavigate = vi.fn();
-
-// Mock `useNavigate` hook
-vi.mock("react-router-dom", async (importOriginal) => {
-  return {
-    ...(await importOriginal<typeof import("react-router-dom")>()),
-    useNavigate: (url: string) => fakeNavigate,
-  };
-});
+const onClick = vi.fn();
 
 describe("ChallengeChoiceButton tests", () => {
   afterEach(() => {
@@ -29,16 +20,11 @@ describe("ChallengeChoiceButton tests", () => {
     renderButton();
   });
 
-  it("Navigates to the challenge page when clicked", async () => {
-    // Arrange
+  it("Call the onClick callback when clicked", async () => {
     renderButton();
-
-    // Act
     await userEvent.click(screen.getByTestId(getButtonId(challenge.id)));
-
-    // Assert
-    expect(fakeNavigate).toHaveBeenCalledWith("/answer/" + challenge.id);
-    expect(fakeNavigate).toHaveBeenCalledTimes(1);
+    expect(onClick).toHaveBeenCalledWith(challenge.id);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it("Checkmark for answered challenge", () => {
@@ -57,9 +43,11 @@ describe("ChallengeChoiceButton tests", () => {
 
   function renderButton(submitted: boolean = false) {
     render(
-      <BrowserRouter>
-        <ChallengeChoiceButton challenge={challenge} submitted={submitted} />
-      </BrowserRouter>
+      <ChallengeChoiceButton
+        challenge={challenge}
+        submitted={submitted}
+        onClick={onClick}
+      />
     );
   }
 });
