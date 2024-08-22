@@ -8,8 +8,9 @@ in each subproject folder.
 
 ## Disclaimer
 
-This is a hobby project, made for a specific event. Therefore, some things which you would expect in a commercial
-product are not there. You are free to use the project as is, or extend it as you like.
+This is a hobby project, made for a specific event and used mostly for learning different concepts and tools. Therefore,
+some things which you would expect in a commercial product are not there. You are free to use the project as is, or
+extend it as you like.
 
 The following important things are identified as missing:
 
@@ -17,6 +18,3 @@ The following important things are identified as missing:
 - Invalidation of tokens
 - Team management for the admin
 - Auto-generated admin user
-- The answer and score DTOs are implemented in a bit weird way (as arrays) and they assume that challenges are always
-  numbered from 1 and onwards. I.e., the system won't work if you would have challenges with ID 2, 7, 12 and 18, for
-  example.
