@@ -26,26 +26,40 @@ describe("ChallengeChoiceButton tests", () => {
   };
 
   it("renders without crashing", () => {
-    render(
-      <BrowserRouter>
-        <ChallengeChoiceButton challenge={challenge} submitted={false} />
-      </BrowserRouter>
-    );
+    renderButton();
   });
 
   it("Navigates to the challenge page when clicked", async () => {
     // Arrange
-    render(
-      <BrowserRouter>
-        <ChallengeChoiceButton challenge={challenge} submitted={false} />
-      </BrowserRouter>
-    );
+    renderButton();
 
     // Act
-    const button = screen.getByTestId(getButtonId(challenge.id));
-    await userEvent.click(button);
+    await userEvent.click(screen.getByTestId(getButtonId(challenge.id)));
 
     // Assert
     expect(fakeNavigate).toHaveBeenCalledWith("/answer/" + challenge.id);
+    expect(fakeNavigate).toHaveBeenCalledTimes(1);
   });
+
+  it("Checkmark for answered challenge", () => {
+    renderButton(true);
+    expect(screen.getByTestId(getButtonId(challenge.id))).toHaveTextContent(
+      "✔"
+    );
+  });
+
+  it("No checkmark for unanswered challenge", () => {
+    renderButton(false);
+    expect(screen.getByTestId(getButtonId(challenge.id))).not.toHaveTextContent(
+      "✔"
+    );
+  });
+
+  function renderButton(submitted: boolean = false) {
+    render(
+      <BrowserRouter>
+        <ChallengeChoiceButton challenge={challenge} submitted={submitted} />
+      </BrowserRouter>
+    );
+  }
 });
