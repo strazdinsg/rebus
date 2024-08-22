@@ -49,7 +49,7 @@ file named `openapi-docs.json` in the `doc` directory.
 
 ## OpenAPI file refresh
 
-Currently the refreshing of the OpenAPI file is done manually. To do this, you need to:
+Currently, the refreshing of the OpenAPI file is done manually. To do this, you need to:
 
 1. Start the backend
 2. Open the OpenAPI docs at `/openapi-docs`
