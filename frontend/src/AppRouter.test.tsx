@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { AppRouter } from "./AppRouter";
-import { UserContext, UserSession } from "../context/UserContext";
+import { UserContext, UserSession } from "./context/UserContext";
 
 /**
  * Component tests for the AppRouter component.

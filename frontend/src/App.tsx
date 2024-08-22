@@ -3,7 +3,7 @@ import { muiTheme } from "./MuiTheme";
 import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import { getAuthenticatedUser } from "./tools/authentication";
-import { AppRouter } from "./components/AppRouter";
+import { AppRouter } from "./AppRouter";
 
 /**
  * The main application wrapper.
