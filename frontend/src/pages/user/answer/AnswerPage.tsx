@@ -62,9 +62,7 @@ export function AnswerPage() {
   const [updatedAnswer, setUpdatedAnswer] = useState(
     submittedAnswerText !== "" ? submittedAnswerText : null
   );
-  const [errorText, setErrorText] = useState("");
   const submissionEnabled = !updateMyAnswer.isPending && updatedAnswer != "";
-  const hasError = !!errorText;
   const navigate = useNavigate();
 
   if (
@@ -102,7 +100,7 @@ export function AnswerPage() {
           <IconButton onClick={goBack}>
             <ArrowBack />
           </IconButton>
-          <Typography variant="h5">Challenge {challenge.id}</Typography>
+          <Typography variant="h5">Challenge {challengeId}</Typography>
         </Toolbar>
       </AppBar>
       <main>
@@ -113,8 +111,6 @@ export function AnswerPage() {
             label="Your answer"
             placeholder="Your answer here"
             type="text"
-            error={hasError}
-            helperText={errorText}
             multiline={true}
             onChange={(event) => setUpdatedAnswer(event.target.value)}
             value={updatedAnswer || ""}
@@ -190,7 +186,6 @@ export function AnswerPage() {
   }
 
   function onAnswerSaved() {
-    setErrorText("");
     // Delay the toast to avoid flickering
     setTimeout(() => {
       toast.success("Answer saved", {
