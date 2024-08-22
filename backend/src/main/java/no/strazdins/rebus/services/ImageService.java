@@ -37,7 +37,7 @@ public class ImageService {
    * @param contentType The content type to check
    * @return True if it is an image-tuype, false if it is not
    */
-  private static boolean isImageContentType(String contentType) {
+  public static boolean isImageContentType(String contentType) {
     return Arrays.asList(IMAGE_CONTENT_TYPES).contains(contentType);
   }
 }

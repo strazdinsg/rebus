@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { GradingPage } from "./grading/GradingPage";
+import { MainAppBar } from "../../components/MainAppBar";
 
 /**
  * Page for admin user.
@@ -10,7 +11,9 @@ export function AdminPage() {
   if (userContext.user) {
     return (
       <>
-        <h1>Dashboard for {userContext.user.name}</h1>
+        <MainAppBar
+          title={`Admin Dashboard for ${userContext.user.name}`}
+        ></MainAppBar>
         <GradingPage />
       </>
     );

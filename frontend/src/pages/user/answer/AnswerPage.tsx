@@ -158,7 +158,6 @@ export function AnswerPage() {
   }
 
   function goBack() {
-    // setPictureToUpload(null); // Is this necessary?
     navigate(-1);
   }
 

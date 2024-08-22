@@ -1,66 +1,44 @@
 import { useContext } from "react";
 import { UserContext } from "../../../context/UserContext";
-import { AppBar, Toolbar, Typography } from "@mui/material";
-import { ChallengeChoiceButton } from "./ChallengeChoiceButton";
-import "./UserDashboard.css";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useMyAnswers } from "../../../queries/answerQueries";
+import { ChallengePicker } from "./ChallengePicker";
+import { useNavigate } from "react-router-dom";
+import { MainAppBar } from "../../../components/MainAppBar";
 
 /**
  * Dashboard for regular users, showing a listing of available challenges.
  */
 export function UserDashboard() {
   const userContext = useContext(UserContext);
-  const user = userContext.user;
-  const challenges = useChallenges();
-  const myAnswers = useMyAnswers();
+  const challengeQuery = useChallenges();
+  const myAnswerQuery = useMyAnswers();
+  const navigate = useNavigate();
 
-  if (!user || challenges.isPending || myAnswers.isPending) {
-    return <main>Loading...</main>;
+  const challenges = challengeQuery.data ? challengeQuery.data.data : [];
+  const myAnswers = myAnswerQuery.data?.data?.answers || [];
+
+  if (!userContext.user) {
+    return <p>Error: not logged in!</p>;
   }
-
-  if (challenges.error || myAnswers.error) {
-    return <main>Data error, contact the developer</main>;
-  }
-
-  if (!challenges || !challenges.data) {
-    return <main>No challenges found</main>;
-  }
-
-  const challengeList = challenges.data.data || [];
-  const myAnswerList = myAnswers.data.data?.answers || [];
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h5">{user.name}</Typography>
-        </Toolbar>
-      </AppBar>
+      <MainAppBar title={userContext.user.name}></MainAppBar>
       <main>
-        <h2>Choose a challenge</h2>
-        <div id="challenge-container">
-          {challengeList.map((challenge, index) => (
-            <ChallengeChoiceButton
-              challenge={challenge}
-              submitted={isAnswered(challenge.id)}
-              key={index}
-            />
-          ))}
-        </div>
+        <ChallengePicker
+          pending={challengeQuery.isPending || myAnswerQuery.isPending}
+          error={!!(challengeQuery.error || myAnswerQuery.error)}
+          challengeIds={challenges.map((challenge) => challenge.id)}
+          answered={myAnswers.map((answer) => answer.challengeId)}
+          user={userContext.user}
+          onPick={onChallengePicked}
+        />
       </main>
     </>
   );
 
-  function isAnswered(challengeId: number) {
-    let answerFound = false;
-    if (myAnswers.data) {
-      let i = 0;
-      while (!answerFound && i < myAnswerList.length) {
-        answerFound = myAnswerList[i].challengeId === challengeId;
-        i++;
-      }
-    }
-    return answerFound;
+  function onChallengePicked(challengeId: number) {
+    navigate("/answer/" + challengeId);
   }
 }

@@ -2,10 +2,8 @@ import ScoreSelectBox from "./ScoreSelectBox";
 import { useChallenges } from "../../../queries/challengeQueries";
 import { useAllAnswers, useUpdateScore } from "../../../queries/answerQueries";
 import { TeamDto } from "../../../api-v1/models";
-import { apiV1AxiosClient } from "../../../api-v1/apiClient";
-import { useEffect } from "react";
+import React from "react";
 import { AnswerDto, TeamAnswerDto } from "../../../api-v2/models";
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 
 /**
  * One row in the grading table - for one team
@@ -36,7 +34,7 @@ export function GradingTableRow(props: { team: TeamDto }) {
     return renderMessage("No challenges found");
   }
 
-  const challengeCells: ReactJSXElement[] = [];
+  const challengeCells: React.JSX.Element[] = [];
   challengeList.forEach((challenge, index) => {
     const answer = getAnswerForChallenge(challenge.id);
     const imageUrl = answer?.imageUrl || null;
@@ -82,11 +80,6 @@ export function GradingTableRow(props: { team: TeamDto }) {
       (answer) => answer.challengeId === challengeId
     );
     return answer || null;
-  }
-
-  function getScoreForChallenge(challengeId: number): number | null {
-    const answer = getAnswerForChallenge(challengeId);
-    return answer?.score || null;
   }
 
   function saveScore(score: number | null, challengeId: number) {
