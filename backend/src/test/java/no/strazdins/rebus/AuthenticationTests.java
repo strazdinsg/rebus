@@ -31,7 +31,6 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class AuthenticationTests {
   @Autowired
   private UserRepository userRepository;
