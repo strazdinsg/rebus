@@ -29,6 +29,27 @@ public class User {
   private boolean isAdmin;
 
   /**
+   * Create a new user.
+   */
+  public User() {
+  }
+
+  /**
+   * Create a new user.
+   *
+   * @param id      The ID of the user.
+   * @param name    The name of the user.
+   * @param pin     The PIN code of the user.
+   * @param isAdmin Whether the user is an admin.
+   */
+  public User(int id, String name, String pin, boolean isAdmin) {
+    this.id = id;
+    this.name = name;
+    this.pin = pin;
+    this.isAdmin = isAdmin;
+  }
+
+  /**
    * Check whether the user is an admin.
    *
    * @return True when this user is an admin, false otherwise.
