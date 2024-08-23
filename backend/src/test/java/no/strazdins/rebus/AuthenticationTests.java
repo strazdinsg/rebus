@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,6 +46,8 @@ class AuthenticationTests {
   @Autowired
   ObjectMapper objectMapper;
 
+  private static final String ADMIN_USERNAME = "chuck";
+  private static final String USER_USERNAME = "dave";
 
   @BeforeEach
   void setupUsers() {
@@ -53,8 +56,8 @@ class AuthenticationTests {
       return;
     }
     log.info("Creating users");
-    userRepository.save(new User(1, "chuck", "1234", true));
-    userRepository.save(new User(2, "dave", "5678", false));
+    userRepository.save(new User(1, ADMIN_USERNAME, "1234", true));
+    userRepository.save(new User(2, USER_USERNAME, "5678", false));
   }
 
   @Test
@@ -77,8 +80,8 @@ class AuthenticationTests {
 
   @Test
   public void tryAuthenticateWithWrongPin() throws Exception {
-    Optional<User> user = userRepository.findByName("dave");
-    assertTrue(user.isPresent(), "Dave should be present");
+    Optional<User> user = userRepository.findByName(USER_USERNAME);
+    assertTrue(user.isPresent(), "User should be present");
     User u = user.get();
     String requestBodyJson = getAuthBodyForPin(u.getPin() + "667");
 
@@ -90,7 +93,7 @@ class AuthenticationTests {
 
   @Test
   public void authenticateAsUser() throws Exception {
-    Optional<User> user = userRepository.findByName("dave");
+    Optional<User> user = userRepository.findByName(USER_USERNAME);
     assertTrue(user.isPresent(), "Dave should be present");
     User u = user.get();
     String responseBody = mvc.perform(post("/authenticate")
@@ -113,33 +116,39 @@ class AuthenticationTests {
   }
 
   @Test
-  public void accessUserEndpointWithoutToken() {
-    assertTrue(false);
+  public void accessPublicEndpointWithoutToken() throws Exception {
+    mvc.perform(get("/challenges")).andExpect(status().isOk());
   }
 
   @Test
-  public void accessUserEndpointWithUserToken() {
-    assertTrue(false);
+  public void accessUserEndpointWithoutToken() throws Exception {
+    mvc.perform(get("/answers/my"))
+        .andExpect(status().isForbidden());
   }
 
   @Test
-  public void accessUserEndpointWithAdminToken() {
-    assertTrue(false);
+  public void accessUserEndpointWithUserToken() throws Exception {
+    performGetRequestWithToken("/answers/my", USER_USERNAME).andExpect(status().isOk());
   }
 
   @Test
-  public void accessAdminEndpointWithoutToken() {
-    assertTrue(false);
+  public void accessUserEndpointWithAdminToken() throws Exception {
+    performGetRequestWithToken("/answers/my", ADMIN_USERNAME).andExpect(status().isOk());
   }
 
   @Test
-  public void accessAdminEndpointWithUserToken() {
-    assertTrue(false);
+  public void accessAdminEndpointWithoutToken() throws Exception {
+    mvc.perform(get("/teams")).andExpect(status().isForbidden());
   }
 
   @Test
-  public void accessAdminEndpointWithAdminToken() {
-    assertTrue(false);
+  public void accessAdminEndpointWithUserToken() throws Exception {
+    performGetRequestWithToken("/teams", USER_USERNAME).andExpect(status().isForbidden());
+  }
+
+  @Test
+  public void accessAdminEndpointWithAdminToken() throws Exception {
+    performGetRequestWithToken("/teams", ADMIN_USERNAME).andExpect(status().isOk());
   }
 
 
@@ -160,5 +169,16 @@ class AuthenticationTests {
     String jwtToken = response.data().jwt();
     assertNotNull(jwtToken);
     assertTrue(jwtUtil.validateToken(jwtToken, user.getId()));
+  }
+
+  private ResultActions performGetRequestWithToken(String url, String username) throws Exception {
+    String jwt = getJwtForUser(username);
+    return mvc.perform(get(url).header("Authorization", "Bearer " + jwt));
+  }
+
+  private String getJwtForUser(String username) {
+    Optional<User> user = userRepository.findByName(username);
+    assertTrue(user.isPresent(), "User " + username + " should be present");
+    return jwtUtil.generateToken(user.get());
   }
 }
