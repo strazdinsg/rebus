@@ -57,7 +57,6 @@ class AnswerServiceTests {
   private AnswerService answerService;
 
   private final List<Answer> team1Answers = new LinkedList<>();
-  private final List<Answer> team2Answers = new LinkedList<>();
   private final List<Answer> emptyAnswers = new LinkedList<>();
 
   private Answer savedAnswer;
@@ -111,9 +110,6 @@ class AnswerServiceTests {
     team1Answers.clear();
     team1Answers.add(answerWithScoreAndUrl);
     team1Answers.add(answerWithoutScore);
-
-    team2Answers.clear();
-    team2Answers.add(team2Answer);
 
     when(answerRepository.findByUserId(TEAM1_ID)).thenReturn(team1Answers);
     when(answerRepository.findByUserId(NON_EXISTING_TEAM_ID)).thenReturn(emptyAnswers);
