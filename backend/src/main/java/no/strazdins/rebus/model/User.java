@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.HashSet;
 import java.util.Set;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 /**
@@ -14,6 +15,7 @@ import lombok.Data;
  */
 @Entity
 @Data
+@Table(name = "\"user\"")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
