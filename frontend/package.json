@@ -39,6 +39,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^24.1.1",
     "msw": "^2.3.5",
+    "openapi3-ts": "^4.3.3",
     "orval": "^7.0.1",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0",
