@@ -1,35 +1,41 @@
-import { beforeEach, describe, expect, jest, test } from "@jest/globals";
+import { describe, it, expect, vi } from "vitest";
 import { challengeRepository } from "./challengeRepository";
+import { ChallengeDto } from "../../common/types/dto/challengeDto";
 
-// Mock all the database functions
-jest.mock("../../database/database");
+const queryMock = vi.fn();
 
-// This is needed, don't convert to import!
-const database = require("../../database/database");
+vi.mock("../../database/databaseManager", () => {
+  return {
+    getConnection: () => {
+      return {
+        query: queryMock,
+        close: () => {
+          return Promise.resolve();
+        },
+      };
+    },
+  };
+});
 
 describe("ChallengeRepository", () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
-  test("Convert database entries to ChallengeDto objects correctly", async () => {
-    const mockRows = [
-      { id: 1, question: "What is 2 + 2?", max_score: 10 },
-      { id: 2, question: "What is the capital of France?", max_score: 5 },
-    ];
-    database.executeQuery.mockResolvedValue(mockRows);
-
-    const result = await challengeRepository.getAll();
-
-    expect(result).toEqual([
+  it("Challenges from DB are returned", async () => {
+    const mockChallenges: ChallengeDto[] = [
       { id: 1, question: "What is 2 + 2?", maxScore: 10 },
       { id: 2, question: "What is the capital of France?", maxScore: 5 },
-    ]);
+    ];
+    queryMock.mockImplementationOnce(() => {
+      return Promise.resolve(mockChallenges);
+    });
+
+    const result = await challengeRepository.getAll();
+    expect(result).toEqual(mockChallenges);
   });
 
-  test("Handle errors when executeQuery fails", async () => {
+  it("Handle errors when executeQuery fails", async () => {
     const e = new Error("Database error");
-    database.executeQuery.mockRejectedValue(e);
+    queryMock.mockImplementationOnce(() => {
+      throw e;
+    });
     await expect(challengeRepository.getAll()).rejects.toThrow();
   });
 });

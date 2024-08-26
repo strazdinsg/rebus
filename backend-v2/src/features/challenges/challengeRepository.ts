@@ -1,5 +1,5 @@
 import { ChallengeDto } from "../../common/types/dto/challengeDto";
-import { select } from "../../database/select";
+import { getConnection } from "../../database/databaseManager";
 
 /**
  * Database repository for the challenges.
@@ -11,12 +11,13 @@ class ChallengeRepository {
    * @returns A promise that resolves with an array of ChallengeDto objects.
    * @throws The promise rejects with an error if the database query fails.
    */
-  public getAll(): Promise<ChallengeDto[]> {
-    return select("SELECT * FROM challenge", (row) => {
+  public async getAll(): Promise<ChallengeDto[]> {
+    const connection = getConnection();
+    return await connection.query("SELECT * FROM challenge", (row) => {
       return {
-        id: row.id,
+        id: parseInt(row.id),
         question: row.question,
-        maxScore: row.max_score,
+        maxScore: parseInt(row.max_score),
       };
     });
   }

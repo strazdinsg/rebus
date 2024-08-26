@@ -1,6 +1,7 @@
 import { TeamAnswerDto } from "../../common/types/dto/teamAnswerDto";
-import { select } from "../../database/select";
 import { AnswerDto } from "../../common/types/dto/answerDto";
+import { getConnection } from "../../database/databaseManager";
+import { toNullableNumber } from "../../database/resultRow";
 
 type ExtendedAnswerDto = AnswerDto & { teamId: number };
 
@@ -15,14 +16,15 @@ class AnswerRepository {
    * @throws The promise rejects with an error if the database query fails.
    */
   async getAll(): Promise<TeamAnswerDto[]> {
-    const ungroupedAnswers: ExtendedAnswerDto[] = await select(
+    const connection = getConnection();
+    const ungroupedAnswers: ExtendedAnswerDto[] = await connection.query(
       "SELECT * FROM answer",
       (row) => {
         return {
-          teamId: row.user_id,
-          challengeId: row.challenge_id,
+          teamId: parseInt(row.user_id),
+          challengeId: parseInt(row.challenge_id),
           answer: row.answer,
-          score: row.score,
+          score: toNullableNumber(row.score),
           imageUrl: row.image_url,
         };
       }

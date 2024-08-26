@@ -1,8 +1,11 @@
-import { expect, test } from "@jest/globals";
-import { closeConnection, getConnection } from "./database";
+import { describe, expect, it } from "vitest";
+import { getConnection } from "./databaseManager";
 
-test("Can connect to the database", async () => {
-  const connection = await getConnection();
-  expect(connection).toBeTruthy();
-  await closeConnection();
+describe("Database Manager", () => {
+  it("Can connect to the database", async () => {
+    const connection = getConnection();
+    expect(connection).toBeTruthy();
+    expect(connection.getSingletonInstance()).toBeTruthy();
+    await connection.close();
+  });
 });
