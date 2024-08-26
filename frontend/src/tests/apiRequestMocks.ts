@@ -60,14 +60,13 @@ export const mockAnswers = {
     {
       answer: "42",
       challengeId: 1,
-      imageUrl: null,
-      score: null,
+      imageUrl:
+        "https://mycyprustravel.com/wp-content/uploads/2018/04/Forty-Two-Bar-e1529047298193.jpg",
     },
     {
       answer: "Paris",
       challengeId: 2,
       imageUrl: null,
-      score: null,
     },
   ],
   teamId: 1,

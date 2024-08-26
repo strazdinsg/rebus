@@ -34,28 +34,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain)
       throws ServletException, IOException {
-    final String authorizationHeader = request.getHeader("Authorization");
     Integer userId = null;
-    String jwt = null;
+    String jwt = tryGetJwtFromAuthorizationHeader(request);
+    if (jwt == null) {
+      jwt = tryGetJwtFromCookie(request);
+    }
+    if (jwt != null) {
+      userId = jwtUtil.extractUserId(jwt);
+    }
+
     try {
-      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-        jwt = authorizationHeader.substring(7);
-      } else {
-        // extract JWT from cookie
-        Optional<Cookie> jwtCookie = Arrays.stream(request.getCookies()).filter(
-            c -> c.getName().equals("jwt")).findFirst();
-        if (jwtCookie.isPresent()) {
-          jwt = jwtCookie.get().getValue();
-        }
-      }
-
-      if (jwt != null) {
-        userId = jwtUtil.extractUserId(jwt);
-      }
-
       if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         AccessUserDetails userDetails = userService.getAccessUserById(userId);
-        if (jwtUtil.validateToken(jwt, userDetails)) {
+        if (userDetails != null && jwtUtil.validateToken(jwt, userDetails.getId())) {
           UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(
               userDetails, null, userDetails.getAuthorities());
           upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -66,5 +57,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       logger.info("Error while parsing JWT token: " + ex.getMessage());
     }
     filterChain.doFilter(request, response);
+  }
+
+  private String tryGetJwtFromAuthorizationHeader(HttpServletRequest request) {
+    String jwt = null;
+    final String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+      jwt = authorizationHeader.substring(7);
+    }
+    return jwt;
+  }
+
+  private static String tryGetJwtFromCookie(HttpServletRequest request) {
+    String jwt = null;
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null && cookies.length > 0) {
+      Optional<Cookie> jwtCookie = Arrays.stream(cookies).filter(
+          c -> c.getName().equals("jwt")).findFirst();
+      if (jwtCookie.isPresent()) {
+        jwt = jwtCookie.get().getValue();
+      }
+    }
+    return jwt;
   }
 }

@@ -4,6 +4,7 @@ import * as matchers from "@testing-library/jest-dom/matchers";
 import { setupServer } from "msw/node";
 import { handlers } from "./apiRequestMocks";
 
+// Set up MSW (Mock Service Worker) for API requests
 export const server = setupServer(...handlers);
 server.listen();
 

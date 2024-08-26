@@ -1,14 +1,13 @@
 import { render } from "@testing-library/react";
 import { AppRouter } from "./AppRouter";
-import { UserContext, UserSession } from "./context/UserContext";
+import { UserSession } from "./context/UserContext";
 import {
   adminUser,
   expectAppBarText,
   expectLoginPage,
   regularUser,
-  testQueryClient,
+  TestMockWrapper,
 } from "./tests/testTools";
-import { QueryClientProvider } from "@tanstack/react-query";
 
 /**
  * Component tests for the AppRouter component.
@@ -31,11 +30,9 @@ describe("AppRouter", () => {
 
   function renderAppRouterFor(user: UserSession | null) {
     render(
-      <UserContext.Provider value={{ user: user, setUser: vi.fn() }}>
-        <QueryClientProvider client={testQueryClient}>
-          <AppRouter />
-        </QueryClientProvider>
-      </UserContext.Provider>
+      <TestMockWrapper user={user}>
+        <AppRouter />
+      </TestMockWrapper>
     );
   }
 

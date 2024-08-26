@@ -65,12 +65,12 @@ public class JwtUtil {
    * Check if a token is valid for a given user.
    *
    * @param token       Token to validate
-   * @param userDetails Object containing user details
+   * @param expectedUserId      ID of the user
    * @return True if the token matches the current user and is still valid
    */
-  public boolean validateToken(String token, AccessUserDetails userDetails) {
+  public boolean validateToken(String token, int expectedUserId) {
     final int userId = extractUserId(token);
-    return userId == userDetails.getId() && !isTokenExpired(token);
+    return userId == expectedUserId && !isTokenExpired(token);
   }
 
 

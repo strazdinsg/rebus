@@ -16,7 +16,7 @@ export function ImagePreview(props: { imageSource: string | null }) {
       id={PREVIEW_IMG_ELEMENT_ID}
       src={props.imageSource || ""}
       style={{ display: props.imageSource ? "block" : "none" }}
-      alt="Preview of the user-selected file"
+      alt="User-submitted image preview"
     />
   );
 }
