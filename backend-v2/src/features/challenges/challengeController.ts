@@ -1,6 +1,6 @@
 import { Get, Route, SuccessResponse, Response, Tags } from "tsoa";
 import { ChallengeResponseDto } from "../../common/types/dto/challengeDto";
-import { challengeRepository } from "./challengeRepository";
+import { challengeService } from "./challengeService";
 import { HttpError } from "../../common/types/httpError";
 import { ErrorResponseDto } from "../../common/types/dto/httpResponse";
 
@@ -15,7 +15,7 @@ export class ChallengeController {
   @Response<ErrorResponseDto>(500, "Internal Server Error")
   public async getChallenges(): Promise<ChallengeResponseDto> {
     try {
-      const challenges = await challengeRepository.getAll();
+      const challenges = await challengeService.getAll();
       return {
         status: "SUCCESS",
         data: challenges,

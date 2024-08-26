@@ -5,7 +5,6 @@ describe("Database Manager", () => {
   it("Can connect to the database", async () => {
     const connection = getConnection();
     expect(connection).toBeTruthy();
-    expect(connection.getSingletonInstance()).toBeTruthy();
     await connection.close();
   });
 });

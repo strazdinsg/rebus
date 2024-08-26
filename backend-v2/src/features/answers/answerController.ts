@@ -1,7 +1,7 @@
 import { TeamAnswerResponseDto } from "../../common/types/dto/teamAnswerDto";
 import { Get, Response, Route, Security, SuccessResponse, Tags } from "tsoa";
 import { ErrorResponseDto } from "../../common/types/dto/httpResponse";
-import { answerRepository } from "./answerRepository";
+import { answerService } from "./answerService";
 import { HttpError } from "../../common/types/httpError";
 
 @Route("answers")
@@ -17,7 +17,7 @@ export class AnswerController {
   @Security("jwt", ["ROLE_ADMIN"])
   public async getAllAnswers(): Promise<TeamAnswerResponseDto> {
     try {
-      const answers = await answerRepository.getAll();
+      const answers = await answerService.getAll();
       return {
         status: "SUCCESS",
         data: answers,
