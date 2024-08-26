@@ -4,7 +4,6 @@
  * Rebus backend
  */
 import type {
-  HttpResponseDtoListTeamAnswerDto,
   HttpResponseDtoListTeamDto,
   HttpResponseDtoString,
   SingleScoreDto,
@@ -12,12 +11,6 @@ import type {
 import { apiV1AxiosClient } from "../../apiClient";
 
 export const getAdminEndpoints = () => {
-  const getAllAnswers = () => {
-    return apiV1AxiosClient<HttpResponseDtoListTeamAnswerDto>({
-      url: `/answers/long`,
-      method: "GET",
-    });
-  };
   /**
    * @summary Set score for a specific team, specific challenge
    */
@@ -42,11 +35,8 @@ export const getAdminEndpoints = () => {
       method: "GET",
     });
   };
-  return { getAllAnswers, setScore, getAllTeams };
+  return { setScore, getAllTeams };
 };
-export type GetAllAnswersResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getAdminEndpoints>["getAllAnswers"]>>
->;
 export type SetScoreResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getAdminEndpoints>["setScore"]>>
 >;

@@ -68,34 +68,6 @@ public class AdminController {
     return HttpResponseDto.withData(userService.getAllTeams());
   }
 
-
-  /**
-   * Get all answers, in the long format.
-   *
-   * @return List of all answers
-   */
-  @Schema(description = "Get all answers, in the long format")
-  @ApiResponses(value = {
-      @ApiResponse(
-          responseCode = "200", description = "OK, list of all answers in the data field"
-      ),
-      @ApiResponse(
-          responseCode = "403", description = "Forbidden, no access to answer listing",
-          content = @Content(
-              schema = @Schema(
-                  example = "{\"status\":\"ERROR\",\"message\":\"Must log in as admin\","
-                      + " \"data\":\"\"}"
-              )
-          )
-      )
-  })
-  @GetMapping("/answers/long")
-  public HttpResponseDto<List<TeamAnswerDto>> getAllAnswers() {
-    Map<Integer, TeamAnswerDto> answerMap = answerService.getAll();
-    List<TeamAnswerDto> answers = answerMap.values().stream().toList();
-    return HttpResponseDto.withData(answers);
-  }
-
   /**
    * Set score for a specific team, specific challenge.
    *
