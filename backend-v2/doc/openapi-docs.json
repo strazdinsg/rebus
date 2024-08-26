@@ -176,7 +176,7 @@
 	},
 	"info": {
 		"title": "rebus-backend",
-		"version": "2.3.0",
+		"version": "3.0.0",
 		"description": "Backend for the Rebus application, in Node.js",
 		"license": {
 			"name": "MIT"
@@ -221,7 +221,7 @@
 				"parameters": []
 			}
 		},
-		"/answers/long": {
+		"/answers": {
 			"get": {
 				"operationId": "GetAllAnswers",
 				"responses": {

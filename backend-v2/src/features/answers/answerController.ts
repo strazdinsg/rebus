@@ -10,7 +10,7 @@ export class AnswerController {
   /**
    * Get all answers for all teams, long version. Accessible by admins only.
    */
-  @Get("/long")
+  @Get()
   @SuccessResponse("200", "Ok")
   @Response<ErrorResponseDto>(401, "Unauthorized (only accessible by admins)")
   @Response<ErrorResponseDto>(500, "Internal Server Error")

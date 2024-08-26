@@ -12,7 +12,7 @@ export const getAdminEndpoints = () => {
    */
   const getAllAnswers = () => {
     return apiV2AxiosClient<HttpResponseDtoTeamAnswerDtoArray>({
-      url: `/answers/long`,
+      url: `/answers`,
       method: "GET",
     });
   };
