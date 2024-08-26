@@ -5,12 +5,12 @@ import { answerService } from "./answerService";
 import { HttpError } from "../../common/types/httpError";
 
 @Route("answers")
-@Tags("Admin endpoints")
 export class AnswerController {
   /**
    * Get all answers for all teams, long version. Accessible by admins only.
    */
   @Get()
+  @Tags("Admin endpoints")
   @SuccessResponse("200", "Ok")
   @Response<ErrorResponseDto>(401, "Unauthorized (only accessible by admins)")
   @Response<ErrorResponseDto>(500, "Internal Server Error")
