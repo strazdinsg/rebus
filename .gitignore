@@ -2,3 +2,5 @@
 .idea/
 
 backend-v2/doc/swagger.json
+
+backend-v2/coverage/

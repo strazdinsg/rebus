@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.strazdins.rebus.model.User;
 import no.strazdins.rebus.services.AzureBlobService;
@@ -40,8 +39,6 @@ class ImageControllerTests {
   MockMvc mvc;
   @Autowired
   private TestHelper testHelper;
-  @Autowired
-  private ObjectMapper objectMapper;
 
   @BeforeEach
   void setUp() {
