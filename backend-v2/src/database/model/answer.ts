@@ -1,4 +1,9 @@
-import { DataTypes, ForeignKey, Model } from "sequelize";
+import {
+  DataTypes,
+  ForeignKey,
+  HasOneGetAssociationMixin,
+  Model,
+} from "sequelize";
 import { getConnection } from "../databaseManager";
 import { Challenge } from "./challenge";
 import { User } from "./user";
@@ -15,6 +20,8 @@ class Answer extends Model {
   declare answer: string;
   declare score: number;
   declare imageUrl: string;
+  declare getChallenge: HasOneGetAssociationMixin<Challenge>;
+  declare getUser: HasOneGetAssociationMixin<User>;
 }
 
 Answer.init(
