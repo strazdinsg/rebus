@@ -12,4 +12,11 @@ export type TeamAnswerDto = {
   answers: AnswerDto[];
 };
 
-export type TeamAnswerResponseDto = HttpResponseDto<TeamAnswerDto[]>;
+/**
+ * Answers for one team.
+ */
+export type TeamAnswerResponseDto = HttpResponseDto<TeamAnswerDto>;
+/**
+ * Answers for all teams.
+ */
+export type TeamListAnswerResponseDto = HttpResponseDto<TeamAnswerDto[]>;

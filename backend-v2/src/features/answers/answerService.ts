@@ -20,6 +20,23 @@ class AnswerService {
     }
     return teamAnswers;
   }
+
+  /**
+   * Retrieves answers for a specific team.
+   * @param teamId ID of the team
+   * @returns A promise that resolves with an object containing the team ID and the answers for the team.
+   * @throws The promise rejects with an error if the database query fails.
+   */
+  async getAnswersForTeam(teamId: number): Promise<TeamAnswerDto> {
+    // Get current user ID
+    const answers: Answer[] = await Answer.findAll({
+      where: { userId: teamId },
+    });
+    return {
+      teamId: teamId,
+      answers: answers.map(_convertToDtoWithoutScore),
+    };
+  }
 }
 
 // TODO - test this function
@@ -44,6 +61,15 @@ function _appendAnswerToTeamAnswers(
       answers: [answerDto],
     });
   }
+}
+
+function _convertToDtoWithoutScore(answer: Answer): AnswerDto {
+  return {
+    challengeId: answer.challengeId,
+    answer: answer.answer,
+    score: null,
+    imageUrl: answer.imageUrl,
+  };
 }
 
 export const answerService = new AnswerService();

@@ -162,8 +162,37 @@
 				"type": "object",
 				"description": "Generic HTTP response body."
 			},
+			"TeamListAnswerResponseDto": {
+				"$ref": "#/components/schemas/HttpResponseDto_TeamAnswerDto-Array_",
+				"description": "Answers for all teams."
+			},
+			"HttpResponseDto_TeamAnswerDto_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/TeamAnswerDto"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"SUCCESS",
+							"ERROR"
+						]
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"status"
+				],
+				"type": "object",
+				"description": "Generic HTTP response body."
+			},
 			"TeamAnswerResponseDto": {
-				"$ref": "#/components/schemas/HttpResponseDto_TeamAnswerDto-Array_"
+				"$ref": "#/components/schemas/HttpResponseDto_TeamAnswerDto_",
+				"description": "Answers for one team."
 			}
 		},
 		"securitySchemes": {
@@ -230,7 +259,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/TeamAnswerResponseDto"
+									"$ref": "#/components/schemas/TeamListAnswerResponseDto"
 								}
 							}
 						}
@@ -247,9 +276,38 @@
 								}
 							}
 						}
+					}
+				},
+				"description": "Get all answers for all teams. Accessible by admins only.",
+				"tags": [
+					"Admin endpoints"
+				],
+				"security": [
+					{
+						"jwt": [
+							"ROLE_ADMIN"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/answers/my": {
+			"get": {
+				"operationId": "GetMyAnswers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TeamAnswerResponseDto"
+								}
+							}
+						}
 					},
-					"500": {
-						"description": "Internal Server Error",
+					"401": {
+						"description": "Unauthorized (only accessible by users)",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -262,14 +320,14 @@
 						}
 					}
 				},
-				"description": "Get all answers for all teams, long version. Accessible by admins only.",
+				"description": "Get all answers for the current user, long version. Accessible by users only.",
 				"tags": [
-					"Admin endpoints"
+					"User endpoints"
 				],
 				"security": [
 					{
 						"jwt": [
-							"ROLE_ADMIN"
+							"ROLE_USER"
 						]
 					}
 				],

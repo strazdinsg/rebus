@@ -3,6 +3,9 @@
  * Do not edit manually.
  * rebus-backend
  */
-import type { HttpResponseDtoTeamAnswerDtoArray } from "./httpResponseDtoTeamAnswerDtoArray";
+import type { HttpResponseDtoTeamAnswerDto } from "./httpResponseDtoTeamAnswerDto";
 
-export type TeamAnswerResponseDto = HttpResponseDtoTeamAnswerDtoArray;
+/**
+ * Answers for one team.
+ */
+export type TeamAnswerResponseDto = HttpResponseDtoTeamAnswerDto;

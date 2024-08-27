@@ -8,7 +8,7 @@ import { apiV2AxiosClient } from "../../apiClient";
 
 export const getAdminEndpoints = () => {
   /**
-   * Get all answers for all teams, long version. Accessible by admins only.
+   * Get all answers for all teams. Accessible by admins only.
    */
   const getAllAnswers = () => {
     return apiV2AxiosClient<HttpResponseDtoTeamAnswerDtoArray>({

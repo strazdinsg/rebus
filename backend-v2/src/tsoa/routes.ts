@@ -51,9 +51,19 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true},"data":{"dataType":"array","array":{"dataType":"refAlias","ref":"TeamAnswerDto"},"required":true},"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SUCCESS"]},{"dataType":"enum","enums":["ERROR"]}],"required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "TeamAnswerResponseDto": {
+    "TeamListAnswerResponseDto": {
         "dataType": "refAlias",
         "type": {"ref":"HttpResponseDto_TeamAnswerDto-Array_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "HttpResponseDto_TeamAnswerDto_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true},"data":{"ref":"TeamAnswerDto","required":true},"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["SUCCESS"]},{"dataType":"enum","enums":["ERROR"]}],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TeamAnswerResponseDto": {
+        "dataType": "refAlias",
+        "type": {"ref":"HttpResponseDto_TeamAnswerDto_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -121,6 +131,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getAllAnswers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/answers/my',
+            authenticateMiddleware([{"jwt":["ROLE_USER"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AnswerController)),
+            ...(fetchMiddlewares<RequestHandler>(AnswerController.prototype.getMyAnswers)),
+
+            async function AnswerController_getMyAnswers(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new AnswerController();
+
+              await templateService.apiHandler({
+                methodName: 'getMyAnswers',
                 controller,
                 response,
                 next,

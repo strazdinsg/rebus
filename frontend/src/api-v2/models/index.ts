@@ -16,3 +16,6 @@ export * from "./httpResponseDtoTeamAnswerDtoArray";
 export * from "./httpResponseDtoTeamAnswerDtoArrayStatus";
 export * from "./teamAnswerDto";
 export * from "./teamAnswerResponseDto";
+export * from "./httpResponseDtoTeamAnswerDto";
+export * from "./httpResponseDtoTeamAnswerDtoStatus";
+export * from "./teamListAnswerResponseDto";
