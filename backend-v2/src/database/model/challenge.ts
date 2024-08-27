@@ -23,11 +23,15 @@ Challenge.init(
     question: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     maxScore: {
       type: DataTypes.DOUBLE,
       allowNull: false,
       field: "max_score",
+      validate: {
+        min: 1,
+      },
     },
   },
   {
