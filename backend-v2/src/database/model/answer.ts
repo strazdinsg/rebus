@@ -14,6 +14,7 @@ import { User } from "./user";
 class Answer extends Model {
   // Declare the properties of the model, do not initialize them here
   // See https://sequelize.org/docs/v6/core-concepts/model-basics/#caveat-with-public-class-fields
+  // Also see https://sequelize.org/docs/v6/other-topics/typescript/#usage
   declare id: number;
   declare userId: ForeignKey<User["id"]>;
   declare challengeId: ForeignKey<Challenge["id"]>;
