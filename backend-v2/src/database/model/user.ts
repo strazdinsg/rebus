@@ -24,10 +24,15 @@ User.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     pin: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        is: /^\d{4,6}$/,
+        msg: "Pin code must be 4 to 6 digits",
+      },
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
