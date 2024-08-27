@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, ForeignKey, Model } from "sequelize";
 import { getConnection } from "../databaseManager";
 import { Challenge } from "./challenge";
 import { User } from "./user";
@@ -10,8 +10,8 @@ class Answer extends Model {
   // Declare the properties of the model, do not initialize them here
   // See https://sequelize.org/docs/v6/core-concepts/model-basics/#caveat-with-public-class-fields
   declare id: number;
-  declare userId: number;
-  declare challengeId: number;
+  declare userId: ForeignKey<User["id"]>;
+  declare challengeId: ForeignKey<Challenge["id"]>;
   declare answer: string;
   declare score: number;
   declare imageUrl: string;
@@ -29,11 +29,19 @@ Answer.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "user_id",
+      references: {
+        model: User,
+        key: "id",
+      },
     },
     challengeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "challenge_id",
+      references: {
+        model: Challenge,
+        key: "id",
+      },
     },
     answer: {
       type: DataTypes.STRING,
@@ -61,8 +69,21 @@ Answer.init(
 Challenge.hasMany(Answer, {
   foreignKey: "challengeId",
 });
+Answer.belongsTo(Challenge, {
+  foreignKey: {
+    name: "challengeId",
+    allowNull: false,
+  },
+});
+
 User.hasMany(Answer, {
   foreignKey: "userId",
+});
+Answer.belongsTo(User, {
+  foreignKey: {
+    name: "userId",
+    allowNull: false,
+  },
 });
 
 export { Answer };
