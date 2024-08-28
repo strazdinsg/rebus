@@ -169,21 +169,7 @@
           },
           "status": {
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ],
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "SimpleAnswerDto": {
-        "description": "A team's answer for one specific challenge",
-        "properties": {
-          "answer": {
-            "description": "The answer text",
-            "example": "Hello World",
+            "enum": ["SUCCESS", "ERROR"],
             "type": "string"
           }
         },
@@ -248,7 +234,7 @@
   },
   "info": {
     "title": "Rebus backend",
-    "version": "5.0.0"
+    "version": "6.0.0"
   },
   "openapi": "3.0.1",
   "paths": {
@@ -313,7 +299,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SimpleAnswerDto"
+                "type": "string"
               }
             }
           },

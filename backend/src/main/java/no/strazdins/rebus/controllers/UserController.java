@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.HttpResponseDto;
-import no.strazdins.rebus.dto.SimpleAnswerDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
+import no.strazdins.rebus.tools.StringFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -96,13 +96,15 @@ public class UserController {
   @PostMapping("/answers/{challengeId}/{userId}")
   public ResponseEntity<HttpResponseDto<String>> postAnswer(@PathVariable Integer challengeId,
                                                             @PathVariable Integer userId,
-                                                            @RequestBody SimpleAnswerDto answer) {
+                                                            @RequestBody String answer) {
     if (userService.isForbiddenToAccessUser(userId)) {
       return HttpResponseDto.errorResponse(HttpStatus.FORBIDDEN,
           "Can't post an answer in the name of another team");
     }
 
-    answerService.updateAnswerText(challengeId, userId, answer.answer());
+
+    answer = StringFormatter.parseJsonString(answer);
+    answerService.updateAnswerText(challengeId, userId, answer);
     return HttpResponseDto.okResponse("");
   }
 }
