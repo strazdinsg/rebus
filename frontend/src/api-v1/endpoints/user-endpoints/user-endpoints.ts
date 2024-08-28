@@ -5,7 +5,7 @@
  */
 import type {
   HttpResponseDtoTeamAnswerDto,
-  MyAnswerDto,
+  SimpleAnswerDto,
   UploadPictureBody,
 } from "../../models";
 import { apiV1AxiosClient } from "../../apiClient";
@@ -26,13 +26,13 @@ export const getUserEndpoints = () => {
   const postAnswer = (
     challengeId: number,
     userId: number,
-    myAnswerDto: MyAnswerDto
+    simpleAnswerDto: SimpleAnswerDto
   ) => {
     return apiV1AxiosClient<string>({
       url: `/answers/${challengeId}/${userId}`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      data: myAnswerDto,
+      data: simpleAnswerDto,
     });
   };
   /**

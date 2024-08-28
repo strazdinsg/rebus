@@ -68,7 +68,6 @@ export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
       if (user) {
         await v1userEndpoints().postAnswer(args.challengeId, user.id, {
           answer: args.answer,
-          challengeId: args.challengeId,
         });
       }
     },

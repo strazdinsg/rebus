@@ -199,24 +199,15 @@
         },
         "type": "object"
       },
-      "MyAnswerDto": {
-        "description": "Our team's answer for one specific challenge",
+      "SimpleAnswerDto": {
+        "description": "A team's answer for one specific challenge",
         "properties": {
           "answer": {
             "description": "The answer text",
             "example": "Hello World",
             "type": "string"
-          },
-          "challengeId": {
-            "description": "ID of the challenge",
-            "example": 123,
-            "format": "int32",
-            "type": "integer"
           }
         },
-        "required": [
-          "challengeId"
-        ],
         "type": "object"
       },
       "SingleScoreDto": {
@@ -351,7 +342,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MyAnswerDto"
+                "$ref": "#/components/schemas/SimpleAnswerDto"
               }
             }
           },
