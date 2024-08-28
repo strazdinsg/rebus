@@ -18,6 +18,9 @@ export const handlers = [
   http.get(API_V1_BASE_URL + "/answers/my", () => {
     return HttpResponse.json(successResponse(mockAnswers));
   }),
+  http.get(API_V2_BASE_URL + "/answers/my", () => {
+    return HttpResponse.json(successResponse(mockAnswers));
+  }),
   http.get(API_V1_BASE_URL + "/teams", () => {
     return HttpResponse.json(successResponse(mockTeams));
   }),
