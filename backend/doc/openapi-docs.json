@@ -27,9 +27,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "challengeId"
-        ],
+        "required": ["challengeId"],
         "type": "object"
       },
       "AuthenticationRequest": {
@@ -40,9 +38,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "pin"
-        ],
+        "required": ["pin"],
         "type": "object"
       },
       "AuthenticationResponse": {
@@ -53,9 +49,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "jwt"
-        ],
+        "required": ["jwt"],
         "type": "object"
       },
       "ChallengeDto": {
@@ -79,10 +73,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "question"
-        ],
+        "required": ["id", "question"],
         "type": "object"
       },
       "HttpResponseDtoAuthenticationResponse": {
@@ -97,10 +88,7 @@
           },
           "status": {
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ],
+            "enum": ["SUCCESS", "ERROR"],
             "type": "string"
           }
         },
@@ -122,10 +110,7 @@
           },
           "status": {
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ],
+            "enum": ["SUCCESS", "ERROR"],
             "type": "string"
           }
         },
@@ -147,10 +132,7 @@
           },
           "status": {
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ],
+            "enum": ["SUCCESS", "ERROR"],
             "type": "string"
           }
         },
@@ -169,10 +151,7 @@
           },
           "status": {
             "description": "Response status: success or error",
-            "enum": [
-              "SUCCESS",
-              "ERROR"
-            ],
+            "enum": ["SUCCESS", "ERROR"],
             "type": "string"
           }
         },
@@ -239,10 +218,7 @@
             "type": "integer"
           }
         },
-        "required": [
-          "answers",
-          "teamId"
-        ],
+        "required": ["answers", "teamId"],
         "type": "object"
       },
       "TeamDto": {
@@ -258,10 +234,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object"
       }
     },
@@ -310,9 +283,7 @@
           }
         },
         "summary": "Get answers of the currently logged-in user",
-        "tags": [
-          "User endpoints"
-        ]
+        "tags": ["User endpoints"]
       }
     },
     "/answers/{challengeId}/{userId}": {
@@ -381,9 +352,7 @@
           }
         },
         "summary": "Post an answer to a challenge",
-        "tags": [
-          "User endpoints"
-        ]
+        "tags": ["User endpoints"]
       }
     },
     "/authenticate": {
@@ -428,9 +397,7 @@
           }
         },
         "summary": "Log in",
-        "tags": [
-          "Public endpoints"
-        ]
+        "tags": ["Public endpoints"]
       }
     },
     "/challenges": {
@@ -449,9 +416,7 @@
           }
         },
         "summary": "Get all challenges",
-        "tags": [
-          "Public endpoints"
-        ]
+        "tags": ["Public endpoints"]
       }
     },
     "/pictures/{challengeId}/{userId}": {
@@ -487,9 +452,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "fileContent"
-                ],
+                "required": ["fileContent"],
                 "type": "object"
               }
             }
@@ -543,9 +506,7 @@
           }
         },
         "summary": "Upload an image to the server",
-        "tags": [
-          "User endpoints"
-        ]
+        "tags": ["User endpoints"]
       }
     },
     "/score/{challengeId}/{userId}": {
@@ -609,9 +570,7 @@
           }
         },
         "summary": "Set score for a specific team, specific challenge",
-        "tags": [
-          "Admin endpoints"
-        ]
+        "tags": ["Admin endpoints"]
       }
     },
     "/teams": {
@@ -645,9 +604,7 @@
           }
         },
         "summary": "Get all teams",
-        "tags": [
-          "Admin endpoints"
-        ]
+        "tags": ["Admin endpoints"]
       }
     }
   },
