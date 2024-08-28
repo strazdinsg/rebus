@@ -41,6 +41,7 @@ Answer.init(
         model: User,
         key: "id",
       },
+      unique: "unique_challenge_user",
     },
     challengeId: {
       type: DataTypes.INTEGER,
@@ -50,6 +51,7 @@ Answer.init(
         model: Challenge,
         key: "id",
       },
+      unique: "unique_challenge_user",
     },
     answer: {
       type: DataTypes.STRING,
