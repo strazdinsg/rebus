@@ -66,11 +66,9 @@ export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
     mutationFn: async (args: { challengeId: number; answer: string }) => {
       const user = getAuthenticatedUser();
       if (user) {
-        await v1userEndpoints().postAnswer(
-          args.challengeId,
-          user.id,
-          args.answer
-        );
+        await v2userEndpoints().postAnswer(args.challengeId, user.id, {
+          answer: args.answer,
+        });
       }
     },
     onSuccess: async () => {

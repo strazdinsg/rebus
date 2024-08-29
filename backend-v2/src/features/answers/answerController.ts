@@ -11,10 +11,18 @@ import {
   SuccessResponse,
   Tags,
   Request,
+  Path,
+  Body,
+  Post,
 } from "tsoa";
-import { ErrorResponseDto } from "../../common/types/dto/httpResponse";
+import {
+  ErrorResponseDto,
+  HttpResponseDto,
+} from "../../common/types/dto/httpResponse";
 import { answerService } from "./answerService";
 import { HttpError } from "../../common/types/httpError";
+import { isCurrentUserAllowedToAccessResource } from "../../common/middleware/authentication";
+import { SimpleAnswerDto } from "../../common/types/dto/simpleAnswerDto";
 
 @Route("answers")
 export class AnswerController {
@@ -60,6 +68,33 @@ export class AnswerController {
       return {
         status: "SUCCESS",
         data: answers,
+        message: "",
+      };
+    } catch (e) {
+      throw new HttpError(500, "Database query failure");
+    }
+  }
+
+  @Post("{challengeId}/{userId}")
+  @Tags("User endpoints")
+  @SuccessResponse("200", "Ok")
+  @Response<ErrorResponseDto>(401, "Unauthorized (only accessible by users)")
+  @Response<ErrorResponseDto>(403, "Can't access the answer")
+  @Security("jwt", ["ROLE_USER"])
+  public async postAnswer(
+    @Path() userId: number,
+    @Path() challengeId: number,
+    @Body() answer: SimpleAnswerDto,
+    @Request() request: express.Request
+  ): Promise<HttpResponseDto<string>> {
+    if (!isCurrentUserAllowedToAccessResource(userId, request)) {
+      throw new HttpError(403, "Unauthorized");
+    }
+    try {
+      await answerService.saveAnswer(challengeId, userId, answer.answer);
+      return {
+        status: "SUCCESS",
+        data: "",
         message: "",
       };
     } catch (e) {

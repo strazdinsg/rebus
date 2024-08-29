@@ -3,7 +3,11 @@
  * Do not edit manually.
  * rebus-backend
  */
-import type { HttpResponseDtoTeamAnswerDto } from "../../models";
+import type {
+  HttpResponseDtoString,
+  HttpResponseDtoTeamAnswerDto,
+  SimpleAnswerDto,
+} from "../../models";
 import { apiV2AxiosClient } from "../../apiClient";
 
 export const getUserEndpoints = () => {
@@ -16,8 +20,23 @@ export const getUserEndpoints = () => {
       method: "GET",
     });
   };
-  return { getMyAnswers };
+  const postAnswer = (
+    challengeId: number,
+    userId: number,
+    simpleAnswerDto: SimpleAnswerDto
+  ) => {
+    return apiV2AxiosClient<HttpResponseDtoString>({
+      url: `/answers/${challengeId}/${userId}`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: simpleAnswerDto,
+    });
+  };
+  return { getMyAnswers, postAnswer };
 };
 export type GetMyAnswersResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getUserEndpoints>["getMyAnswers"]>>
+>;
+export type PostAnswerResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getUserEndpoints>["postAnswer"]>>
 >;

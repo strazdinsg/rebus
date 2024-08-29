@@ -1,7 +1,7 @@
 import express from "express";
 import * as jwt from "jsonwebtoken";
-import { loadEnvironmentVariables } from "../utils/environment";
 import { JwtPayload } from "jsonwebtoken";
+import { loadEnvironmentVariables } from "../utils/environment";
 import { HttpError } from "../types/httpError";
 import { FORBIDDEN, UNAUTHORIZED } from "../types/dto/httpResponse";
 
@@ -136,4 +136,29 @@ function _getCookie(
     }
   }
   return null;
+}
+
+/**
+ * Checks whether the current session user is allowed to access a resource for the given user.
+ * @param ownerId ID of the owning user for the resource
+ * @param request HTTP Request object
+ * @returns true if the user is allowed to access the resource, false otherwise
+ */
+export function isCurrentUserAllowedToAccessResource(
+  ownerId: number,
+  request: express.Request
+) {
+  return _currentUserIsOwner(ownerId, request) || _currentUserIsAdmin(request);
+}
+
+function _currentUserIsOwner(ownerId: number, request: express.Request) {
+  const sessionUserId = request.sessionUserId;
+  if (!sessionUserId) {
+    return false;
+  }
+  return ownerId === sessionUserId;
+}
+
+function _currentUserIsAdmin(request: express.Request): boolean {
+  return !!request.sessionUserIsAdmin;
 }

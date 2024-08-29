@@ -193,6 +193,42 @@
 			"TeamAnswerResponseDto": {
 				"$ref": "#/components/schemas/HttpResponseDto_TeamAnswerDto_",
 				"description": "Answers for one team."
+			},
+			"HttpResponseDto_string_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"SUCCESS",
+							"ERROR"
+						]
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"status"
+				],
+				"type": "object",
+				"description": "Generic HTTP response body."
+			},
+			"SimpleAnswerDto": {
+				"properties": {
+					"answer": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"answer"
+				],
+				"type": "object",
+				"description": "A single answer to a challenge, by a single team."
 			}
 		},
 		"securitySchemes": {
@@ -332,6 +368,89 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/answers/{challengeId}/{userId}": {
+			"post": {
+				"operationId": "PostAnswer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HttpResponseDto_string_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized (only accessible by users)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDto"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Can't access the answer",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseDto"
+								},
+								"examples": {
+									"Example 1": {}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User endpoints"
+				],
+				"security": [
+					{
+						"jwt": [
+							"ROLE_USER"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "challengeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SimpleAnswerDto"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

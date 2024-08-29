@@ -175,6 +175,15 @@
         },
         "type": "object"
       },
+      "SimpleAnswerDto": {
+        "description": "An answer by a specific team to a specific challenge",
+        "properties": {
+          "answer": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "SingleScoreDto": {
         "description": "A single score",
         "properties": {
@@ -299,7 +308,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/SimpleAnswerDto"
               }
             }
           },

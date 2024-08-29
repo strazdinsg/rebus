@@ -24,3 +24,4 @@ export * from "./singleScoreDto";
 export * from "./teamAnswerDto";
 export * from "./teamDto";
 export * from "./uploadPictureBody";
+export * from "./simpleAnswerDto";
