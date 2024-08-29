@@ -6,4 +6,5 @@ import { Sequelize } from "sequelize";
 export const inMemorySqliteDbSequelize = new Sequelize({
   dialect: "sqlite",
   storage: ":memory:",
+  logging: false,
 });
