@@ -11,7 +11,6 @@ import no.strazdins.rebus.dto.SimpleAnswerDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
-import no.strazdins.rebus.tools.StringFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
