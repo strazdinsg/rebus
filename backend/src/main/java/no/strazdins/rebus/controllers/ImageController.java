@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.HttpResponseDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.AzureBlobService;
+import no.strazdins.rebus.services.ChallengeService;
 import no.strazdins.rebus.services.ImageService;
 import no.strazdins.rebus.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +31,22 @@ public class ImageController {
   private final UserService userService;
   private final AnswerService answerService;
   private final AzureBlobService azureBlobService;
+  private final ChallengeService challengeService;
 
   /**
    * Create a new ImageController.
    *
-   * @param userService       UserService object, injected by Spring
-   * @param answerService     AnswerService object, injected by Spring
-   * @param azureBlobService  AzureBlobService object, injected by Spring
+   * @param userService      UserService object, injected by Spring
+   * @param answerService    AnswerService object, injected by Spring
+   * @param azureBlobService AzureBlobService object, injected by Spring
    */
   public ImageController(UserService userService,
-                         AnswerService answerService, AzureBlobService azureBlobService) {
+                         AnswerService answerService, AzureBlobService azureBlobService,
+                         ChallengeService challengeService) {
     this.userService = userService;
     this.azureBlobService = azureBlobService;
     this.answerService = answerService;
+    this.challengeService = challengeService;
   }
 
   /**
@@ -97,7 +101,9 @@ public class ImageController {
     if (userService.isForbiddenToAccessUser(userId)) {
       throw new AccessDeniedException("Not allowed to upload images for other teams");
     }
-
+    if (challengeService.findById(challengeId).isEmpty()) {
+      throw new IllegalArgumentException("Challenge does not exist");
+    }
     if (!ImageService.isImage(multipartFile)) {
       throw new IllegalArgumentException("Provided data is not an image");
     }

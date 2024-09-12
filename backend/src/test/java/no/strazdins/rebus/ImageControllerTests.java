@@ -43,6 +43,7 @@ class ImageControllerTests {
   @BeforeEach
   void setUp() {
     testHelper.createDefaultUsers();
+    testHelper.createDefaultChallenges();
     when(azureBlobService.uploadImage(any())).thenReturn(IMAGE_URL);
   }
 
@@ -64,6 +65,15 @@ class ImageControllerTests {
     User user = testHelper.getAnotherUser();
     int wrongTeamId = user.getId();
     String path = "/pictures/1/" + wrongTeamId;
+    testHelper.performMultipartRequestForUser(mvc, path, getImageFile())
+        .andExpect(status().is4xxClientError());
+  }
+
+  @Test
+  void imagePostForNonExistingChallengeFails() throws Exception {
+    User user = testHelper.getRegularUser();
+    int ownTeamId = user.getId();
+    String path = "/pictures/66788/" + ownTeamId;
     testHelper.performMultipartRequestForUser(mvc, path, getImageFile())
         .andExpect(status().is4xxClientError());
   }

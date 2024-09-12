@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.strazdins.rebus.dto.AuthenticationRequest;
 import no.strazdins.rebus.dto.HttpResponseDto;
+import no.strazdins.rebus.model.Challenge;
 import no.strazdins.rebus.model.User;
+import no.strazdins.rebus.repositories.ChallengeRepository;
 import no.strazdins.rebus.repositories.UserRepository;
 import no.strazdins.rebus.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class TestHelper {
   @Autowired
   private UserRepository userRepository;
   @Autowired
+  private ChallengeRepository challengeRepository;
+  @Autowired
   private ObjectMapper objectMapper;
 
 
@@ -51,6 +55,16 @@ public class TestHelper {
     userRepository.save(new User(1, ADMIN_USERNAME, "1234", true));
     userRepository.save(new User(2, USER_USERNAME, "5678", false));
     userRepository.save(new User(3, ANOTHER_USER_USERNAME, "1357", false));
+  }
+
+  public void createDefaultChallenges() {
+    if (challengeRepository.count() > 0) {
+      return;
+    }
+    log.info("Creating challenges");
+    challengeRepository.save(new Challenge("First challenge", 10));
+    challengeRepository.save(new Challenge("Second challenge", 20));
+    challengeRepository.save(new Challenge("Third challenge", 30));
   }
 
   /**
