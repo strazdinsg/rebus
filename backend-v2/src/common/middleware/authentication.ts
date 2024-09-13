@@ -1,15 +1,18 @@
 import express from "express";
 import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
-import { loadEnvironmentVariables } from "../utils/environment";
+import {
+  isTestEnvironment,
+  loadEnvironmentVariables,
+} from "../utils/environment";
 import { HttpError } from "../types/httpError";
 import { FORBIDDEN, UNAUTHORIZED } from "../types/dto/httpResponse";
 
 loadEnvironmentVariables();
 
-const secretKey = process.env.JWT_SECRET_KEY;
+const secretKey = isTestEnvironment() ? _loadTestSecretKey() : _loadSecretKey();
 if (!secretKey) {
-  console.error("No JWT secret key provided in the .env file!");
+  console.error("No JWT secret key provided in the environment!");
 }
 
 /**
@@ -161,4 +164,14 @@ function _currentUserIsOwner(ownerId: number, request: express.Request) {
 
 function _currentUserIsAdmin(request: express.Request): boolean {
   return !!request.sessionUserIsAdmin;
+}
+
+function _loadSecretKey(): string | undefined {
+  return process.env.JWT_SECRET_KEY;
+}
+
+function _loadTestSecretKey(): string | undefined {
+  const key = process.env.TEST_JWT_SECRET_KEY;
+  console.log(`Loading test secret key: ${key}`);
+  return key;
 }
