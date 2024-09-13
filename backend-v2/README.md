@@ -40,3 +40,25 @@ Authentication is done using JWT tokens. This backend does the JWT validation an
 authentication endpoints for the backend v1. The same token should be used for both backends.
 For this to work it is critical that the same token signing key is used for both
 backends (`JWT_SECRET_KEY` environment variable).
+
+# Testing
+
+Run `pnpm test` to run the tests.
+
+# End-to-end testing
+
+End-to-end (E2E) testing is done using Playwright, in a [separate project](../e2e-testing).
+For E2E tests to work, we need to ensure static data which is synchronized between the backends.
+Therefore, some environment variables need to be set:
+
+- NODE_ENV - set to "test"
+- E2E_TEST - set to "true"
+- ADMIN_NAME - name of the admin user
+- ADMIN_PIN - pin of the admin user
+- USER_NAME - name of the user
+- USER_PIN - pin of the user
+- TEST_JWT_SECRET_KEY - secret key used to sign JWT tokens for the test environment
+
+These will be automatically set by PlayWright. However, if you want to run this backend in test mode manually, you need
+to provide the described environment variables.
+

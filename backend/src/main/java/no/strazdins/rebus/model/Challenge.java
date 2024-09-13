@@ -17,4 +17,21 @@ public class Challenge {
   private int id;
   private String question;
   private int maxScore;
+
+  /**
+   * Default constructor for JPA.
+   */
+  public Challenge() {
+  }
+
+  /**
+   * Constructor for Challenge.
+   *
+   * @param question The question of the challenge
+   * @param maxScore The maximum score of the challenge
+   */
+  public Challenge(String question, int maxScore) {
+    this.question = question;
+    this.maxScore = maxScore;
+  }
 }

@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuthenticatedUser } from "../tools/authentication";
 import { getAdminEndpoints as adminEndpointsV1 } from "../api-v1/endpoints/admin-endpoints/admin-endpoints";
 import { getAdminEndpoints as adminEndpointsV2 } from "../api-v2/endpoints/admin-endpoints/admin-endpoints";
-import { getUserEndpoints as v1userEndpoints } from "../api-v1/endpoints/user-endpoints/user-endpoints";
 import { getUserEndpoints as v2userEndpoints } from "../api-v2/endpoints/user-endpoints/user-endpoints";
 
 /**
@@ -66,9 +65,8 @@ export function useUpdateMyAnswer(onSuccess: () => void, onError: () => void) {
     mutationFn: async (args: { challengeId: number; answer: string }) => {
       const user = getAuthenticatedUser();
       if (user) {
-        await v1userEndpoints().postAnswer(args.challengeId, user.id, {
+        await v2userEndpoints().postAnswer(args.challengeId, user.id, {
           answer: args.answer,
-          challengeId: args.challengeId,
         });
       }
     },

@@ -37,9 +37,28 @@ class AnswerService {
       answers: answers.map(_convertToDtoWithoutScore),
     };
   }
+
+  /**
+   * Saves an answer for a specific challenge. Creates a new answer if it doesn't exist.
+   * @param challengeId
+   * @param userId
+   * @param answer
+   * @returns A promise that resolves when the answer is saved.
+   * @throws The promise rejects with an error if the database query fails.
+   */
+  async saveAnswer(
+    challengeId: number,
+    userId: number,
+    answer: string
+  ): Promise<void> {
+    await Answer.upsert({
+      challengeId: challengeId,
+      userId: userId,
+      answer: answer,
+    });
+  }
 }
 
-// TODO - test this function
 function _appendAnswerToTeamAnswers(
   teamAnswers: TeamAnswerDto[],
   answer: Answer

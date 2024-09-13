@@ -9,9 +9,9 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface UserRepository extends CrudRepository<User, Integer> {
   /**
-   * Finds a user by PIN number (password).
+   * Finds a user by PIN (password).
    *
-   * @param pin the PIN number
+   * @param pin the PIN
    * @return the user with the given PIN
    */
   Optional<User> findOneByPin(String pin);
@@ -30,5 +30,12 @@ public interface UserRepository extends CrudRepository<User, Integer> {
    * @return The first admin user.
    */
   Optional<User> findFirstByIsAdminTrue();
+
+  /**
+   * Finds all users that are not admins.
+   *
+   * @return All users that are not admins.
+   */
+  Iterable<User> findAllByIsAdminFalse();
 
 }

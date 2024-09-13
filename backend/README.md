@@ -29,8 +29,8 @@ First you need to ensure the following requirements are met:
     - AZURE_STORAGE_CONNECTION_STRING - connection string for Azure Blob Storage
     - AZURE_STORAGE_CONTAINER_NAME - name of the container in Azure Blob Storage where images will
       be stored
-- Configure your Azure Blob Storage account to allow CORS requests from the backend. You can do
-  it in Azure Portal > your storage account > Settings > CORS. See also
+- Configure your Azure Blob Storage account to allow CORS requests from the backend. You can do it
+  in Azure Portal > your storage account > Settings > CORS. See also
   [this](https://learn.microsoft.com/en-us/rest/api/storageservices/cross-origin-resource-sharing--cors--support-for-the-azure-storage-services#enabling-cors-for-azure-storage)
   for more information.
 
@@ -58,3 +58,23 @@ Currently, the refreshing of the OpenAPI file is done manually. To do this, you 
 5. Format the file:
     1. Auto-format it (Cmd+Alt+L)
     2. Sort the JSON keys - use the `JSON Sorter` plugin
+
+# Testing
+
+Run `mvn test` to run the tests.
+
+# End-to-end testing
+
+End-to-end (E2E) testing is done using Playwright, in a [separate project](../e2e-testing). For E2E
+tests to work, we need to ensure static data which is synchronized between the backends. Therefore,
+some environment variables need to be set:
+
+- ADMIN_NAME - name of the admin user
+- ADMIN_PIN - pin of the admin user
+- USER_NAME - name of the user
+- USER_PIN - pin of the user
+- TEST_JWT_SECRET_KEY - secret key used to sign JWT tokens for the test environment
+
+These will be automatically set by PlayWright. However, if you want to run this backend in test mode
+manually, you need to provide the described environment variables.
+

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import no.strazdins.rebus.dto.HttpResponseDto;
-import no.strazdins.rebus.dto.MyAnswerDto;
+import no.strazdins.rebus.dto.SimpleAnswerDto;
 import no.strazdins.rebus.dto.TeamAnswerDto;
 import no.strazdins.rebus.services.AnswerService;
 import no.strazdins.rebus.services.UserService;
@@ -96,10 +96,14 @@ public class UserController {
   @PostMapping("/answers/{challengeId}/{userId}")
   public ResponseEntity<HttpResponseDto<String>> postAnswer(@PathVariable Integer challengeId,
                                                             @PathVariable Integer userId,
-                                                            @RequestBody MyAnswerDto answer) {
+                                                            @RequestBody SimpleAnswerDto answer) {
     if (userService.isForbiddenToAccessUser(userId)) {
       return HttpResponseDto.errorResponse(HttpStatus.FORBIDDEN,
           "Can't post an answer in the name of another team");
+    }
+
+    if (answer == null) {
+      return HttpResponseDto.errorResponse(HttpStatus.BAD_REQUEST, "Answer is empty");
     }
 
     answerService.updateAnswerText(challengeId, userId, answer.answer());

@@ -1,15 +1,18 @@
 import express from "express";
 import * as jwt from "jsonwebtoken";
-import { loadEnvironmentVariables } from "../utils/environment";
 import { JwtPayload } from "jsonwebtoken";
+import {
+  isTestEnvironment,
+  loadEnvironmentVariables,
+} from "../utils/environment";
 import { HttpError } from "../types/httpError";
 import { FORBIDDEN, UNAUTHORIZED } from "../types/dto/httpResponse";
 
 loadEnvironmentVariables();
 
-const secretKey = process.env.JWT_SECRET_KEY;
+const secretKey = isTestEnvironment() ? _loadTestSecretKey() : _loadSecretKey();
 if (!secretKey) {
-  console.error("No JWT secret key provided in the .env file!");
+  console.error("No JWT secret key provided in the environment!");
 }
 
 /**
@@ -136,4 +139,39 @@ function _getCookie(
     }
   }
   return null;
+}
+
+/**
+ * Checks whether the current session user is allowed to access a resource for the given user.
+ * @param ownerId ID of the owning user for the resource
+ * @param request HTTP Request object
+ * @returns true if the user is allowed to access the resource, false otherwise
+ */
+export function isCurrentUserAllowedToAccessResource(
+  ownerId: number,
+  request: express.Request
+) {
+  return _currentUserIsOwner(ownerId, request) || _currentUserIsAdmin(request);
+}
+
+function _currentUserIsOwner(ownerId: number, request: express.Request) {
+  const sessionUserId = request.sessionUserId;
+  if (!sessionUserId) {
+    return false;
+  }
+  return ownerId === sessionUserId;
+}
+
+function _currentUserIsAdmin(request: express.Request): boolean {
+  return !!request.sessionUserIsAdmin;
+}
+
+function _loadSecretKey(): string | undefined {
+  return process.env.JWT_SECRET_KEY;
+}
+
+function _loadTestSecretKey(): string | undefined {
+  const key = process.env.TEST_JWT_SECRET_KEY;
+  console.log(`Loading test secret key: ${key}`);
+  return key;
 }
