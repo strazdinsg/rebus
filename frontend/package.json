@@ -23,6 +23,7 @@
     "lint": "eslint src",
     "serve": "vite preview",
     "orval:generate": "pnpx orval --config orval.config.ts",
+    "test:ci": "vitest run",
     "test": "vitest"
   },
   "devDependencies": {
