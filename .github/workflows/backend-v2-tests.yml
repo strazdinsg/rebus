@@ -1,0 +1,23 @@
+name: Run backend tests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "backend-v2/**" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v4
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: npm run test:ci
