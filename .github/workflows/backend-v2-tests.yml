@@ -3,7 +3,7 @@ name: Run backend tests
 on:
   push:
     branches: [ "main" ]
-    paths: [ "backend-v2/**" ]
+#    paths: [ "backend-v2/**" ]
   pull_request:
     branches: [ "main" ]
 
