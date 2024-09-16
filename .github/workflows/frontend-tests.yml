@@ -1,11 +1,11 @@
-name: Run backend tests
+name: Run frontend tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 #    paths: [ "frontend/**" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   build:
