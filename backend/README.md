@@ -61,7 +61,17 @@ Currently, the refreshing of the OpenAPI file is done manually. To do this, you 
 
 # Testing
 
-Run `mvn test` to run the tests.
+Run `mvn test` to run the tests. The following environment variables are needed for tests:
+- TEST_JWT_SECRET_KEY - a JWT token signing key. It can be anything, but must be long enough: 256
+  bits or more (32+ characters). You can supply this either in the `.env` file or on the command
+  line.
+- spring-boot.run.profiles=test - specify the test profile to use the test database
+
+For example, you can run the tests with the following command:
+
+```bash
+mvn test -Dspring-boot.run.profiles=test -DTEST_JWT_SECRET_KEY=12345678901234567890123456789012
+```
 
 # End-to-end testing
 
