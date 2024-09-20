@@ -24,19 +24,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Start backend
-        run: cd ../backend && TEST_JWT_SECRET_KEY=secretsecretsecretsecretsecretsecretsecret ADMIN_PIN=5678 USER_PIN=1234 USER_NAME=dave ADMIN_NAME=chuck nohup mvn spring-boot:run -Dspring-boot.run.profiles=test,e2etest &
-
       - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
-
-      - name: Start backend v2
-        run: cd ../backend-v2 && pnpm install && NODE_ENV=test E2E_TEST=true TEST_JWT_SECRET_KEY=secretsecretsecretsecretsecretsecretsecret ADMIN_PIN=5678 USER_PIN=1234 USER_NAME=dave ADMIN_NAME=chuck nohup npm run restart &
-
-      - name: Start frontend
-        run: cd ../frontend && pnpm install && nohup npm run start &
 
       - name: Install E2E test dependencies
         run: pnpm install
