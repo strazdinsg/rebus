@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "tests-with-ui": "playwright test --ui"
+    "tests-with-ui": "playwright test --ui",
+    "print-version": "node playwright-version.js"
   },
   "keywords": [],
   "author": "",
