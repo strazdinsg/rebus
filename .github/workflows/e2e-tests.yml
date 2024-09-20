@@ -29,6 +29,12 @@ jobs:
         with:
           version: 9
 
+      - name: Install dependencies for backend v2
+        run: cd ../backend-v2 && pnpm install
+
+      - name: Install dependencies for frontend
+        run: cd ../frontend && pnpm install
+
       - name: Install E2E test dependencies
         run: pnpm install
 
