@@ -24,16 +24,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Setup pnpm
+      - name: Setup pnpm and Node.js
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
+      - name: PNPM cache
+        uses: actions/cache@v4
         with:
-          node-version: 20
-          cache: 'pnpm'
+          path: |
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('package.json', '../backend-v2/package.json', '../frontend/package.json') }}
+          restore-keys: |
+              ${{ runner.os }}-pnpm-
 
       - name: Install dependencies for backend v2
         run: cd ../backend-v2 && pnpm install
