@@ -24,10 +24,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Setup Node.js and pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
 
       - name: Install dependencies for backend v2
         run: cd ../backend-v2 && pnpm install
