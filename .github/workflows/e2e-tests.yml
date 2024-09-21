@@ -34,7 +34,7 @@ jobs:
         with:
           path: |
             ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('package.json', '../backend-v2/package.json', '../frontend/package.json') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/package.json') }}
           restore-keys: |
               ${{ runner.os }}-pnpm-
 
