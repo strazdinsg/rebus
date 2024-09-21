@@ -4,14 +4,13 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "tests-with-ui": "playwright test --ui",
-    "print-version": "node playwright-version.js"
+    "tests-with-ui": "playwright test --ui"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
+  "dependencies": {
     "@playwright/test": "^1.47.0",
     "@types/node": "^22.5.4",
     "dotenv": "^16.4.5"
