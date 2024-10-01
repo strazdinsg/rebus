@@ -21,9 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
-  /**
-   * A service providing our users from the database.
-   */
   private final JwtRequestFilter jwtRequestFilter;
 
   public SecurityConfiguration(JwtRequestFilter jwtRequestFilter) {
@@ -42,7 +39,7 @@ public class SecurityConfiguration {
     // Set up the authorization requests, starting from most restrictive at the top,
     // to least restrictive on the bottom
     http
-        // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
+        // Disable CSRF checks. Without this it will be hard to make automated tests.
         .csrf(AbstractHttpConfigurer::disable)
         // Authentication URL is accessible for everyone
         .authorizeHttpRequests(auth -> auth.requestMatchers("/authenticate").permitAll())
