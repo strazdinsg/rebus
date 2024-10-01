@@ -34,7 +34,11 @@ First you need to ensure the following requirements are met:
   [this](https://learn.microsoft.com/en-us/rest/api/storageservices/cross-origin-resource-sharing--cors--support-for-the-azure-storage-services#enabling-cors-for-azure-storage)
   for more information.
 
-You can start the backend by executing `mvn spring-boot:run` in the terminal.
+You can start the backend by executing `mvn spring-boot:run -Dspring-boot.run.profiles=prod` in the
+terminal.
+
+Note, that you need to specify the `prod` profile when running the application in production.
+Without it some variables will not be set correctly from the `application-prod.properties` file.
 
 During development can simply run `RebusApplication.main()` method from your IDE.
 
@@ -60,6 +64,12 @@ Currently, the refreshing of the OpenAPI file is done manually. To do this, you 
     2. Sort the JSON keys - use the `JSON Sorter` plugin
 
 # Testing
+
+For tests, you need to supply the following environment variables:
+
+- TEST_JWT_SECRET_KEY - key used to sign JWT tokens for the test environment. This is not secret,
+  because it is used only for testing. You can store it in a file named `.env` in the root of the
+  project or supply it on command line when running the tests.
 
 Run `mvn test` to run the tests.
 
