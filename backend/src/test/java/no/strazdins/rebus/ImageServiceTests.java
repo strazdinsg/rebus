@@ -17,4 +17,9 @@ class ImageServiceTests {
     assertFalse(ImageService.isImageContentType(null));
     assertTrue(ImageService.isImageContentType("image/jpg"));
   }
+
+  @Test
+  void testIsImagePdf(){
+    assertFalse(ImageService.isImageContentType("application/pdf"));
+  }
 }

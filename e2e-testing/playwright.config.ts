@@ -11,7 +11,7 @@ import {
 // Load environment variables from .env file.
 dotenvConfig();
 
-const DEFAULT_FRONTEND_PORT = 80;
+const DEFAULT_FRONTEND_PORT = 8000;
 const DEFAULT_BACKEND_PORT = 8080;
 const DEFAULT_BACKEND_V2_PORT = 3000;
 
@@ -58,6 +58,11 @@ export default defineConfig({
       reuseExistingServer: true,
       stdout: "ignore",
       stderr: "pipe",
+      env: {
+        VITE_DEV_SERVER_PORT: `${frontendPort}`,
+        VITE_API_V1_BASE_URL: BACKEND_URL,
+        VITE_API_V2_BASE_URL: BACKEND_V2_URL,
+      }
     },
     {
       /* Start the backend server */
