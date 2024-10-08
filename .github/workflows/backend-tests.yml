@@ -6,6 +6,8 @@ on:
     paths: [ "backend/**" ]
   pull_request:
     branches: [ "master" ]
+  # Allow to run the workflow manually on GitHub website
+  workflow_dispatch:
 
 jobs:
   build:
