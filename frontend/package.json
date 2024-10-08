@@ -15,7 +15,7 @@
     "react-toastify": "^10.0.5"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.21.0"
+    "@rollup/rollup-linux-x64-gnu": "^4.24.0"
   },
   "scripts": {
     "start": "vite",
