@@ -54,7 +54,7 @@ export default defineConfig({
       cwd: "../frontend",
       command: "npm run start",
       url: FRONTEND_URL,
-      timeout: 10 * 1000,
+      timeout: 60 * 1000,
       reuseExistingServer: true,
       stdout: "ignore",
       stderr: "pipe",
@@ -62,7 +62,7 @@ export default defineConfig({
         VITE_DEV_SERVER_PORT: `${frontendPort}`,
         VITE_API_V1_BASE_URL: BACKEND_URL,
         VITE_API_V2_BASE_URL: BACKEND_V2_URL,
-      }
+      },
     },
     {
       /* Start the backend server */
@@ -70,7 +70,7 @@ export default defineConfig({
       command: "mvn spring-boot:run -Dspring-boot.run.profiles=test,e2etest",
       env: testEnv,
       url: BACKEND_URL,
-      timeout: 30 * 1000,
+      timeout: 60 * 1000,
       reuseExistingServer: true,
       stdout: "ignore",
       stderr: "pipe",
@@ -80,7 +80,7 @@ export default defineConfig({
       cwd: "../backend-v2",
       command: "npm run restart",
       url: BACKEND_V2_URL,
-      timeout: 20 * 1000,
+      timeout: 60 * 1000,
       reuseExistingServer: true,
       env: testEnv,
       stdout: "pipe",
