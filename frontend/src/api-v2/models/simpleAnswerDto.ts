@@ -4,6 +4,9 @@
  * rebus-backend
  */
 
+/**
+ * A single answer to a challenge, by a single team.
+ */
 export interface SimpleAnswerDto {
   answer: string;
 }
