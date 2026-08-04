@@ -31,7 +31,7 @@
     "express": "^4.20.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
-    "sequelize": "^6.37.3",
+    "sequelize": "^6.37.8",
     "sqlite3": "^5.1.7",
     "tsoa": "^6.4.0"
   },
